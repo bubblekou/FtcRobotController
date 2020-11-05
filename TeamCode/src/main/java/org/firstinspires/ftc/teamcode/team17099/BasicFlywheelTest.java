@@ -103,20 +103,15 @@ public class BasicFlywheelTest extends LinearOpMode {
             double turn  =  gamepad1.left_stick_x;
             leftPower    = Range.clip(drive + turn, -0.5, 0.5) ;
             rightPower   = Range.clip(drive - turn, -0.5, 0.5) ;
-
+            int power = 0;
             if (gamepad1.a) {
-                leftFlywheel.setPower(1.00);
-                rightFlywheel.setPower(1.00);
+                power=1;
             }
             else if (gamepad1.b) {
-                leftFlywheel.setPower(-1.00);
-                rightFlywheel.setPower(-1.00);
+                power=0;
             }
-
-            else {
-                leftFlywheel.setPower(0);
-                rightFlywheel.setPower(0);
-            }
+            leftFlywheel.setPower(power);
+            rightFlywheel.setPower(power);
 
             // Tank Mode uses one stick to control each wheel.
             // - This requires no math, but it is hard to drive forward slowly and keep straight.
