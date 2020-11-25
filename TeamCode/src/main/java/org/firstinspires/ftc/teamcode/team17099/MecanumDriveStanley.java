@@ -58,6 +58,8 @@ public class MecanumDriveStanley extends LinearOpMode {
 
     public DcMotor wheelBackLeft = null;
     public DcMotor wheelBackRight = null;
+    public DcMotor ShootyL = null;
+    public DcMotor ShootyR = null;
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -73,6 +75,8 @@ public class MecanumDriveStanley extends LinearOpMode {
         wheelFrontRight = hardwareMap.get(DcMotor.class, "wheel_front_right");
         wheelBackLeft = hardwareMap.get(DcMotor.class, "wheel_back_left");
         wheelBackRight = hardwareMap.get(DcMotor.class, "wheel_back_right");
+        ShootyL = hardwareMap.get(DcMotor.class, "leftFlywheel");
+        ShootyR = hardwareMap.get(DcMotor.class, "rightFlywheel");
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
@@ -109,7 +113,14 @@ public class MecanumDriveStanley extends LinearOpMode {
             wheelFrontRight.setPower(wheelFrontRightPower);
             wheelBackLeft.setPower(wheelBackLeftPower);
             wheelBackRight.setPower(wheelBackRightPower);
-
+            if(gamepad1.right_trigger==1){
+                ShootyR.setPower(1);
+                ShootyR.setPower(-1);
+            } else{
+                ShootyR.setPower(0);
+                ShootyR.setPower(0);
+            }
+            sleep(100);
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.update();
