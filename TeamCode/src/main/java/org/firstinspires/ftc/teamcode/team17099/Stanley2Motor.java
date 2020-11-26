@@ -99,10 +99,10 @@ public class Stanley2Motor extends LinearOpMode {
             Right.setPower(rightPower);
             if(gamepad1.right_trigger==1){
                 ShootyR.setPower(1);
-                ShootyR.setPower(-1);
+                ShootyL.setPower(-1);
             } else{
                 ShootyR.setPower(0);
-                ShootyR.setPower(0);
+                ShootyL.setPower(0);
             }
             sleep(100);
             // Show the elapsed game time and wheel power.
