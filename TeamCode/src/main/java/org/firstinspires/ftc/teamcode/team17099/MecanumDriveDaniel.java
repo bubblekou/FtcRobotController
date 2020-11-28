@@ -55,9 +55,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class MecanumDriveDaniel extends LinearOpMode {
     public DcMotor wheelFrontLeft = null;
     public DcMotor wheelFrontRight = null;
-
     public DcMotor wheelBackLeft = null;
     public DcMotor wheelBackRight = null;
+
+    private DcMotor intake = null;
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -116,6 +117,18 @@ public class MecanumDriveDaniel extends LinearOpMode {
             wheelFrontRight.setPower(wheelFrontRightPower);
             wheelBackLeft.setPower(wheelBackLeftPower);
             wheelBackRight.setPower(wheelBackRightPower);
+
+            int power = 0;
+            if (gamepad1.dpad_up) {
+                power=1;
+            }
+            else if (gamepad1.dpad_down) {
+                power=-1;
+            }
+            else {
+                power = 0;
+            }
+            intake.setPower(power);
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
