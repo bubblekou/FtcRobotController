@@ -50,7 +50,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Daniel Mecanum Drive", group="Linear Opmode")
+@TeleOp(name="MecanumDriveDaniel", group="Linear Opmode")
 //@Disabled
 public class MecanumDriveDaniel extends LinearOpMode {
     public DcMotor wheelFrontLeft = null;
@@ -76,12 +76,14 @@ public class MecanumDriveDaniel extends LinearOpMode {
         wheelFrontRight = hardwareMap.get(DcMotor.class, "wheel_front_right");
         wheelBackLeft = hardwareMap.get(DcMotor.class, "wheel_back_left");
         wheelBackRight = hardwareMap.get(DcMotor.class, "wheel_back_right");
+        intake = hardwareMap.get(DcMotor.class, "intake");
 
         wheelFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         wheelFrontRight.setDirection(DcMotorSimple.Direction.FORWARD);
         wheelBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         wheelBackRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
+        intake.setDirection(DcMotorSimple.Direction.REVERSE);
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
 
@@ -91,19 +93,6 @@ public class MecanumDriveDaniel extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-
-            // Setup a variable for each drive wheel to save power level for telemetry
-
-
-            // Choose to drive using either Tank Mode, or POV Mode
-            // Comment out the method that's not used.  The default below is POV.
-
-            // POV Mode uses left stick to go forward, and right stick to turn.
-            // - This uses basic math to combine motions and is easier to drive straight.
-            double drive = gamepad1.left_stick_y;
-            double strafe= gamepad1.left_stick_x;
-            double turn  =  gamepad1.right_stick_x;
-
             double lx = gamepad1.left_stick_x;
             double ly = gamepad1.left_stick_y;
             double rx = gamepad1.right_stick_x;
@@ -118,17 +107,17 @@ public class MecanumDriveDaniel extends LinearOpMode {
             wheelBackLeft.setPower(wheelBackLeftPower);
             wheelBackRight.setPower(wheelBackRightPower);
 
-            int power = 0;
+            double intakepower = 0;
             if (gamepad1.dpad_up) {
-                power=1;
+                intakepower = 1.00;
             }
             else if (gamepad1.dpad_down) {
-                power=-1;
+                intakepower = -1.00;
             }
             else {
-                power = 0;
+                intakepower = 0.00;
             }
-            intake.setPower(power);
+            intake.setPower(intakepower);
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());

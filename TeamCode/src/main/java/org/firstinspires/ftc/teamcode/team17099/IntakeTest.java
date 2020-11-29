@@ -78,21 +78,15 @@ public class IntakeTest extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-
-            // Setup a variable for each drive wheel to save power level for telemetry
-            double intakePower;
-
-            // Choose to drive using either Tank Mode, or POV Mode
-            // Comment out the method that's not used.  The default below is POV.
-
-            // POV Mode uses left stick to go forward, and right stick to turn.
-            // - This uses basic math to combine motions and is easier to drive straight.
             int power = 0;
-            if (gamepad1.a) {
+            if (gamepad1.dpad_up) {
                 power=1;
             }
-            else if (gamepad1.b) {
-                power=0;
+            else if (gamepad1.dpad_down) {
+                power=-1;
+            }
+            else {
+                power = 0;
             }
             intake.setPower(power);
 
