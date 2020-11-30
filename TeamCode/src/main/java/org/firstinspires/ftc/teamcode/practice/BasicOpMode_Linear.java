@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.team17099;
+package org.firstinspires.ftc.teamcode.practice;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -50,9 +50,9 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Ethan Linear OpMode", group="Linear Opmode")
-
-public class Ethan_BasicOpMode_Linear extends LinearOpMode {
+@TeleOp(name="Basic: Linear OpMode", group="Linear Opmode")
+@Disabled
+public class BasicOpMode_Linear extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -85,23 +85,6 @@ public class Ethan_BasicOpMode_Linear extends LinearOpMode {
             // Setup a variable for each drive wheel to save power level for telemetry
             double leftPower;
             double rightPower;
-            double speed;
-            boolean fast;
-            fast = true;
-            speed = 1;
-
-            //if x is pressed the robot's speed will change
-            if (gamepad1.x)
-                if (fast)
-                    speed = 0.3;
-                    fast = false;
-                if (!fast)
-                    speed = 1;
-                    fast = true;
-
-
-
-
 
             // Choose to drive using either Tank Mode, or POV Mode
             // Comment out the method that's not used.  The default below is POV.
@@ -113,10 +96,14 @@ public class Ethan_BasicOpMode_Linear extends LinearOpMode {
             leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
             rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
 
+            // Tank Mode uses one stick to control each wheel.
+            // - This requires no math, but it is hard to drive forward slowly and keep straight.
+            // leftPower  = -gamepad1.left_stick_y ;
+            // rightPower = -gamepad1.right_stick_y ;
 
             // Send calculated power to wheels
-            leftDrive.setPower(speed * leftPower);
-            rightDrive.setPower(speed * rightPower);
+            leftDrive.setPower(leftPower);
+            rightDrive.setPower(rightPower);
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());

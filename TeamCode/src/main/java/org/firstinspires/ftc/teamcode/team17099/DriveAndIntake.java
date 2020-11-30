@@ -50,9 +50,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="MecanumDriveDaniel", group="Linear Opmode")
-//@Disabled
-public class MecanumDriveDaniel extends LinearOpMode {
+@TeleOp(name="Drive And Intake", group="17099 Manual")
+public class DriveAndIntake extends LinearOpMode {
     public DcMotor wheelFrontLeft = null;
     public DcMotor wheelFrontRight = null;
     public DcMotor wheelBackLeft = null;
@@ -76,16 +75,16 @@ public class MecanumDriveDaniel extends LinearOpMode {
         wheelFrontRight = hardwareMap.get(DcMotor.class, "wheel_front_right");
         wheelBackLeft = hardwareMap.get(DcMotor.class, "wheel_back_left");
         wheelBackRight = hardwareMap.get(DcMotor.class, "wheel_back_right");
-        intake = hardwareMap.get(DcMotor.class, "intake");
 
-        wheelFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        wheelFrontRight.setDirection(DcMotorSimple.Direction.FORWARD);
-        wheelBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        wheelBackRight.setDirection(DcMotorSimple.Direction.FORWARD);
-
-        intake.setDirection(DcMotorSimple.Direction.REVERSE);
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
+        wheelFrontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        wheelFrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        wheelBackLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        wheelBackRight.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        intake = hardwareMap.get(DcMotor.class, "intake");
+        intake.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -107,17 +106,17 @@ public class MecanumDriveDaniel extends LinearOpMode {
             wheelBackLeft.setPower(wheelBackLeftPower);
             wheelBackRight.setPower(wheelBackRightPower);
 
-            double intakepower = 0;
+            double intakePower = 0;
             if (gamepad1.dpad_up) {
-                intakepower = 1.00;
+                intakePower = 1.00;
             }
             else if (gamepad1.dpad_down) {
-                intakepower = -1.00;
+                intakePower = -1.00;
             }
             else {
-                intakepower = 0.00;
+                intakePower = 0.00;
             }
-            intake.setPower(intakepower);
+            intake.setPower(intakePower);
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());

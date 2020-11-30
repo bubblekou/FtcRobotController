@@ -27,14 +27,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.team17099;
+package org.firstinspires.ftc.teamcode.practice.stanley;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
 
 /**
@@ -50,16 +49,15 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="FlywheelTest", group="Linear Opmode")
-//@Disabled
-public class BasicFlywheelTest extends LinearOpMode {
-
+@TeleOp(name="4Stanley2Motor", group="Linear Opmode")
+@Disabled
+public class Stanley2Motor extends LinearOpMode {
+    public DcMotor Left = null;
+    public DcMotor Right = null;
+    public DcMotor ShootyL = null;
+    public DcMotor ShootyR = null;
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor leftDrive = null;
-    private DcMotor rightDrive = null;
-    private DcMotor leftFlywheel = null;
-    private DcMotor rightFlywheel = null;
 
     @Override
     public void runOpMode() {
@@ -69,17 +67,13 @@ public class BasicFlywheelTest extends LinearOpMode {
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
-        leftDrive  = hardwareMap.get(DcMotor.class, "leftDrive");
-        rightDrive = hardwareMap.get(DcMotor.class, "rightDrive");
-        rightFlywheel = hardwareMap.get(DcMotor.class, "rightFlywheel");
-        leftFlywheel = hardwareMap.get(DcMotor.class, "leftFlywheel");
+        Left = hardwareMap.get(DcMotor.class, "LeftMotor");
+        Right = hardwareMap.get(DcMotor.class, "RightMotor");
+        ShootyL = hardwareMap.get(DcMotor.class, "leftFlywheel");
+        ShootyR = hardwareMap.get(DcMotor.class, "rightFlywheel");
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
-        leftDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightDrive.setDirection(DcMotor.Direction.FORWARD);
-        leftFlywheel.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightFlywheel.setDirection(DcMotorSimple.Direction.FORWARD);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -89,45 +83,30 @@ public class BasicFlywheelTest extends LinearOpMode {
         while (opModeIsActive()) {
 
             // Setup a variable for each drive wheel to save power level for telemetry
-            double leftPower;
-            double rightPower;
-            double leftLauncherPower;
-            double rightLauncherPower;
+
 
             // Choose to drive using either Tank Mode, or POV Mode
             // Comment out the method that's not used.  The default below is POV.
 
             // POV Mode uses left stick to go forward, and right stick to turn.
             // - This uses basic math to combine motions and is easier to drive straight.
-            double drive = -gamepad1.left_stick_y;
-            double turn  =  gamepad1.left_stick_x;
-            leftPower    = Range.clip(drive + turn, -0.5, 0.5) ;
-            rightPower   = Range.clip(drive - turn, -0.5, 0.5) ;
-            int power = 0;
-            if (gamepad1.a) {
-                power=1;
+
+
+            double leftPower= gamepad1.left_stick_y+gamepad1.left_stick_x;
+            double rightPower= gamepad1.left_stick_y+gamepad1.left_stick_x;
+
+            Left.setPower(leftPower);
+            Right.setPower(rightPower);
+            if(gamepad1.right_trigger==1){
+                ShootyR.setPower(1);
+                ShootyL.setPower(-1);
+            } else{
+                ShootyR.setPower(0);
+                ShootyL.setPower(0);
             }
-            else if (gamepad1.b) {
-                power=0;
-            }
-
-            leftFlywheel.setPower(power);
-            rightFlywheel.setPower(power);
-            sleep(750);
-
-            // Tank Mode uses one stick to control each wheel.
-            // - This requires no math, but it is hard to drive forward slowly and keep straight.
-            // leftPower  = -gamepad1.left_stick_y ;
-            // rightPower = -gamepad1.right_stick_y ;
-
-            // Send calculated power to wheel
-
-            leftDrive.setPower(leftPower);
-            rightDrive.setPower(rightPower);
-
+            sleep(100);
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
             telemetry.update();
         }
     }

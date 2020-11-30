@@ -27,65 +27,59 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.team17099;
+package org.firstinspires.ftc.teamcode.your_respective_team_name;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
+@TeleOp(name="MecanumDrivetrain", group = "linear Opmode")
+public class MecanumDrivetrain extends LinearOpMode {
+    public DcMotor wheelFrontLeft = null;
+    public DcMotor wheelFrontRight = null;
+    public DcMotor wheelBackLeft = null;
+    public DcMotor wheelBackRight = null;
 
-/**
- * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
- * the autonomous or the teleop period of an FTC match. The names of OpModes appear on the menu
- * of the FTC Driver Station. When an selection is made from the menu, the corresponding OpMode
- * class is instantiated on the Robot Controller and executed.
- *
- * This particular OpMode just executes a basic Tank Drive Teleop for a two wheeled robot
- * It includes all the skeletal structure that all linear OpModes contain.
- *
- * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
- */
-
-@TeleOp(name="EthanLauncherCode", group="Linear Opmode")
-//@Disabled
-public class EthanLauncherCode extends LinearOpMode {
-
+    private DcMotor intake = null;
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    //private DcMotor leftDrive = null;
-    //private DcMotor rightDrive = null;
-    Servo servo;
-    double servoPosition = 0.0;
+
+    private double turbo = 0.5;
 
     @Override
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
-        servo = hardwareMap.servo.get("servo");
-        servo.setPosition(servoPosition);
+        wheelFrontLeft = hardwareMap.get(DcMotor.class, "wheel_front_left");
+        wheelFrontRight = hardwareMap.get(DcMotor.class, "wheel_front_right");
+        wheelBackLeft = hardwareMap.get(DcMotor.class, "wheel_back_left");
+        wheelBackRight = hardwareMap.get(DcMotor.class, "wheel_back_right");
 
-        // Wait for the game to start (driver presses PLAY)
+        wheelFrontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        wheelFrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        wheelBackLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        wheelBackRight.setDirection(DcMotorSimple.Direction.REVERSE);
+
         waitForStart();
         runtime.reset();
-        while (opModeIsActive()){
-            if (gamepad1.right_bumper){
-                servoPosition = 1;
-            }
-            if (gamepad1.left_bumper){
-                servoPosition = 0;
-            }
-            servo.setPosition(servoPosition);
 
-            sleep(500);
+        while (opModeIsActive()) {
+            double lx = gamepad1.left_stick_x;
+            double ly = gamepad1.left_stick_y;
+            double rx = gamepad1.right_stick_x;
+
+            double wheelFrontRightPower = turbo * (-lx - rx - ly);
+            double wheelBackRightPower = turbo * (lx - rx - ly);
+            double wheelFrontLeftPower = turbo * (lx + rx - ly);
+            double wheelBackLeftPower = turbo * (-lx + rx - ly);
+
+            wheelFrontLeft.setPower(wheelFrontLeftPower);
+            wheelFrontRight.setPower(wheelFrontRightPower);
+            wheelBackLeft.setPower(wheelBackLeftPower);
+            wheelBackRight.setPower(wheelBackRightPower);
         }
-
-
     }
 }

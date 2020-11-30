@@ -27,13 +27,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.team17099;
+package org.firstinspires.ftc.teamcode.practice.stanley;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 
 /**
@@ -49,11 +50,14 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="4Stanley2Motor", group="Linear Opmode")
+@TeleOp(name="Stanley Mecanum Drive", group="Linear Opmode")
 @Disabled
-public class Stanley2Motor extends LinearOpMode {
-    public DcMotor Left = null;
-    public DcMotor Right = null;
+public class MecanumDriveStanley extends LinearOpMode {
+    public DcMotor wheelFrontLeft = null;
+    public DcMotor wheelFrontRight = null;
+
+    public DcMotor wheelBackLeft = null;
+    public DcMotor wheelBackRight = null;
     public DcMotor ShootyL = null;
     public DcMotor ShootyR = null;
     // Declare OpMode members.
@@ -67,8 +71,10 @@ public class Stanley2Motor extends LinearOpMode {
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
-        Left = hardwareMap.get(DcMotor.class, "LeftMotor");
-        Right = hardwareMap.get(DcMotor.class, "RightMotor");
+        wheelFrontLeft = hardwareMap.get(DcMotor.class, "wheel_front_left");
+        wheelFrontRight = hardwareMap.get(DcMotor.class, "wheel_front_right");
+        wheelBackLeft = hardwareMap.get(DcMotor.class, "wheel_back_left");
+        wheelBackRight = hardwareMap.get(DcMotor.class, "wheel_back_right");
         ShootyL = hardwareMap.get(DcMotor.class, "leftFlywheel");
         ShootyR = hardwareMap.get(DcMotor.class, "rightFlywheel");
 
@@ -90,19 +96,29 @@ public class Stanley2Motor extends LinearOpMode {
 
             // POV Mode uses left stick to go forward, and right stick to turn.
             // - This uses basic math to combine motions and is easier to drive straight.
+            double drive = gamepad1.left_stick_y;
+            double strafe= gamepad1.left_stick_x;
+            double turn  =  gamepad1.right_stick_x;
 
+            double lx = gamepad1.left_stick_x;
+            double ly = gamepad1.left_stick_y;
+            double rx = gamepad1.right_stick_x;
 
-            double leftPower= gamepad1.left_stick_y+gamepad1.left_stick_x;
-            double rightPower= gamepad1.left_stick_y+gamepad1.left_stick_x;
+            double wheelFrontRightPower =  (-lx - rx - ly);
+            double wheelBackRightPower =  (lx - rx - ly);
+            double wheelFrontLeftPower = (lx + rx - ly);
+            double wheelBackLeftPower = (-lx + rx - ly);
 
-            Left.setPower(leftPower);
-            Right.setPower(rightPower);
+            wheelFrontLeft.setPower(wheelFrontLeftPower);
+            wheelFrontRight.setPower(wheelFrontRightPower);
+            wheelBackLeft.setPower(wheelBackLeftPower);
+            wheelBackRight.setPower(wheelBackRightPower);
             if(gamepad1.right_trigger==1){
                 ShootyR.setPower(1);
-                ShootyL.setPower(-1);
+                ShootyR.setPower(-1);
             } else{
                 ShootyR.setPower(0);
-                ShootyL.setPower(0);
+                ShootyR.setPower(0);
             }
             sleep(100);
             // Show the elapsed game time and wheel power.

@@ -27,12 +27,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.team17099;
+package org.firstinspires.ftc.teamcode.practice.ethan;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -50,80 +52,40 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Stanley Mecanum Drive", group="Linear Opmode")
+@TeleOp(name="EthanLauncherCode", group="Linear Opmode")
 @Disabled
-public class MecanumDriveStanley extends LinearOpMode {
-    public DcMotor wheelFrontLeft = null;
-    public DcMotor wheelFrontRight = null;
+public class EthanLauncherCode extends LinearOpMode {
 
-    public DcMotor wheelBackLeft = null;
-    public DcMotor wheelBackRight = null;
-    public DcMotor ShootyL = null;
-    public DcMotor ShootyR = null;
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
+    //private DcMotor leftDrive = null;
+    //private DcMotor rightDrive = null;
+    Servo servo;
+    double servoPosition = 0.0;
 
     @Override
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
-        // Initialize the hardware variables. Note that the strings used here as parameters
-        // to 'get' must correspond to the names assigned during the robot configuration
-        // step (using the FTC Robot Controller app on the phone).
-        wheelFrontLeft = hardwareMap.get(DcMotor.class, "wheel_front_left");
-        wheelFrontRight = hardwareMap.get(DcMotor.class, "wheel_front_right");
-        wheelBackLeft = hardwareMap.get(DcMotor.class, "wheel_back_left");
-        wheelBackRight = hardwareMap.get(DcMotor.class, "wheel_back_right");
-        ShootyL = hardwareMap.get(DcMotor.class, "leftFlywheel");
-        ShootyR = hardwareMap.get(DcMotor.class, "rightFlywheel");
-
-        // Most robots need the motor on one side to be reversed to drive forward
-        // Reverse the motor that runs backwards when connected directly to the battery
+        servo = hardwareMap.servo.get("servo");
+        servo.setPosition(servoPosition);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
-
-        // run until the end of the match (driver presses STOP)
-        while (opModeIsActive()) {
-
-            // Setup a variable for each drive wheel to save power level for telemetry
-
-
-            // Choose to drive using either Tank Mode, or POV Mode
-            // Comment out the method that's not used.  The default below is POV.
-
-            // POV Mode uses left stick to go forward, and right stick to turn.
-            // - This uses basic math to combine motions and is easier to drive straight.
-            double drive = gamepad1.left_stick_y;
-            double strafe= gamepad1.left_stick_x;
-            double turn  =  gamepad1.right_stick_x;
-
-            double lx = gamepad1.left_stick_x;
-            double ly = gamepad1.left_stick_y;
-            double rx = gamepad1.right_stick_x;
-
-            double wheelFrontRightPower =  (-lx - rx - ly);
-            double wheelBackRightPower =  (lx - rx - ly);
-            double wheelFrontLeftPower = (lx + rx - ly);
-            double wheelBackLeftPower = (-lx + rx - ly);
-
-            wheelFrontLeft.setPower(wheelFrontLeftPower);
-            wheelFrontRight.setPower(wheelFrontRightPower);
-            wheelBackLeft.setPower(wheelBackLeftPower);
-            wheelBackRight.setPower(wheelBackRightPower);
-            if(gamepad1.right_trigger==1){
-                ShootyR.setPower(1);
-                ShootyR.setPower(-1);
-            } else{
-                ShootyR.setPower(0);
-                ShootyR.setPower(0);
+        while (opModeIsActive()){
+            if (gamepad1.right_bumper){
+                servoPosition = 1;
             }
-            sleep(100);
-            // Show the elapsed game time and wheel power.
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.update();
+            if (gamepad1.left_bumper){
+                servoPosition = 0;
+            }
+            servo.setPosition(servoPosition);
+
+            sleep(500);
         }
+
+
     }
 }
