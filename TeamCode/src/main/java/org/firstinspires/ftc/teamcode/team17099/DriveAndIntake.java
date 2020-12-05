@@ -107,10 +107,10 @@ public class DriveAndIntake extends LinearOpMode {
             wheelBackRight.setPower(wheelBackRightPower);
 
             double intakePower = 0;
-            if (gamepad1.dpad_up) {
+            if (gamepad2.dpad_up) {
                 intakePower = 1.00;
             }
-            else if (gamepad1.dpad_down) {
+            else if (gamepad2.dpad_down) {
                 intakePower = -1.00;
             }
             else {
