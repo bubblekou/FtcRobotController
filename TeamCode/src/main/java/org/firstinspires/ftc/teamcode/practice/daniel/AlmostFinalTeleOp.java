@@ -98,10 +98,10 @@ public class AlmostFinalTeleOp extends LinearOpMode {
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
-        conveyor.setDirection(DcMotor.Direction.REVERSE);
-        intake.setDirection(DcMotor.Direction.REVERSE);
-        flywheel.setDirection(DcMotor.Direction.FORWARD);
-        grabber.setDirection(DcMotorSimple.Direction.FORWARD);
+        conveyor.setDirection(DcMotor.Direction.FORWARD);
+        intake.setDirection(DcMotor.Direction.FORWARD);
+        flywheel.setDirection(DcMotor.Direction.REVERSE);
+        grabber.setDirection(DcMotorSimple.Direction.REVERSE);
 
         wheelFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         wheelBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
