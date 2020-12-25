@@ -86,6 +86,7 @@ public class AlmostFinalTeleOp extends LinearOpMode {
         wheelFrontRight = hardwareMap.get(DcMotor.class, "wheel_front_right");
         wheelBackLeft = hardwareMap.get(DcMotor.class, "wheel_back_left");
         wheelBackRight = hardwareMap.get(DcMotor.class, "wheel_back_right");
+
         conveyor = hardwareMap.get(DcMotor.class, "conveyor");
         grabber = hardwareMap.get(DcMotor.class, "grabber");
         intake = hardwareMap.get(DcMotor.class, "intake");
@@ -101,9 +102,10 @@ public class AlmostFinalTeleOp extends LinearOpMode {
         intake.setDirection(DcMotor.Direction.REVERSE);
         flywheel.setDirection(DcMotor.Direction.FORWARD);
         grabber.setDirection(DcMotorSimple.Direction.FORWARD);
+
         wheelFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         wheelBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        wheelFrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        wheelFrontRight.setDirection(DcMotorSimple.Direction.FORWARD);
         wheelBackRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
 
