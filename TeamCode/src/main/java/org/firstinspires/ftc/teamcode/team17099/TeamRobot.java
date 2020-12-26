@@ -66,14 +66,14 @@ public class TeamRobot {
         stabilizer = hardwareMap.get(Servo.class, "stabilizer");
 
         // Initialize launching hardware
-        flywheel = hardwareMap.get(DcMotor.class, "flywheel");
-        flywheel.setDirection(DcMotor.Direction.REVERSE);
-        pusher = hardwareMap.get(Servo.class, "pusher");
-
-        // Initialize wobble grabber hardware
-        grabber = hardwareMap.get(DcMotor.class, "grabber");
-        grabber.setDirection(DcMotorSimple.Direction.REVERSE);
-        wobble_goal_grabber = hardwareMap.get(Servo.class, "wobble_goal_grabber");
+//        flywheel = hardwareMap.get(DcMotor.class, "flywheel");
+//        flywheel.setDirection(DcMotor.Direction.REVERSE);
+//        pusher = hardwareMap.get(Servo.class, "pusher");
+//
+//        // Initialize wobble grabber hardware
+//        grabber = hardwareMap.get(DcMotor.class, "grabber");
+//        grabber.setDirection(DcMotorSimple.Direction.REVERSE);
+//        wobble_goal_grabber = hardwareMap.get(Servo.class, "wobble_goal_grabber");
     }
 
     /**
@@ -152,23 +152,5 @@ public class TeamRobot {
         stabilizer.setPosition(0);
         TimeUnit.MILLISECONDS.sleep(1500);
         stabilizer.setPosition(1);
-    }
-
-    public void initflywheel() {
-        flywheel.setPower(1.00);
-    }
-
-    public void push() throws InterruptedException {
-        pusher.setPosition(0);
-        TimeUnit.MILLISECONDS.sleep(1500);
-        pusher.setPosition(1);
-    }
-
-    public void lift() {
-        grabber.setPower(1);
-    }
-
-    public void drop() {
-        grabber.setPower(0);
     }
 }

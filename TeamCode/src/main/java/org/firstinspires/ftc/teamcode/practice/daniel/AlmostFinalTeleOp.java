@@ -31,6 +31,8 @@ package org.firstinspires.ftc.teamcode.practice.daniel;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.team17099.TeamRobot;
@@ -51,15 +53,22 @@ import java.util.concurrent.TimeUnit;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="AlmostFinalTeleOp", group="Daniel's Teleops")
+@TeleOp(name="AlmostFinalTeleOp", group="Linear Opmode")
 //@Disabled
 public class AlmostFinalTeleOp extends LinearOpMode {
+
     private TeamRobot bot;
 
     public Servo wobble_goal_grabber = null;
     public Servo pusher = null;
 
+    public DcMotor flywheel = null;
+    public DcMotor grabber = null;
+
+    public double turbo = 0.5;
+
     private int nextwobble_goal_grabber = 0;
+    private int nextStabilizer = 0;
     private int nextPusher = 0;
 
     @Override
@@ -68,6 +77,18 @@ public class AlmostFinalTeleOp extends LinearOpMode {
         telemetry.update();
 
         this.bot = new TeamRobot(hardwareMap);
+
+        bot.init();
+
+        grabber = hardwareMap.get(DcMotor.class, "grabber");
+        flywheel = hardwareMap.get(DcMotor.class, "flywheel");
+
+        wobble_goal_grabber = hardwareMap.get(Servo.class, "wobble_goal_grabber");
+        pusher = hardwareMap.get(Servo.class, "pusher");
+
+
+        flywheel.setDirection(DcMotor.Direction.REVERSE);
+        grabber.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -84,7 +105,6 @@ public class AlmostFinalTeleOp extends LinearOpMode {
             else if (gamepad1.dpad_down) {
                 bot.updateTurbo(false);
             }
-
             //Strafe drive
             bot.strafe(gamepad1);
 
@@ -100,8 +120,16 @@ public class AlmostFinalTeleOp extends LinearOpMode {
                 grabberpower = 0;
             }
 
+            double flywheelpower = 0.00;
+
             if (gamepad2.left_bumper) {
-                bot.push();
+                nextPusher++;
+                if(nextPusher % 2 == 0){
+                    pusher.setPosition(1);
+                } else {
+                    pusher.setPosition(0);
+                }
+                TimeUnit.MILLISECONDS.sleep(500);
             }
             if (gamepad2.right_bumper) {
                 nextwobble_goal_grabber++;
@@ -127,9 +155,19 @@ public class AlmostFinalTeleOp extends LinearOpMode {
                 bot.stopTaking();
             }
 
+
             if (gamepad2.y) {
-                bot.initflywheel();
+                flywheelpower = 1.00;
             }
+            else if (gamepad2.x) {
+                flywheelpower = -1.00;
+            }
+            else {
+                flywheelpower = 0.00;
+            }
+
+            flywheel.setPower(flywheelpower);
+            grabber.setPower(grabberpower);
         }
     }
 }

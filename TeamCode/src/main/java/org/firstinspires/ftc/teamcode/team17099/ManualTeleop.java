@@ -1,4 +1,4 @@
-/* Copyright (c) 2017 FIRST. All rights reserved.
+package org.firstinspires.ftc.teamcode.team17099;/* Copyright (c) 2017 FIRST. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted (subject to the limitations in the disclaimer below) provided that
@@ -27,10 +27,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.practice.daniel;
-
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.team17099.TeamRobot;
 
@@ -50,10 +51,19 @@ import java.util.concurrent.TimeUnit;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="ManualTeleop", group="Team's Teleops")
+@TeleOp(name="Manual", group="Team's Teleops")
 public class ManualTeleop extends LinearOpMode {
 
     private TeamRobot bot;
+
+    public Servo wobble_goal_grabber = null;
+    public Servo pusher = null;
+
+    public DcMotor flywheel = null;
+    public DcMotor grabber = null;
+
+    private int nextwobble_goal_grabber = 0;
+    private int nextPusher = 0;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -61,6 +71,20 @@ public class ManualTeleop extends LinearOpMode {
         telemetry.update();
 
         this.bot = new TeamRobot(hardwareMap);
+
+        bot.init();
+
+        grabber = hardwareMap.get(DcMotor.class, "grabber");
+        flywheel = hardwareMap.get(DcMotor.class, "flywheel");
+
+        wobble_goal_grabber = hardwareMap.get(Servo.class, "wobble_goal_grabber");
+        pusher = hardwareMap.get(Servo.class, "pusher");
+
+
+        flywheel.setDirection(DcMotor.Direction.REVERSE);
+        grabber.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
         // run until the end of the match (driver presses STOP)
@@ -75,20 +99,31 @@ public class ManualTeleop extends LinearOpMode {
             else if (gamepad1.dpad_down) {
                 bot.updateTurbo(false);
             }
-
             //Strafe drive
             bot.strafe(gamepad1);
 
             double grabberpower;
 
             if (gamepad2.dpad_down) {
-                bot.drop();
+                grabberpower = 1;
             }
             else if (gamepad2.dpad_up) {
-                bot.lift();
+                grabberpower = -1;
             }
-            if (gamepad2.y) {
-                bot.push();
+            else {
+                grabberpower = 0;
+            }
+
+            double flywheelpower = 0.00;
+
+            if (gamepad2.left_bumper) {
+                nextPusher++;
+                if(nextPusher % 2 == 0){
+                    pusher.setPosition(1);
+                } else {
+                    pusher.setPosition(0);
+                }
+                TimeUnit.MILLISECONDS.sleep(500);
             }
             if (gamepad2.right_bumper) {
                 nextwobble_goal_grabber++;
@@ -98,6 +133,9 @@ public class ManualTeleop extends LinearOpMode {
                     wobble_goal_grabber.setPosition(0);
                 }
                 TimeUnit.MILLISECONDS.sleep(500);
+            }
+            if (gamepad1.right_bumper) {
+                bot.stabilizeRing();
             }
 
             //Intake
@@ -111,14 +149,19 @@ public class ManualTeleop extends LinearOpMode {
                 bot.stopTaking();
             }
 
-            if (gamepad1.right_bumper) {
-                bot.stabilizeRing();
+
+            if (gamepad2.y) {
+                flywheelpower = 1.00;
+            }
+            else if (gamepad2.x) {
+                flywheelpower = -1.00;
+            }
+            else {
+                flywheelpower = 0.00;
             }
 
-            // Launch
-            if (gamepad2.y) {
-                bot.initflywheel();
-            }
+            flywheel.setPower(flywheelpower);
+            grabber.setPower(grabberpower);
         }
     }
 }
