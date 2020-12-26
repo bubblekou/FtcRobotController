@@ -138,7 +138,7 @@ public class AlmostFinalTeleOp extends LinearOpMode {
                     wobble_goal_grabber.setPosition(0);
                 }
             }
-            if (gamepad1.left_bumper) {
+            if (gamepad1.right_bumper) {
                 bot.stabilize();
             }
 

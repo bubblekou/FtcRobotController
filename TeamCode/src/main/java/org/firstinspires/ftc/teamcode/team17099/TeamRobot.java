@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.team17099;
 
+import android.icu.util.TimeUnit;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -101,6 +103,7 @@ public class TeamRobot {
         else {
             stabilizer.setPosition(1);
         }
+        Thread.sleep(500);
         this.isStabilizerOpen = !isStabilizerOpen;
     }
 }
