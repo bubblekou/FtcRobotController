@@ -27,17 +27,16 @@ public class TeamRobot {
     private DcMotor intake = null;
     private DcMotor conveyor = null;
     // Stablizer to help to put the ring in the magazine
-    public Servo stabilizer = null;
+    private Servo stabilizer = null;
 
     // Launching system
-    public DcMotor flywheel = null;
-    public Servo pusher = null;
+    private DcMotor flywheel = null;
+    private Servo pusher = null;
 
     // Grabber system
-    public DcMotor grabber = null;
+    private DcMotor arm = null;
     private boolean isHeld = false;
-
-    public Servo wobble_goal_grabber = null;
+    private Servo grabber = null;
 
     public TeamRobot(HardwareMap hardwareMap) {
         this.hardwareMap = hardwareMap;
@@ -65,15 +64,16 @@ public class TeamRobot {
         intake.setDirection(DcMotor.Direction.FORWARD);
         stabilizer = hardwareMap.get(Servo.class, "stabilizer");
 
-        // Initialize launching hardware
-//        flywheel = hardwareMap.get(DcMotor.class, "flywheel");
-//        flywheel.setDirection(DcMotor.Direction.REVERSE);
-//        pusher = hardwareMap.get(Servo.class, "pusher");
-//
-//        // Initialize wobble grabber hardware
-//        grabber = hardwareMap.get(DcMotor.class, "grabber");
-//        grabber.setDirection(DcMotorSimple.Direction.REVERSE);
-//        wobble_goal_grabber = hardwareMap.get(Servo.class, "wobble_goal_grabber");
+        //Initialize launching hardware
+        flywheel = hardwareMap.get(DcMotor.class, "flywheel");
+        flywheel.setDirection(DcMotor.Direction.REVERSE);
+        pusher = hardwareMap.get(Servo.class, "pusher");
+
+        // Initialize wobble grabber hardware
+        arm = hardwareMap.get(DcMotor.class, "arm");
+        arm.setDirection(DcMotorSimple.Direction.REVERSE);
+        grabber = hardwareMap.get(Servo.class, "grabber");
+        this.isHeld = grabber.getPosition() == 0;
     }
 
     /**
@@ -152,5 +152,38 @@ public class TeamRobot {
         stabilizer.setPosition(0);
         TimeUnit.MILLISECONDS.sleep(1500);
         stabilizer.setPosition(1);
+    }
+
+    public void pushRing() throws InterruptedException {
+        pusher.setPosition(0);
+        TimeUnit.MILLISECONDS.sleep(500);
+        pusher.setPosition(1);
+    }
+
+    public void flipGrabber() throws InterruptedException {
+        if (isHeld) {
+            grabber.setPosition(1);
+        }
+        else {
+            grabber.setPosition(0);
+        }
+        isHeld = !isHeld;
+        TimeUnit.MILLISECONDS.sleep(500);
+    }
+
+    public void liftArm() {
+        arm.setPower(1);
+    }
+    public void dropArm() {
+        arm.setPower(-1);
+    }
+    public void stopArm() {
+        arm.setPower(0);
+    }
+    public void startFlywheel() {
+        flywheel.setPower(1.00);
+    }
+    public void stopFlywheel() {
+        flywheel.setPower(0);
     }
 }

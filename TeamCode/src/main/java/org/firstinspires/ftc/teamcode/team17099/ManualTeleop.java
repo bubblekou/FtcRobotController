@@ -33,10 +33,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.team17099.TeamRobot;
-
-import java.util.concurrent.TimeUnit;
-
 
 /**
  * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
@@ -102,42 +98,6 @@ public class ManualTeleop extends LinearOpMode {
             //Strafe drive
             bot.strafe(gamepad1);
 
-            double grabberpower;
-
-            if (gamepad2.dpad_down) {
-                grabberpower = 1;
-            }
-            else if (gamepad2.dpad_up) {
-                grabberpower = -1;
-            }
-            else {
-                grabberpower = 0;
-            }
-
-            double flywheelpower = 0.00;
-
-            if (gamepad2.left_bumper) {
-                nextPusher++;
-                if(nextPusher % 2 == 0){
-                    pusher.setPosition(1);
-                } else {
-                    pusher.setPosition(0);
-                }
-                TimeUnit.MILLISECONDS.sleep(500);
-            }
-            if (gamepad2.right_bumper) {
-                nextwobble_goal_grabber++;
-                if(nextwobble_goal_grabber % 2 == 0){
-                    wobble_goal_grabber.setPosition(1);
-                } else {
-                    wobble_goal_grabber.setPosition(0);
-                }
-                TimeUnit.MILLISECONDS.sleep(500);
-            }
-            if (gamepad1.right_bumper) {
-                bot.stabilizeRing();
-            }
-
             //Intake
             if (gamepad1.dpad_right) {
                 bot.inTake();
@@ -148,20 +108,34 @@ public class ManualTeleop extends LinearOpMode {
             else {
                 bot.stopTaking();
             }
-
-
-            if (gamepad2.y) {
-                flywheelpower = 1.00;
+            //stabilize the ring so it lies flat in the magazine
+            if (gamepad1.right_bumper) {
+                bot.stabilizeRing();
             }
-            else if (gamepad2.x) {
-                flywheelpower = -1.00;
+            //launching system
+            if (gamepad2.y) {
+                bot.startFlywheel();
             }
             else {
-                flywheelpower = 0.00;
+                bot.stopFlywheel();
+            }
+            if (gamepad2.left_bumper) {
+                bot.pushRing();
             }
 
-            flywheel.setPower(flywheelpower);
-            grabber.setPower(grabberpower);
+            //wobble goal actions, including lifting it to put it over the wall and holding it in place
+            if (gamepad2.dpad_up) {
+                bot.liftArm();
+            }
+            else if (gamepad2.dpad_down) {
+                bot.dropArm();
+            }
+            else {
+                bot.stopArm();
+            }
+            if (gamepad2.right_bumper) {
+                bot.flipGrabber();
+            }
         }
     }
 }
