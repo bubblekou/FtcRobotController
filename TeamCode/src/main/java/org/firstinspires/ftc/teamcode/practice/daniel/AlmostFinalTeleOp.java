@@ -139,7 +139,7 @@ public class AlmostFinalTeleOp extends LinearOpMode {
             double conveyorPower = 0.00;
             double flywheelpower = 0.00;
 
-            if (gamepad2.left_bumper) {
+            if (gamepad1.left_bumper) {
                 nextPusher++;
                 if(nextPusher % 2 == 0){
                     pusher.setPosition(1);
@@ -179,10 +179,10 @@ public class AlmostFinalTeleOp extends LinearOpMode {
                 intakePower = 0.00;
                 conveyorPower = 0.00;
             }
-            if (gamepad2.x) {
+            if (gamepad2.y) {
                 flywheelpower = 1.00;
             }
-            else if (gamepad2.y) {
+            else if (gamepad2.x) {
                 flywheelpower = -1.00;
             }
             else {
