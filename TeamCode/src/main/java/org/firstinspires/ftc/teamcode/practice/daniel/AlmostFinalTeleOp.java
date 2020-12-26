@@ -65,10 +65,7 @@ public class AlmostFinalTeleOp extends LinearOpMode {
     public DcMotor flywheel = null;
     public DcMotor grabber = null;
 
-    public double turbo = 0.5;
-
     private int nextwobble_goal_grabber = 0;
-    private int nextStabilizer = 0;
     private int nextPusher = 0;
 
     @Override
@@ -103,6 +100,7 @@ public class AlmostFinalTeleOp extends LinearOpMode {
             else if (gamepad1.dpad_down) {
                 bot.updateTurbo(false);
             }
+
             //Strafe drive
             bot.strafe(gamepad1);
 
