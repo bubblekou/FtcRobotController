@@ -19,12 +19,18 @@ public class TeamRobot {
     private DcMotor conveyor = null;
     private DcMotor intake = null;
 
+    public DcMotor flywheel = null;
+    public DcMotor grabber = null;
+
     private double fastPace = 0.2;
     private double slowPace = 0.1;
     private double turbo = 0.5;
     private boolean isFastPace = true;
+    private boolean isHeld = false;
 
     public Servo stabilizer = null;
+    public Servo wobble_goal_grabber = null;
+    public Servo pusher = null;
 
     public TeamRobot(HardwareMap hardwareMap) {
         this.hardwareMap = hardwareMap;
@@ -51,7 +57,15 @@ public class TeamRobot {
         conveyor.setDirection(DcMotor.Direction.FORWARD);
         intake.setDirection(DcMotor.Direction.FORWARD);
 
+        grabber = hardwareMap.get(DcMotor.class, "grabber");
+        flywheel = hardwareMap.get(DcMotor.class, "flywheel");
+
+        flywheel.setDirection(DcMotor.Direction.REVERSE);
+        grabber.setDirection(DcMotorSimple.Direction.REVERSE);
+
         stabilizer = hardwareMap.get(Servo.class, "stabilizer");
+        wobble_goal_grabber = hardwareMap.get(Servo.class, "wobble_goal_grabber");
+        pusher = hardwareMap.get(Servo.class, "pusher");
     }
 
     public void flipPace() {
@@ -97,8 +111,25 @@ public class TeamRobot {
     }
 
     public void stabilize() throws InterruptedException {
-        stabilizer.setPosition(1);
-        TimeUnit.MILLISECONDS.sleep(500);
+        stabilizer.setPosition(0);
+        TimeUnit.MILLISECONDS.sleep(1500);
         stabilizer.setPosition(1);
     }
+
+    public void initflywheel() {
+        flywheel.setPower(1.00);
+    }
+
+    public void push() throws InterruptedException {
+        pusher.setPosition(0);
+        TimeUnit.MILLISECONDS.sleep(1500);
+        pusher.setPosition(1);
+    }
+    public void lift() {
+        grabber.setPower(1);
+    }
+    public void drop() {
+        grabber.setPower(0);
+    }
+    public void encapsulate()
 }

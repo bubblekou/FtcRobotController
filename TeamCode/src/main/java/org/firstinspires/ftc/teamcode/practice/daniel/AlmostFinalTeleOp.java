@@ -53,7 +53,7 @@ import java.util.concurrent.TimeUnit;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="AlmostFinalTeleOp", group="Linear Opmode")
+@TeleOp(name="AlmostFinalTeleOp", group="DanielCode")
 //@Disabled
 public class AlmostFinalTeleOp extends LinearOpMode {
 
@@ -61,9 +61,6 @@ public class AlmostFinalTeleOp extends LinearOpMode {
 
     public Servo wobble_goal_grabber = null;
     public Servo pusher = null;
-
-    public DcMotor flywheel = null;
-    public DcMotor grabber = null;
 
     private int nextwobble_goal_grabber = 0;
     private int nextPusher = 0;
@@ -75,15 +72,11 @@ public class AlmostFinalTeleOp extends LinearOpMode {
 
         this.bot = new TeamRobot(hardwareMap);
 
-        grabber = hardwareMap.get(DcMotor.class, "grabber");
-        flywheel = hardwareMap.get(DcMotor.class, "flywheel");
-
-        wobble_goal_grabber = hardwareMap.get(Servo.class, "wobble_goal_grabber");
-        pusher = hardwareMap.get(Servo.class, "pusher");
 
 
-        flywheel.setDirection(DcMotor.Direction.REVERSE);
-        grabber.setDirection(DcMotorSimple.Direction.REVERSE);
+
+
+
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -116,16 +109,8 @@ public class AlmostFinalTeleOp extends LinearOpMode {
                 grabberpower = 0;
             }
 
-            double flywheelpower = 0.00;
-
             if (gamepad2.left_bumper) {
-                nextPusher++;
-                if(nextPusher % 2 == 0){
-                    pusher.setPosition(1);
-                } else {
-                    pusher.setPosition(0);
-                }
-                TimeUnit.MILLISECONDS.sleep(500);
+                bot.push();
             }
             if (gamepad2.right_bumper) {
                 nextwobble_goal_grabber++;
@@ -151,19 +136,9 @@ public class AlmostFinalTeleOp extends LinearOpMode {
                 bot.stoptake();
             }
 
-
             if (gamepad2.y) {
-                flywheelpower = 1.00;
+                bot.initflywheel();
             }
-            else if (gamepad2.x) {
-                flywheelpower = -1.00;
-            }
-            else {
-                flywheelpower = 0.00;
-            }
-
-            flywheel.setPower(flywheelpower);
-            grabber.setPower(grabberpower);
         }
     }
 }
