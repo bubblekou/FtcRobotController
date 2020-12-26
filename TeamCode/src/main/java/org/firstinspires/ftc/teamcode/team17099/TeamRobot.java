@@ -1,12 +1,12 @@
 package org.firstinspires.ftc.teamcode.team17099;
 
-import android.icu.util.TimeUnit;
-
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+
+import java.util.concurrent.TimeUnit;
 
 public class TeamRobot {
     private HardwareMap hardwareMap;
@@ -96,14 +96,14 @@ public class TeamRobot {
         conveyor.setPower(0);
     }
 
-    public void stabilize() {
+    public void stabilize() throws InterruptedException {
         if (isStabilizerOpen) {
             stabilizer.setPosition(0);
         }
         else {
             stabilizer.setPosition(1);
         }
-        Thread.sleep(500);
+        TimeUnit.MILLISECONDS.sleep(500);
         this.isStabilizerOpen = !isStabilizerOpen;
     }
 }
