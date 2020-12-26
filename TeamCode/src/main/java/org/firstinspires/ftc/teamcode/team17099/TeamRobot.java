@@ -11,24 +11,24 @@ import java.util.concurrent.TimeUnit;
 public class TeamRobot {
     private HardwareMap hardwareMap;
 
-    public DcMotor wheelFrontLeft = null;
-    public DcMotor wheelFrontRight = null;
-    public DcMotor wheelBackLeft = null;
-    public DcMotor wheelBackRight = null;
+    private DcMotor wheelFrontLeft = null;
+    private DcMotor wheelFrontRight = null;
+    private DcMotor wheelBackLeft = null;
+    private DcMotor wheelBackRight = null;
 
-    public DcMotor conveyor = null;
-    public DcMotor intake = null;
+    private DcMotor conveyor = null;
+    private DcMotor intake = null;
 
     private double fastPace = 0.2;
     private double slowPace = 0.1;
     private double turbo = 0.5;
-    private boolean isStabilizerOpen = false;
     private boolean isFastPace = true;
 
     public Servo stabilizer = null;
 
     public TeamRobot(HardwareMap hardwareMap) {
         this.hardwareMap = hardwareMap;
+        init();
     }
 
     public void init() {
@@ -97,13 +97,8 @@ public class TeamRobot {
     }
 
     public void stabilize() throws InterruptedException {
-        if (isStabilizerOpen) {
-            stabilizer.setPosition(0);
-        }
-        else {
-            stabilizer.setPosition(1);
-        }
+        stabilizer.setPosition(1);
         TimeUnit.MILLISECONDS.sleep(500);
-        this.isStabilizerOpen = !isStabilizerOpen;
+        stabilizer.setPosition(1);
     }
 }
