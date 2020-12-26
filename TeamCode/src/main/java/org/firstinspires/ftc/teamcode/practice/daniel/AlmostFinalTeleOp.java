@@ -129,6 +129,7 @@ public class AlmostFinalTeleOp extends LinearOpMode {
                 } else {
                     pusher.setPosition(0);
                 }
+                TimeUnit.MILLISECONDS.sleep(500);
             }
             if (gamepad2.right_bumper) {
                 nextwobble_goal_grabber++;
@@ -137,6 +138,7 @@ public class AlmostFinalTeleOp extends LinearOpMode {
                 } else {
                     wobble_goal_grabber.setPosition(0);
                 }
+                TimeUnit.MILLISECONDS.sleep(500);
             }
             if (gamepad1.right_bumper) {
                 bot.stabilize();
