@@ -50,7 +50,7 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Ethan Linear OpMode", group="Linear Opmode")
+@TeleOp(name="Ethan Linear OpMode", group="Ethan's Teleops")
 @Disabled
 public class Ethan_BasicOpMode_Linear extends LinearOpMode {
 

@@ -10,27 +10,34 @@ import java.util.concurrent.TimeUnit;
 
 public class TeamRobot {
     private HardwareMap hardwareMap;
-
+    // Mecanum dirvetrain. Grabber is in the front
     private DcMotor wheelFrontLeft = null;
     private DcMotor wheelFrontRight = null;
     private DcMotor wheelBackLeft = null;
     private DcMotor wheelBackRight = null;
 
-    private DcMotor conveyor = null;
-    private DcMotor intake = null;
-
-    public DcMotor flywheel = null;
-    public DcMotor grabber = null;
-
+    // Macanum drive speed control with turbo between 0.1 and 1.0, there are face and slow paces
+    // for turbo adjustment
+    private double turbo = 0.5;
     private double fastPace = 0.2;
     private double slowPace = 0.1;
-    private double turbo = 0.5;
     private boolean isFastPace = true;
+
+    // Intake system
+    private DcMotor intake = null;
+    private DcMotor conveyor = null;
+    // Stablizer to help to put the ring in the magazine
+    public Servo stabilizer = null;
+
+    // Launching system
+    public DcMotor flywheel = null;
+    public Servo pusher = null;
+
+    // Grabber system
+    public DcMotor grabber = null;
     private boolean isHeld = false;
 
-    public Servo stabilizer = null;
     public Servo wobble_goal_grabber = null;
-    public Servo pusher = null;
 
     public TeamRobot(HardwareMap hardwareMap) {
         this.hardwareMap = hardwareMap;
@@ -51,27 +58,37 @@ public class TeamRobot {
         wheelFrontRight.setDirection(DcMotorSimple.Direction.FORWARD);
         wheelBackRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
+        // Initialize intake hardware
         conveyor = hardwareMap.get(DcMotor.class, "conveyor");
-        intake = hardwareMap.get(DcMotor.class, "intake");
-
         conveyor.setDirection(DcMotor.Direction.FORWARD);
+        intake = hardwareMap.get(DcMotor.class, "intake");
         intake.setDirection(DcMotor.Direction.FORWARD);
-
-        grabber = hardwareMap.get(DcMotor.class, "grabber");
-        flywheel = hardwareMap.get(DcMotor.class, "flywheel");
-
-        flywheel.setDirection(DcMotor.Direction.REVERSE);
-        grabber.setDirection(DcMotorSimple.Direction.REVERSE);
-
         stabilizer = hardwareMap.get(Servo.class, "stabilizer");
-        wobble_goal_grabber = hardwareMap.get(Servo.class, "wobble_goal_grabber");
+
+        // Initialize launching hardware
+        flywheel = hardwareMap.get(DcMotor.class, "flywheel");
+        flywheel.setDirection(DcMotor.Direction.REVERSE);
         pusher = hardwareMap.get(Servo.class, "pusher");
+
+        // Initialize wobble grabber hardware
+        grabber = hardwareMap.get(DcMotor.class, "grabber");
+        grabber.setDirection(DcMotorSimple.Direction.REVERSE);
+        wobble_goal_grabber = hardwareMap.get(Servo.class, "wobble_goal_grabber");
     }
 
+    /**
+     * Update turbo change pace between slow and fast alternatively
+     */
     public void flipPace() {
         this.isFastPace = !isFastPace;
     }
 
+    /**
+     * Increases or decrease drive train turbo. Use higher turbo for fast speed and slower turbo
+     * for better maneuver
+     *
+     * @param increasing
+     */
     public void updateTurbo(boolean increasing) {
         double pace = isFastPace ? fastPace : slowPace;
         if (increasing) {
@@ -81,6 +98,11 @@ public class TeamRobot {
         }
     }
 
+    /**
+     * Strafe TileRunner
+     *
+     * @param gamepad Gamepad
+     */
     public void strafe(Gamepad gamepad) {
         double lx = gamepad.left_stick_x;
         double ly = gamepad.left_stick_y;
@@ -97,20 +119,36 @@ public class TeamRobot {
         wheelBackRight.setPower(wheelBackRightPower);
     }
 
-    public void intake() {
+    /**
+     * Intake rings with pasta roller and pulley.
+     */
+    public void inTake() {
         intake.setPower(1.00);
         conveyor.setPower(1.00);
     }
-    public void outtake() {
+
+    /**
+     * Outtake rings in case ring is stuck or out of place
+     */
+    public void outTake() {
         intake.setPower(-1.00);
         conveyor.setPower(-1.00);
     }
-    public void stoptake() {
+
+    /**
+     * Stop taking
+     */
+    public void stopTaking() {
         intake.setPower(0);
         conveyor.setPower(0);
     }
 
-    public void stabilize() throws InterruptedException {
+    /**
+     * Flap the ring stabilizer to help to lay the ring in the magazine
+     *
+     * @throws InterruptedException
+     */
+    public void stabilizeRing() throws InterruptedException {
         stabilizer.setPosition(0);
         TimeUnit.MILLISECONDS.sleep(1500);
         stabilizer.setPosition(1);
@@ -125,11 +163,12 @@ public class TeamRobot {
         TimeUnit.MILLISECONDS.sleep(1500);
         pusher.setPosition(1);
     }
+
     public void lift() {
         grabber.setPower(1);
     }
+
     public void drop() {
         grabber.setPower(0);
     }
-    public void encapsulate()
 }

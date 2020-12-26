@@ -49,7 +49,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="4Stanley2Motor", group="Linear Opmode")
+@TeleOp(name="4Stanley2Motor", group="Stanley's Teleops")
 @Disabled
 public class Stanley2Motor extends LinearOpMode {
     public DcMotor Left = null;

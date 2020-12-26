@@ -31,9 +31,6 @@ package org.firstinspires.ftc.teamcode.practice.daniel;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.team17099.TeamRobot;
 
@@ -53,8 +50,7 @@ import java.util.concurrent.TimeUnit;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="ManualTeleop", group="team17099")
-//@Disabled
+@TeleOp(name="ManualTeleop", group="Team's Teleops")
 public class ManualTeleop extends LinearOpMode {
 
     private TeamRobot bot;
@@ -103,20 +99,23 @@ public class ManualTeleop extends LinearOpMode {
                 }
                 TimeUnit.MILLISECONDS.sleep(500);
             }
-            if (gamepad1.right_bumper) {
-                bot.stabilize();
-            }
 
             //Intake
             if (gamepad1.dpad_right) {
-                bot.intake();
+                bot.inTake();
             }
             else if (gamepad1.dpad_left) {
-                bot.outtake();
+                bot.outTake();
             }
             else {
-                bot.stoptake();
+                bot.stopTaking();
             }
+
+            if (gamepad1.right_bumper) {
+                bot.stabilizeRing();
+            }
+
+            // Launch
             if (gamepad2.y) {
                 bot.initflywheel();
             }
