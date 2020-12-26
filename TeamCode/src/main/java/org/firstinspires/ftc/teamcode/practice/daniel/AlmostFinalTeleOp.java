@@ -35,6 +35,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.team17099.TeamRobot;
+
 import java.util.concurrent.TimeUnit;
 
 
@@ -55,18 +57,13 @@ import java.util.concurrent.TimeUnit;
 //@Disabled
 public class AlmostFinalTeleOp extends LinearOpMode {
 
-    public DcMotor conveyor = null;
-    public DcMotor intake = null;
-    public DcMotor flywheel = null;
-    public DcMotor grabber = null;
-    public DcMotor wheelFrontLeft = null;
-    public DcMotor wheelFrontRight = null;
-    public DcMotor wheelBackLeft = null;
-    public DcMotor wheelBackRight = null;
+    private TeamRobot bot;
 
     public Servo wobble_goal_grabber = null;
     public Servo pusher = null;
-    public Servo stabilizer = null;
+
+    public DcMotor flywheel = null;
+    public DcMotor grabber = null;
 
     public double turbo = 0.5;
 
@@ -79,49 +76,37 @@ public class AlmostFinalTeleOp extends LinearOpMode {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
-        // Initialize the hardware variables. Note that the strings used here as parameters
-        // to 'get' must correspond to the names assigned during the robot configuration
-        // step (using the FTC Robot Controller app on the phone).
-        wheelFrontLeft = hardwareMap.get(DcMotor.class, "wheel_front_left");
-        wheelFrontRight = hardwareMap.get(DcMotor.class, "wheel_front_right");
-        wheelBackLeft = hardwareMap.get(DcMotor.class, "wheel_back_left");
-        wheelBackRight = hardwareMap.get(DcMotor.class, "wheel_back_right");
+        this.bot = new TeamRobot(hardwareMap);
 
-        conveyor = hardwareMap.get(DcMotor.class, "conveyor");
+        bot.init();
+
         grabber = hardwareMap.get(DcMotor.class, "grabber");
-        intake = hardwareMap.get(DcMotor.class, "intake");
         flywheel = hardwareMap.get(DcMotor.class, "flywheel");
 
         wobble_goal_grabber = hardwareMap.get(Servo.class, "wobble_goal_grabber");
         pusher = hardwareMap.get(Servo.class, "pusher");
-        stabilizer = hardwareMap.get(Servo.class, "stabilizer");
 
-        // Most robots need the motor on one side to be reversed to drive forward
-        // Reverse the motor that runs backwards when connected directly to the battery
-        conveyor.setDirection(DcMotor.Direction.FORWARD);
-        intake.setDirection(DcMotor.Direction.FORWARD);
+
         flywheel.setDirection(DcMotor.Direction.REVERSE);
         grabber.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        wheelFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        wheelBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        wheelFrontRight.setDirection(DcMotorSimple.Direction.FORWARD);
-        wheelBackRight.setDirection(DcMotorSimple.Direction.FORWARD);
-
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            double lx = gamepad1.left_stick_x;
-            double ly = gamepad1.left_stick_y;
-            double rx = gamepad1.right_stick_x;
-
-            double wheelFrontRightPower = turbo * (-lx - rx - ly);
-            double wheelBackRightPower = turbo * (lx - rx - ly);
-            double wheelFrontLeftPower = turbo * (lx + rx - ly);
-            double wheelBackLeftPower = turbo * (-lx + rx - ly);
+            if (gamepad1.left_bumper) {
+                bot.flipPace();
+            }
+            //Update turbo speed by dpad
+            if (gamepad1.dpad_up) {
+                bot.updateTurbo(true);
+            }
+            else if (gamepad1.dpad_down) {
+                bot.updateTurbo(false);
+            }
+            //Strafe drive
+            bot.strafe(gamepad1);
 
             double grabberpower;
 
@@ -135,50 +120,40 @@ public class AlmostFinalTeleOp extends LinearOpMode {
                 grabberpower = 0;
             }
 
-            double intakePower = 0.00;
-            double conveyorPower = 0.00;
             double flywheelpower = 0.00;
 
-            if (gamepad1.left_bumper) {
+            if (gamepad2.left_bumper) {
                 nextPusher++;
                 if(nextPusher % 2 == 0){
                     pusher.setPosition(1);
                 } else {
                     pusher.setPosition(0);
                 }
-                TimeUnit.MILLISECONDS.sleep(500);
             }
-            if (gamepad2.a) {
+            if (gamepad2.right_bumper) {
                 nextwobble_goal_grabber++;
                 if(nextwobble_goal_grabber % 2 == 0){
                     wobble_goal_grabber.setPosition(1);
                 } else {
                     wobble_goal_grabber.setPosition(0);
                 }
-                TimeUnit.MILLISECONDS.sleep(500);
             }
-            if (gamepad2.right_bumper) {
-                nextStabilizer++;
-                if(nextStabilizer % 2 == 0){
-                    stabilizer.setPosition(1);
-                } else {
-                    stabilizer.setPosition(0);
-                }
-                TimeUnit.MILLISECONDS.sleep(500);
+            if (gamepad1.left_bumper) {
+                bot.stabilize();
             }
 
-            if (gamepad1.dpad_up) {
-                intakePower = 1.00;
-                conveyorPower = 1.00;
+            //Intake
+            if (gamepad1.dpad_right) {
+                bot.intake();
             }
-            else if (gamepad1.dpad_down) {
-                intakePower = -1.00;
-                conveyorPower = -1.00;
+            else if (gamepad1.dpad_left) {
+                bot.outtake();
             }
             else {
-                intakePower = 0.00;
-                conveyorPower = 0.00;
+                bot.stoptake();
             }
+
+
             if (gamepad2.y) {
                 flywheelpower = 1.00;
             }
@@ -188,13 +163,7 @@ public class AlmostFinalTeleOp extends LinearOpMode {
             else {
                 flywheelpower = 0.00;
             }
-            wheelFrontLeft.setPower(wheelFrontLeftPower);
-            wheelFrontRight.setPower(wheelFrontRightPower);
-            wheelBackLeft.setPower(wheelBackLeftPower);
-            wheelBackRight.setPower(wheelBackRightPower);
 
-            intake.setPower(intakePower);
-            conveyor.setPower(conveyorPower);
             flywheel.setPower(flywheelpower);
             grabber.setPower(grabberpower);
         }
