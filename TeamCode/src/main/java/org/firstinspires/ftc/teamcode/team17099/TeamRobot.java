@@ -157,13 +157,21 @@ public class TeamRobot {
         TimeUnit.MILLISECONDS.sleep(1500);
         stabilizer.setPosition(1);
     }
-    //pushing the ring into the launcher
+
+    /**
+     * pushing the ring into the launcher
+     *
+     * @throws InterruptedException
+     */
     public void pushRing() throws InterruptedException {
         pusher.setPosition(1);
         TimeUnit.MILLISECONDS.sleep(500);
         pusher.setPosition(0);
     }
-    //hold the wobble goal in place
+
+    /**
+     * hold the wobble goal in place
+     */
     public void flipGrabber() throws InterruptedException {
         if (isHeld) {
             grabber.setPosition(1);
@@ -174,7 +182,10 @@ public class TeamRobot {
         isHeld = !isHeld;
         TimeUnit.MILLISECONDS.sleep(500);
     }
-    //lifting the arm that will hold the wobble goal so that it can clear the perimeter
+
+    /**
+     * lifting the arm that will hold the wobble goal so that it can clear the perimeter
+     */
     public void liftArm() {
         arm.setPower(1);
     }
@@ -184,7 +195,9 @@ public class TeamRobot {
     public void stopArm() {
         arm.setPower(0);
     }
-    //flywheel for launcher
+    /**
+     * flywheel for launcher
+     */
     public void startFlywheel() {
         flywheel.setPower(1.00);
     }
