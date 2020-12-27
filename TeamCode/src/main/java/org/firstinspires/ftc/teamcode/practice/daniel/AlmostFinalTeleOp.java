@@ -53,7 +53,7 @@ import java.util.concurrent.TimeUnit;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="AlmostFinalTeleOp", group="Linear Opmode")
+@TeleOp(name="Daniel: AlmostFinalTeleOp", group="Daniel's Teleops")
 //@Disabled
 public class AlmostFinalTeleOp extends LinearOpMode {
 

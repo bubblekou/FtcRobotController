@@ -35,7 +35,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp(name="MecanumDrivetrain", group = "Daniel's Teleops")
+@TeleOp(name="Daniel: MecanumDrivetrain", group = "Daniel's Teleops")
 public class MecanumDrivetrain extends LinearOpMode {
     public DcMotor wheelFrontLeft = null;
     public DcMotor wheelFrontRight = null;

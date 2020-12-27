@@ -47,7 +47,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="RingMotion", group="Daniel's Teleops")
+@TeleOp(name="Daniel: RingMotion", group="Daniel's Teleops")
 //@Disabled
 public class RingMotion extends LinearOpMode {
 

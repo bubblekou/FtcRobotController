@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.team17099;/* Copyright (c) 2017 FIRST. All rights reserved.
+/* Copyright (c) 2017 FIRST. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted (subject to the limitations in the disclaimer below) provided that
@@ -27,6 +27,8 @@ package org.firstinspires.ftc.teamcode.team17099;/* Copyright (c) 2017 FIRST. Al
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+package org.firstinspires.ftc.teamcode.team17099;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -44,9 +46,8 @@ import com.qualcomm.robotcore.hardware.Servo;
  * This is includes 2 gamepads. It also has more functions that are used in TeamRobot that are essential to this.
  */
 
-@TeleOp(name="ManualTeleop", group="Team's Teleops")
+@TeleOp(name="17099: Manual", group="Team's Teleops")
 public class ManualTeleop extends LinearOpMode {
-
     private TeamRobot bot;
 
     @Override
