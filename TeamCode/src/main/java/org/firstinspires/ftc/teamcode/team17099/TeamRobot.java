@@ -8,6 +8,10 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import java.util.concurrent.TimeUnit;
 
+/**
+ * This is our team robot, with all the functions necessary to run the Teleop in ManualTeleop.
+ */
+
 public class TeamRobot {
     private HardwareMap hardwareMap;
     // Mecanum dirvetrain. Grabber is in the front
@@ -99,7 +103,7 @@ public class TeamRobot {
     }
 
     /**
-     * Strafe TileRunner
+     * Tilerunner strafing, driving, and turning
      *
      * @param gamepad Gamepad
      */
@@ -153,13 +157,13 @@ public class TeamRobot {
         TimeUnit.MILLISECONDS.sleep(1500);
         stabilizer.setPosition(1);
     }
-
+    //pushing the ring into the launcher
     public void pushRing() throws InterruptedException {
         pusher.setPosition(1);
         TimeUnit.MILLISECONDS.sleep(500);
         pusher.setPosition(0);
     }
-
+    //hold the wobble goal in place
     public void flipGrabber() throws InterruptedException {
         if (isHeld) {
             grabber.setPosition(1);
@@ -170,7 +174,7 @@ public class TeamRobot {
         isHeld = !isHeld;
         TimeUnit.MILLISECONDS.sleep(500);
     }
-
+    //lifting the arm that will hold the wobble goal so that it can clear the perimeter
     public void liftArm() {
         arm.setPower(1);
     }
@@ -180,6 +184,7 @@ public class TeamRobot {
     public void stopArm() {
         arm.setPower(0);
     }
+    //flywheel for launcher
     public void startFlywheel() {
         flywheel.setPower(1.00);
     }

@@ -35,13 +35,13 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 
 /**
- * This file is Nah Robotic's teleop with:
+ * This file is Nah Robotic's teleop. It is an advanced robot TeleOp with:
  * 1. mecanum wheel drivetrain
  * 2. an arm which can grab the wobble goal
  * 3. an intake system
  * 4. A launcher system
  *
- * This is includes 2 gamepads
+ * This is includes 2 gamepads. It also has more functions that are used in TeamRobot that are essential to this.
  */
 
 @TeleOp(name="ManualTeleop", group="Team's Teleops")
@@ -54,6 +54,7 @@ public class ManualTeleop extends LinearOpMode {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
+        //import the team bot so we have access to all the stuff in it.
         this.bot = new TeamRobot(hardwareMap);
 
         // Wait for the game to start (driver presses PLAY)
@@ -61,10 +62,10 @@ public class ManualTeleop extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
+            //Update turbo speed by dpad
             if (gamepad1.left_bumper) {
                 bot.flipPace();
             }
-            //Update turbo speed by dpad
             if (gamepad1.dpad_up) {
                 bot.updateTurbo(true);
             }
