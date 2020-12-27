@@ -35,16 +35,13 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 
 /**
- * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
- * the autonomous or the teleop period of an FTC match. The names of OpModes appear on the menu
- * of the FTC Driver Station. When an selection is made from the menu, the corresponding OpMode
- * class is instantiated on the Robot Controller and executed.
+ * This file is Nah Robotic's teleop with:
+ * 1. mecanum wheel drivetrain
+ * 2. an arm which can grab the wobble goal
+ * 3. an intake system
+ * 4. A launcher system
  *
- * This particular OpMode just executes a basic Tank Drive Teleop for a two wheeled robot
- * It includes all the skeletal structure that all linear OpModes contain.
- *
- * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
+ * This is includes 2 gamepads
  */
 
 @TeleOp(name="ManualTeleop", group="Team's Teleops")
@@ -52,32 +49,12 @@ public class ManualTeleop extends LinearOpMode {
 
     private TeamRobot bot;
 
-    public Servo grabber = null;
-    public Servo pusher = null;
-
-    public DcMotor flywheel = null;
-    public DcMotor arm = null;
-
-    private int nextPusher = 0;
-
     @Override
     public void runOpMode() throws InterruptedException {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
         this.bot = new TeamRobot(hardwareMap);
-
-        bot.init();
-
-        arm = hardwareMap.get(DcMotor.class, "arm");
-        flywheel = hardwareMap.get(DcMotor.class, "flywheel");
-
-        grabber = hardwareMap.get(Servo.class, "grabber");
-        pusher = hardwareMap.get(Servo.class, "pusher");
-
-
-        flywheel.setDirection(DcMotor.Direction.REVERSE);
-        arm.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
