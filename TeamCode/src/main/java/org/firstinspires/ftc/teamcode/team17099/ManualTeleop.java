@@ -31,9 +31,6 @@ package org.firstinspires.ftc.teamcode.team17099;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
 
 
 /**
@@ -77,10 +74,10 @@ public class ManualTeleop extends LinearOpMode {
             bot.strafe(gamepad1);
 
             //Intake
-            if (gamepad1.dpad_right) {
+            if (gamepad2.dpad_right) {
                 bot.inTake();
             }
-            else if (gamepad1.dpad_left) {
+            else if (gamepad2.dpad_left) {
                 bot.outTake();
             }
             else {

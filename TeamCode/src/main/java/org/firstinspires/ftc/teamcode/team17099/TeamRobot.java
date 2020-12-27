@@ -96,7 +96,7 @@ public class TeamRobot {
     public void updateTurbo(boolean increasing) {
         double pace = isFastPace ? fastPace : slowPace;
         if (increasing) {
-            turbo = Math.min(1, turbo + pace);
+            turbo = Math.min(0.5, turbo + pace);
         } else {
             turbo = Math.max(0.1, turbo - pace);
         }

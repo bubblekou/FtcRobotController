@@ -54,7 +54,6 @@ import java.util.concurrent.TimeUnit;
  */
 
 @TeleOp(name="Daniel: AlmostFinalTeleOp", group="Daniel's Teleops")
-//@Disabled
 public class AlmostFinalTeleOp extends LinearOpMode {
 
     private TeamRobot bot;
