@@ -155,9 +155,9 @@ public class TeamRobot {
     }
 
     public void pushRing() throws InterruptedException {
-        pusher.setPosition(0);
-        TimeUnit.MILLISECONDS.sleep(500);
         pusher.setPosition(1);
+        TimeUnit.MILLISECONDS.sleep(500);
+        pusher.setPosition(0);
     }
 
     public void flipGrabber() throws InterruptedException {

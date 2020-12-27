@@ -47,18 +47,17 @@ import com.qualcomm.robotcore.hardware.Servo;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Manual", group="Team's Teleops")
+@TeleOp(name="ManualTeleop", group="Team's Teleops")
 public class ManualTeleop extends LinearOpMode {
 
     private TeamRobot bot;
 
-    public Servo wobble_goal_grabber = null;
+    public Servo grabber = null;
     public Servo pusher = null;
 
     public DcMotor flywheel = null;
-    public DcMotor grabber = null;
+    public DcMotor arm = null;
 
-    private int nextwobble_goal_grabber = 0;
     private int nextPusher = 0;
 
     @Override
@@ -70,15 +69,15 @@ public class ManualTeleop extends LinearOpMode {
 
         bot.init();
 
-        grabber = hardwareMap.get(DcMotor.class, "grabber");
+        arm = hardwareMap.get(DcMotor.class, "arm");
         flywheel = hardwareMap.get(DcMotor.class, "flywheel");
 
-        wobble_goal_grabber = hardwareMap.get(Servo.class, "wobble_goal_grabber");
+        grabber = hardwareMap.get(Servo.class, "grabber");
         pusher = hardwareMap.get(Servo.class, "pusher");
 
 
         flywheel.setDirection(DcMotor.Direction.REVERSE);
-        grabber.setDirection(DcMotorSimple.Direction.REVERSE);
+        arm.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
