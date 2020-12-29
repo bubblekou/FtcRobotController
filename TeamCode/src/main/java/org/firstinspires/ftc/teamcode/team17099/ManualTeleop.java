@@ -32,6 +32,8 @@ package org.firstinspires.ftc.teamcode.team17099;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import java.util.concurrent.TimeUnit;
+
 
 /**
  * This file is Nah Robotic's teleop. It is an advanced robot TeleOp with:
@@ -54,6 +56,8 @@ public class ManualTeleop extends LinearOpMode {
 
         //import the team bot so we have access to all the stuff in it.
         this.bot = new TeamRobot(hardwareMap);
+        boolean far = true;
+        boolean opened = false;
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -85,11 +89,30 @@ public class ManualTeleop extends LinearOpMode {
             }
             //stabilize the ring so it lies flat in the magazine
             if (gamepad1.right_bumper) {
-                bot.stabilizeRing();
+                if (opened){
+                    bot.closeStabilize();
+                    opened = false;
+                }else{
+                    bot.openStabilize();
+                    opened = true;
+                }
+                TimeUnit.MILLISECONDS.sleep(200);
             }
             //launching system
+            if(gamepad2.b) {
+                if (far){
+                    far = false;
+                }else{
+                    far = true;
+                }
+                TimeUnit.MILLISECONDS.sleep(500);
+            }
             if (gamepad2.y) {
-                bot.startFlywheel();
+                if (far) {
+                    bot.startHighFlywheel();
+                }else{
+                    bot.startLowFlywheel();
+                }
             }
             else {
                 bot.stopFlywheel();

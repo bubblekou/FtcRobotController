@@ -157,6 +157,12 @@ public class TeamRobot {
         TimeUnit.MILLISECONDS.sleep(1500);
         stabilizer.setPosition(1);
     }
+    public void openStabilize() throws InterruptedException {
+        stabilizer.setPosition(0);
+    }
+    public void closeStabilize() throws InterruptedException {
+        stabilizer.setPosition(1);
+    }
 
     /**
      * pushing the ring into the launcher
@@ -165,7 +171,7 @@ public class TeamRobot {
      */
     public void pushRing() throws InterruptedException {
         pusher.setPosition(1);
-        TimeUnit.MILLISECONDS.sleep(500);
+        TimeUnit.MILLISECONDS.sleep(300);
         pusher.setPosition(0);
     }
 
@@ -198,8 +204,11 @@ public class TeamRobot {
     /**
      * flywheel for launcher
      */
-    public void startFlywheel() {
-        flywheel.setPower(1.00);
+    public void startLowFlywheel() {
+        flywheel.setPower(0.7);
+    }
+    public void startHighFlywheel() {
+        flywheel.setPower(1);
     }
     public void stopFlywheel() {
         flywheel.setPower(0);
