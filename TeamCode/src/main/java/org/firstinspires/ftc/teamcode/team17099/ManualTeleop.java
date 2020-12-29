@@ -65,9 +65,6 @@ public class ManualTeleop extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             //Update turbo speed by dpad
-            if (gamepad1.left_bumper) {
-                bot.flipPace();
-            }
             if (gamepad1.dpad_up) {
                 bot.updateTurbo(true);
             }
@@ -114,6 +111,9 @@ public class ManualTeleop extends LinearOpMode {
                     bot.startLowFlywheel();
                 }
             }
+            else if (gamepad2.x) {
+                bot.shootPowerShot();
+            }
             else {
                 bot.stopFlywheel();
             }
@@ -134,6 +134,9 @@ public class ManualTeleop extends LinearOpMode {
             if (gamepad2.right_bumper) {
                 bot.flipGrabber();
             }
+            telemetry.addData("lx: ", + bot.lx);
+            telemetry.addData("rx: ", + bot.rx);
+            telemetry.update();
         }
     }
 }
