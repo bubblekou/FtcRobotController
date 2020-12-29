@@ -20,12 +20,27 @@ public class TeamRobot {
     private DcMotor wheelBackLeft = null;
     private DcMotor wheelBackRight = null;
 
+    public double lx;
+    public double rx;
+    public double ly;
+
+    public static final double HD_HEX_COUNTS_PER_ROTATION = 1120; //  Rev HD Hex motor
+    public static final double HD_UltraPlanetary_COUNTS_PER_ROTATION = 1120; //  Rev HD Hex motor
+    public static final double CORE_HEX_COUNTS_PER_ROTATION = 288; //  Rev Core Hex motor
+
+    public static final double DRIVE_GEAR_REDUCTION = 1.29;     // This is < 1.0 if geared UP
+    public static final double WHEEL_DIAMETER_INCHES = 4;     // 4in Andymark HD Mecanum Wheels
+    public static final double CORE_HEX_COUNTS_PER_INCH =
+            (CORE_HEX_COUNTS_PER_ROTATION * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415);
+
+    private static final double HEADING_THRESHOLD = 1;      // As tight as we can make it with an integer gyro
+    private static final double P_TURN_COEFF = 0.1;     // Larger is more responsive, but also less stable
+    private static final double P_DRIVE_COEFF = 0.075;     // Larger is more responsive, but also less stable
+
     // Macanum drive speed control with turbo between 0.1 and 1.0, there are face and slow paces
     // for turbo adjustment
     private double turbo = 0.5;
-    private double fastPace = 0.2;
-    private double slowPace = 0.1;
-    private boolean isFastPace = true;
+    private double pace = 0.2;
 
     // Intake system
     private DcMotor intake = null;
@@ -81,22 +96,14 @@ public class TeamRobot {
     }
 
     /**
-     * Update turbo change pace between slow and fast alternatively
-     */
-    public void flipPace() {
-        this.isFastPace = !isFastPace;
-    }
-
-    /**
      * Increases or decrease drive train turbo. Use higher turbo for fast speed and slower turbo
      * for better maneuver
      *
      * @param increasing
      */
     public void updateTurbo(boolean increasing) {
-        double pace = isFastPace ? fastPace : slowPace;
         if (increasing) {
-            turbo = Math.min(0.5, turbo + pace);
+            turbo = Math.min(0.75, turbo + pace);
         } else {
             turbo = Math.max(0.1, turbo - pace);
         }
@@ -108,9 +115,9 @@ public class TeamRobot {
      * @param gamepad Gamepad
      */
     public void strafe(Gamepad gamepad) {
-        double lx = gamepad.left_stick_x;
-        double ly = gamepad.left_stick_y;
-        double rx = gamepad.right_stick_x;
+        lx = gamepad.left_stick_x;
+        ly = gamepad.left_stick_y;
+        rx = gamepad.right_stick_x;
 
         double wheelFrontRightPower = turbo * (-lx - rx - ly);
         double wheelBackRightPower = turbo * (lx - rx - ly);
@@ -204,4 +211,5 @@ public class TeamRobot {
     public void stopFlywheel() {
         flywheel.setPower(0);
     }
+    public void shootPowerShot() { flywheel.setPower(0.75);}
 }
