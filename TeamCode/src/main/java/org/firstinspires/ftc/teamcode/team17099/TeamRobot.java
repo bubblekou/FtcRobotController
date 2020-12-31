@@ -143,12 +143,13 @@ public class TeamRobot {
         wheelBackRight.setPower(0);
 
     }
-    //positive angle turns left
-    public void turn(int angle) throws InterruptedException{
-        wheelFrontLeft.setPower(-1.5);
-        wheelFrontRight.setPower(1.5);
-        wheelBackLeft.setPower(-1.5);
-        wheelBackRight.setPower(1.5);
+    //turns the robot
+    //note: angle is not the actual angle it turns
+    public void turn(int angle, int direction) throws InterruptedException{
+        wheelFrontLeft.setPower(-1.5 * direction);
+        wheelFrontRight.setPower(1.5  * direction);
+        wheelBackLeft.setPower(-1.5  * direction);
+        wheelBackRight.setPower(1.5  * direction);
 
         TimeUnit.MILLISECONDS.sleep(10 * angle);
 
@@ -252,4 +253,8 @@ public class TeamRobot {
         flywheel.setPower(0);
     }
     public void shootPowerShot() { flywheel.setPower(0.75);}
+
+    public void shootFarRing() {
+        flywheel.setPower(0.8);
+    }
 }

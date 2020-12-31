@@ -94,9 +94,7 @@ public class AlmostFinalTeleOp extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            if (gamepad1.left_bumper) {
-                bot.flipPace();
-            }
+            
             //Update turbo speed by dpad
             if (gamepad1.dpad_up) {
                 bot.updateTurbo(true);
