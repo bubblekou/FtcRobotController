@@ -86,15 +86,9 @@ public class ManualTeleop extends LinearOpMode {
             }
             //stabilize the ring so it lies flat in the magazine
             if (gamepad1.right_bumper) {
-                if (opened){
-                    bot.closeStabilize();
-                    opened = false;
-                }else{
-                    bot.openStabilize();
-                    opened = true;
-                }
-                TimeUnit.MILLISECONDS.sleep(200);
+                bot.stabilizeRing();
             }
+
             //launching system
             if(gamepad2.b) {
                 if (far){

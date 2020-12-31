@@ -119,15 +119,44 @@ public class TeamRobot {
         ly = gamepad.left_stick_y;
         rx = gamepad.right_stick_x;
 
-        double wheelFrontRightPower = turbo * (-lx - rx - ly);
-        double wheelBackRightPower = turbo * (lx - rx - ly);
-        double wheelFrontLeftPower = turbo * (lx + rx - ly);
-        double wheelBackLeftPower = turbo * (-lx + rx - ly);
+        double wheelFrontRightPower = 1.2 * turbo * (-lx - rx - ly);
+        double wheelBackRightPower = 1.2 * turbo * (lx - rx - ly);
+        double wheelFrontLeftPower = 1.2 * turbo * (lx + rx - ly);
+        double wheelBackLeftPower = 1.2 * turbo * (-lx + rx - ly);
 
         wheelFrontLeft.setPower(wheelFrontLeftPower);
         wheelFrontRight.setPower(wheelFrontRightPower);
         wheelBackLeft.setPower(wheelBackLeftPower);
         wheelBackRight.setPower(wheelBackRightPower);
+    }
+    public void move(int distance, int scale) throws InterruptedException{
+        wheelFrontLeft.setPower(scale * 1.5);
+        wheelFrontRight.setPower(scale *1.5);
+        wheelBackLeft.setPower(scale *1.5);
+        wheelBackRight.setPower(scale *1.5);
+
+        TimeUnit.MILLISECONDS.sleep(10 * distance);
+
+        wheelFrontLeft.setPower(0);
+        wheelFrontRight.setPower(0);
+        wheelBackLeft.setPower(0);
+        wheelBackRight.setPower(0);
+
+    }
+    //positive angle turns left
+    public void turn(int angle) throws InterruptedException{
+        wheelFrontLeft.setPower(-1.5);
+        wheelFrontRight.setPower(1.5);
+        wheelBackLeft.setPower(-1.5);
+        wheelBackRight.setPower(1.5);
+
+        TimeUnit.MILLISECONDS.sleep(10 * angle);
+
+        wheelFrontLeft.setPower(0);
+        wheelFrontRight.setPower(0);
+        wheelBackLeft.setPower(0);
+        wheelBackRight.setPower(0);
+
     }
 
     /**
@@ -161,15 +190,17 @@ public class TeamRobot {
      */
     public void stabilizeRing() throws InterruptedException {
         stabilizer.setPosition(0);
-        TimeUnit.MILLISECONDS.sleep(1500);
+        TimeUnit.MILLISECONDS.sleep(250);
         stabilizer.setPosition(1);
     }
+    /*
     public void openStabilize() throws InterruptedException {
         stabilizer.setPosition(0);
     }
     public void closeStabilize() throws InterruptedException {
         stabilizer.setPosition(1);
     }
+     */
 
     /**
      * pushing the ring into the launcher
@@ -193,17 +224,17 @@ public class TeamRobot {
             grabber.setPosition(0);
         }
         isHeld = !isHeld;
-        TimeUnit.MILLISECONDS.sleep(500);
+        TimeUnit.MILLISECONDS.sleep(300);
     }
 
     /**
      * lifting the arm that will hold the wobble goal so that it can clear the perimeter
      */
     public void liftArm() {
-        arm.setPower(1);
+        arm.setPower(0.3);
     }
     public void dropArm() {
-        arm.setPower(-1);
+        arm.setPower(-0.3);
     }
     public void stopArm() {
         arm.setPower(0);
