@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.practice;
+package org.firstinspires.ftc.teamcode.practice.daniel;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -50,14 +50,11 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Example: Motor OpMode", group="Example Teleops")
+@TeleOp(name="Daniel: Conveyor", group="Daniel's Teleops")
 //@Disabled
-public class FirstMotorOpMode extends LinearOpMode {
+public class Conveyor extends LinearOpMode {
 
-    // Declare OpMode members.
-    private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor motorDrive = null;
-    private String motorName = "first_motor";
+    private DcMotor conveyor = null;
 
     @Override
     public void runOpMode() {
@@ -67,37 +64,37 @@ public class FirstMotorOpMode extends LinearOpMode {
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
-        motorDrive = hardwareMap.get(DcMotor.class, motorName);
+        conveyor  = hardwareMap.get(DcMotor.class, "conveyor");
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
-        motorDrive.setDirection(DcMotor.Direction.FORWARD);
+        conveyor.setDirection(DcMotor.Direction.FORWARD);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
-        runtime.reset();
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
             // Setup a variable for each drive wheel to save power level for telemetry
-            double motorPower;
 
+            //if x is pressed the robot's speed will change
             // Choose to drive using either Tank Mode, or POV Mode
             // Comment out the method that's not used.  The default below is POV.
 
             // POV Mode uses left stick to go forward, and right stick to turn.
             // - This uses basic math to combine motions and is easier to drive straight.
-            double drive = gamepad1.left_stick_y;
-            motorPower    = Range.clip(drive, -1.0, 1.0) ;
+            double conveyorPower;
+            if (gamepad1.x) {
+                conveyorPower = 1.00;
+            }
+            else {
+                conveyorPower = 0.00;
+            }
 
-            // Send power to wheels
-            motorDrive.setPower(motorPower);
 
-            // Show the elapsed game time and wheel power.
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData(motorName, "Power (%.2f)", motorPower);
-            telemetry.update();
+            // Send calculated power to wheels
+            conveyor.setPower(conveyorPower);
         }
     }
 }

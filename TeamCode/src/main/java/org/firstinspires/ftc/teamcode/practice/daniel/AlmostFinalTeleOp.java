@@ -27,14 +27,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.team17099;
+package org.firstinspires.ftc.teamcode.practice.daniel;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
+import com.qualcomm.robotcore.hardware.Servo;
+
+import org.firstinspires.ftc.teamcode.team17099.TeamRobot;
+
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -50,48 +53,118 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="17099: Intake", group="Team's Teleops")
-public class IntakeTest extends LinearOpMode {
+@TeleOp(name="Daniel: AlmostFinalTeleOp", group="Daniel's Teleops")
+public class AlmostFinalTeleOp extends LinearOpMode {
 
-    // Declare OpMode members.
-    private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor intake = null;
+    private TeamRobot bot;
+
+    public Servo wobble_goal_grabber = null;
+    public Servo pusher = null;
+
+    public DcMotor flywheel = null;
+    public DcMotor grabber = null;
+
+    public double turbo = 0.5;
+
+    private int nextwobble_goal_grabber = 0;
+    private int nextStabilizer = 0;
+    private int nextPusher = 0;
 
     @Override
-    public void runOpMode() {
+    public void runOpMode() throws InterruptedException {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
-        // Initialize the hardware variables. Note that the strings used here as parameters
-        // to 'get' must correspond to the names assigned during the robot configuration
-        // step (using the FTC Robot Controller app on the phone).
-        intake  = hardwareMap.get(DcMotor.class, "intake");
+        this.bot = new TeamRobot(hardwareMap);
 
-        // Most robots need the motor on one side to be reversed to drive forward
-        // Reverse the motor that runs backwards when connected directly to the battery
-        intake.setDirection(DcMotor.Direction.REVERSE);
+        bot.init();
+
+        grabber = hardwareMap.get(DcMotor.class, "grabber");
+        flywheel = hardwareMap.get(DcMotor.class, "flywheel");
+
+        wobble_goal_grabber = hardwareMap.get(Servo.class, "wobble_goal_grabber");
+        pusher = hardwareMap.get(Servo.class, "pusher");
+
+
+        flywheel.setDirection(DcMotor.Direction.REVERSE);
+        grabber.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
-        runtime.reset();
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            int power = 0;
+            
+            //Update turbo speed by dpad
             if (gamepad1.dpad_up) {
-                power=1;
+                bot.updateTurbo(true);
             }
             else if (gamepad1.dpad_down) {
-                power=-1;
+                bot.updateTurbo(false);
+            }
+            //Strafe drive
+            bot.strafe(gamepad1);
+
+            double grabberpower;
+
+            if (gamepad2.dpad_down) {
+                grabberpower = 1;
+            }
+            else if (gamepad2.dpad_up) {
+                grabberpower = -1;
             }
             else {
-                power = 0;
+                grabberpower = 0;
             }
-            intake.setPower(power);
 
-            // Show the elapsed game time and wheel power.
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.update();
+            double flywheelpower = 0.00;
+
+            if (gamepad2.left_bumper) {
+                nextPusher++;
+                if(nextPusher % 2 == 0){
+                    pusher.setPosition(1);
+                } else {
+                    pusher.setPosition(0);
+                }
+                TimeUnit.MILLISECONDS.sleep(500);
+            }
+            if (gamepad2.right_bumper) {
+                nextwobble_goal_grabber++;
+                if(nextwobble_goal_grabber % 2 == 0){
+                    wobble_goal_grabber.setPosition(1);
+                } else {
+                    wobble_goal_grabber.setPosition(0);
+                }
+                TimeUnit.MILLISECONDS.sleep(500);
+            }
+            if (gamepad1.right_bumper) {
+                bot.stabilizeRing();
+            }
+
+            //Intake
+            if (gamepad1.dpad_right) {
+                bot.inTake();
+            }
+            else if (gamepad1.dpad_left) {
+                bot.outTake();
+            }
+            else {
+                bot.stopTaking();
+            }
+
+
+            if (gamepad2.y) {
+                flywheelpower = 1.00;
+            }
+            else if (gamepad2.x) {
+                flywheelpower = -1.00;
+            }
+            else {
+                flywheelpower = 0.00;
+            }
+
+            flywheel.setPower(flywheelpower);
+            grabber.setPower(grabberpower);
         }
     }
 }
