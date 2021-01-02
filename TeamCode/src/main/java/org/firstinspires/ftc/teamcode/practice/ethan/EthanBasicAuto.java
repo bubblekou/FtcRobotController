@@ -58,15 +58,28 @@ public class EthanBasicAuto extends LinearOpMode {
         bot.move(75,-1);
         bot.turn(42, -1);
 
+        TimeUnit.MILLISECONDS.sleep(1000);
+
         bot.shootFarRing();
+        TimeUnit.MILLISECONDS.sleep(1000);
+
         bot.pushRing();
+        TimeUnit.MILLISECONDS.sleep(1000);
 
         bot.turn(2, -1);
+        TimeUnit.MILLISECONDS.sleep(1000);
         bot.pushRing();
+        TimeUnit.MILLISECONDS.sleep(1000);
+
 
         bot.turn(2, -1);
+        TimeUnit.MILLISECONDS.sleep(1000);
         bot.pushRing();
+        TimeUnit.MILLISECONDS.sleep(1000);
+
 
         bot.stopFlywheel();
+
+
     }
 }

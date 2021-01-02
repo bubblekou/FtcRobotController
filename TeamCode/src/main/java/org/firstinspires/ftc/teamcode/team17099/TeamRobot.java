@@ -194,6 +194,12 @@ public class TeamRobot {
         TimeUnit.MILLISECONDS.sleep(250);
         stabilizer.setPosition(1);
     }
+    public void sweep() {
+        stabilizer.setPosition(0);
+    }
+    public void stopSweep() {
+        stabilizer.setPosition(1);
+    }
     /*
     public void openStabilize() throws InterruptedException {
         stabilizer.setPosition(0);
@@ -232,10 +238,10 @@ public class TeamRobot {
      * lifting the arm that will hold the wobble goal so that it can clear the perimeter
      */
     public void liftArm() {
-        arm.setPower(0.3);
+        arm.setPower(0.7);
     }
     public void dropArm() {
-        arm.setPower(-0.3);
+        arm.setPower(-0.7);
     }
     public void stopArm() {
         arm.setPower(0);
@@ -244,7 +250,7 @@ public class TeamRobot {
      * flywheel for launcher
      */
     public void startLowFlywheel() {
-        flywheel.setPower(0.7);
+        flywheel.setPower(0.75);
     }
     public void startHighFlywheel() {
         flywheel.setPower(1);
@@ -252,7 +258,7 @@ public class TeamRobot {
     public void stopFlywheel() {
         flywheel.setPower(0);
     }
-    public void shootPowerShot() { flywheel.setPower(0.75);}
+    //public void shootPowerShot() { flywheel.setPower(0.75);}
 
     public void shootFarRing() {
         flywheel.setPower(0.8);
