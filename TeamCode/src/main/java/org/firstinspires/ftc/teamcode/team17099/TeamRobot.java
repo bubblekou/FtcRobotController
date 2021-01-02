@@ -13,7 +13,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.opMode;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
@@ -137,7 +136,6 @@ public class TeamRobot {
      * @param gamepad Gamepad
      */
     public void strafe(Gamepad gamepad) {
-<<<<<<< HEAD
         double r = Math.hypot(gamepad.left_stick_x, gamepad.left_stick_y);
         double robotAngle = Math.atan2(gamepad.left_stick_y, gamepad.left_stick_x) - Math.PI / 4;
         double rightX = gamepad.right_stick_x;
@@ -149,21 +147,6 @@ public class TeamRobot {
         wheelFrontRight.setPower(v2);
         wheelBackRight.setPower(v3);
         wheelFrontRight.setPower(v4);
-=======
-        lx = gamepad.left_stick_x;
-        ly = gamepad.left_stick_y;
-        rx = gamepad.right_stick_x;
-
-        double wheelFrontRightPower = 1.2 * turbo * (-lx - rx - ly);
-        double wheelBackRightPower = 1.2 * turbo * (lx - rx - ly);
-        double wheelFrontLeftPower = 1.2 * turbo * (lx + rx - ly);
-        double wheelBackLeftPower = 1.2 * turbo * (-lx + rx - ly);
-
-        wheelFrontLeft.setPower(wheelFrontLeftPower);
-        wheelFrontRight.setPower(wheelFrontRightPower);
-        wheelBackLeft.setPower(wheelBackLeftPower);
-        wheelBackRight.setPower(wheelBackRightPower);
->>>>>>> 37afdb4e8d5cfb49e7912aa528a00effbca96db1
     }
     public void move(int distance, int scale) throws InterruptedException{
         wheelFrontLeft.setPower(scale * 1.5);
@@ -290,7 +273,6 @@ public class TeamRobot {
     }
     public void shootPowerShot() { flywheel.setPower(0.75);}
 
-<<<<<<< HEAD
     public void gyroTurn(double speed, double angle) {
 
         // keep looping while we are still active, and not on heading.
@@ -565,9 +547,5 @@ public class TeamRobot {
 
     private void forward(double speed) {
         setPower(speed, speed, speed, speed);
-=======
-    public void shootFarRing() {
-        flywheel.setPower(0.8);
->>>>>>> 37afdb4e8d5cfb49e7912aa528a00effbca96db1
     }
 }
