@@ -1,12 +1,23 @@
 package org.firstinspires.ftc.teamcode.team17099;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-
 import java.util.concurrent.TimeUnit;
+import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.opMode;
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
+
 
 /**
  * This is our team robot, with all the functions necessary to run the Teleop in ManualTeleop.
@@ -25,8 +36,9 @@ public class TeamRobot {
     public double ly;
 
     public static final double HD_HEX_COUNTS_PER_ROTATION = 1120; //  Rev HD Hex motor
-    public static final double HD_UltraPlanetary_COUNTS_PER_ROTATION = 1120; //  Rev HD Hex motor
+    public static final double HD_UltraPlanetary_COUNTS_PER_ROTATION = 6000; //  Rev Ultrapanetary Hex motor
     public static final double CORE_HEX_COUNTS_PER_ROTATION = 288; //  Rev Core Hex motor
+    public static final double NERVEREST_20_COUNTS_PER_ROTATION = 340; // Nerverest 20 Motor
 
     public static final double DRIVE_GEAR_REDUCTION = 1.29;     // This is < 1.0 if geared UP
     public static final double WHEEL_DIAMETER_INCHES = 4;     // 4in Andymark HD Mecanum Wheels
@@ -56,6 +68,8 @@ public class TeamRobot {
     private DcMotor arm = null;
     private boolean isHeld = false;
     private Servo grabber = null;
+
+    public BNO055IMU imu;
 
     public TeamRobot(HardwareMap hardwareMap) {
         this.hardwareMap = hardwareMap;
@@ -93,6 +107,14 @@ public class TeamRobot {
         arm.setDirection(DcMotorSimple.Direction.REVERSE);
         grabber = hardwareMap.get(Servo.class, "grabber");
         this.isHeld = grabber.getPosition() == 0;
+
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.mode = BNO055IMU.SensorMode.IMU;
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+
+        imu = hardwareMap.get(BNO055IMU.class, "imu2");
+        imu.initialize(parameters);
     }
 
     /**
@@ -115,19 +137,17 @@ public class TeamRobot {
      * @param gamepad Gamepad
      */
     public void strafe(Gamepad gamepad) {
-        lx = gamepad.left_stick_x;
-        ly = gamepad.left_stick_y;
-        rx = gamepad.right_stick_x;
-
-        double wheelFrontRightPower = turbo * (-lx - rx - ly);
-        double wheelBackRightPower = turbo * (lx - rx - ly);
-        double wheelFrontLeftPower = turbo * (lx + rx - ly);
-        double wheelBackLeftPower = turbo * (-lx + rx - ly);
-
-        wheelFrontLeft.setPower(wheelFrontLeftPower);
-        wheelFrontRight.setPower(wheelFrontRightPower);
-        wheelBackLeft.setPower(wheelBackLeftPower);
-        wheelBackRight.setPower(wheelBackRightPower);
+        double r = Math.hypot(gamepad.left_stick_x, gamepad.left_stick_y);
+        double robotAngle = Math.atan2(gamepad.left_stick_y, gamepad.left_stick_x) - Math.PI / 4;
+        double rightX = gamepad.right_stick_x;
+        final double v1 = r * Math.cos(robotAngle) + rightX;
+        final double v2 = r * Math.sin(robotAngle) - rightX;
+        final double v3 = r * Math.sin(robotAngle) + rightX;
+        final double v4 = r * Math.cos(robotAngle) - rightX;
+        wheelFrontLeft.setPower(v1);
+        wheelFrontRight.setPower(v2);
+        wheelBackRight.setPower(v3);
+        wheelFrontRight.setPower(v4);
     }
 
     /**
@@ -212,4 +232,280 @@ public class TeamRobot {
         flywheel.setPower(0);
     }
     public void shootPowerShot() { flywheel.setPower(0.75);}
+
+    public void gyroTurn(double speed, double angle) {
+
+        // keep looping while we are still active, and not on heading.
+        while (opMode.opModeIsActive() && !onHeading(speed, angle, P_TURN_COEFF)) {
+            // Update telemetry & Allow time for other processes to run.
+            telemetry.update();
+        }
+    }
+
+    public void gyroHold(double speed, double angle, double holdTime) {
+
+        ElapsedTime holdTimer = new ElapsedTime();
+
+        // keep looping while we have time remaining.
+        holdTimer.reset();
+        while (opMode.opModeIsActive() && (holdTimer.time() < holdTime)) {
+            // Update telemetry & Allow time for other processes to run.
+            onHeading(speed, angle, P_TURN_COEFF);
+            telemetry.update();
+        }
+
+        // Stop all motion;
+        wheelBackRight.setPower(0);
+        wheelBackLeft.setPower(0);
+        wheelFrontRight.setPower(0);
+        wheelFrontLeft.setPower(0);
+    }
+
+    boolean onHeading(double speed, double angle, double PCoeff) {
+        double error;
+        double steer;
+        boolean onTarget = false;
+        double leftSpeed;
+        double rightSpeed;
+
+        // determine turn power based on +/- error
+        error = getError(angle);
+
+        if (Math.abs(error) <= HEADING_THRESHOLD) {
+            steer = 0.0;
+            leftSpeed = 0.0;
+            rightSpeed = 0.0;
+            onTarget = true;
+        } else {
+            steer = getSteer(error, PCoeff);
+            rightSpeed = speed * steer;
+            leftSpeed = -rightSpeed;
+        }
+
+        // Send desired speeds to motors.
+        wheelFrontLeft.setPower(leftSpeed);
+        wheelFrontRight.setPower(rightSpeed);
+        wheelBackLeft.setPower(leftSpeed);
+        wheelBackRight.setPower(rightSpeed);
+
+        // Display it for the driver.
+        telemetry.addData("Target", "%5.2f", angle);
+        telemetry.addData("Err/St", "%5.2f/%5.2f", error, steer);
+        telemetry.addData("Speed.", "%5.2f:%5.2f", leftSpeed, rightSpeed);
+
+        return onTarget;
+    }
+
+    public double getError(double targetAngle) {
+        double robotError;
+
+        // calculate error in -179 to +180 range  (
+        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        robotError = targetAngle - angles.firstAngle;
+        while (robotError > 180) robotError -= 360;
+        while (robotError <= -180) robotError += 360;
+        return robotError;
+    }
+
+    public double getSteer(double error, double PCoeff) {
+        return Range.clip(error * PCoeff, -1, 1);
+    }
+
+    public void gyroDrive(double speed, double distance, double angle) {
+        int moveCounts;
+        double max;
+        double error;
+        double steer;
+        double leftSpeed;
+        double rightSpeed;
+
+        // Ensure that the opmode is still active
+        if (opMode.opModeIsActive()) {
+            resetMotors();
+
+            // Determine new target position, and pass to motor controller
+            moveCounts = (int) (distance * NERVEREST_20_COUNTS_PER_ROTATION);
+
+            // Set Target and Turn On RUN_TO_POSITION
+            int frontLeftTarget = wheelFrontLeft.getCurrentPosition()+ moveCounts;
+            int frontRightTarget = wheelFrontRight.getCurrentPosition() + moveCounts;
+            int backLeftTarget = wheelBackLeft.getCurrentPosition() + moveCounts;
+            int backRightTarget = wheelBackRight.getCurrentPosition() + moveCounts;
+
+            runToTarget(frontLeftTarget, frontRightTarget, backLeftTarget, backRightTarget);
+
+            // start motion.
+            speed = Range.clip(Math.abs(speed), 0.0, 1.0);
+            forward(speed);
+
+            // keep looping while we are still active, and BOTH motors are running.
+            while (opMode.opModeIsActive() &&
+                    (isOffTarget(wheelFrontLeft, frontLeftTarget, 10)
+                            && isOffTarget(wheelFrontRight, frontRightTarget, 10)
+                            && isOffTarget(wheelBackLeft, backLeftTarget, 10)
+                            && isOffTarget(wheelBackRight, backRightTarget, 10))) {
+
+                // adjust relative speed based on heading error.
+                error = getError(angle);
+                steer = getSteer(error, P_DRIVE_COEFF);
+
+                // if driving in reverse, the motor correction also needs to be reversed
+                if (distance < 0)
+                    steer *= -1.0;
+
+                leftSpeed = speed - steer;
+                rightSpeed = speed + steer;
+
+                // Normalize speeds if either one exceeds +/- 1.0;
+                max = Math.max(Math.abs(leftSpeed), Math.abs(rightSpeed));
+                if (max > 1.0) {
+                    leftSpeed /= max;
+                    rightSpeed /= max;
+                }
+
+                setPower(leftSpeed, rightSpeed, leftSpeed, rightSpeed);
+
+                // Display drive status for the driver.
+                telemetry.addData("Err/St", "%5.1f/%5.1f", error, steer);
+                telemetry.addData("Target", "%7d:%7d:%7d:%7d",
+                        frontLeftTarget,
+                        frontRightTarget,
+                        backLeftTarget,
+                        backRightTarget);
+                telemetry.addData("Actual", "%7d:%7d:%7d:%7d",
+                        wheelFrontLeft.getCurrentPosition(),
+                        wheelFrontRight.getCurrentPosition(),
+                        wheelBackLeft.getCurrentPosition(),
+                        wheelBackRight.getCurrentPosition());
+                telemetry.addData("Speed", "%5.2f:%5.2f", leftSpeed, rightSpeed);
+                telemetry.update();
+            }
+
+            // Turn off RUN_TO_POSITION
+            resetMotors();
+        }
+    }
+
+    public void gyroStrafeSideway(double speed, double distance, double angle) {
+        int moveCounts;
+        double max;
+        double error;
+        double steer;
+        double frontSpeed;
+        double backSpeed;
+
+        // Ensure that the opmode is still active
+        if (opMode.opModeIsActive()) {
+            resetMotors();
+
+            // Determine new target position, and pass to motor controller
+            moveCounts = (int) Math.abs(distance * NERVEREST_20_COUNTS_PER_ROTATION);
+
+            // Set Target and Turn On RUN_TO_POSITION
+            int sign = distance > 0 ? 1 : -1;
+            int frontLeftTarget = wheelFrontLeft.getCurrentPosition() + sign * moveCounts;
+            int frontRightTarget = wheelFrontRight.getCurrentPosition() - sign * moveCounts;
+            int backLeftTarget = wheelBackLeft.getCurrentPosition() - sign * moveCounts;
+            int backRightTarget = wheelBackRight.getCurrentPosition() + sign * moveCounts;
+
+            runToTarget(frontLeftTarget, frontRightTarget, backLeftTarget, backRightTarget);
+
+            // start motion.
+            speed = Range.clip(Math.abs(speed), 0.0, 1.0);
+            setPower(sign * speed, -sign * speed, -sign * speed,
+                    sign * speed);
+
+            // keep looping while we are still active, and BOTH motors are running.
+            while (opMode.opModeisActive() &&
+                    (isOffTarget(wheelFrontLeft, frontLeftTarget, 10)
+                            && isOffTarget(wheelFrontRight, frontRightTarget, 10)
+                            && isOffTarget(wheelBackLeft, backLeftTarget, 10)
+                            && isOffTarget(wheelBackRight, backRightTarget, 10))) {
+
+                // adjust relative speed based on heading error.
+                error = getError(angle);
+                steer = getSteer(error, P_DRIVE_COEFF);
+
+                // if driving in reverse, the motor correction also needs to be reversed
+                if (distance < 0)
+                    steer *= -1.0;
+
+                frontSpeed = speed - steer;
+                backSpeed = speed + steer;
+
+                // Normalize speeds if either one exceeds +/- 1.0;
+                max = Math.max(Math.abs(frontSpeed), Math.abs(backSpeed));
+                if (max > 1.0) {
+                    frontSpeed /= max;
+                    backSpeed /= max;
+                }
+
+                setPower(sign * frontSpeed, -sign * frontSpeed, -sign * backSpeed, sign * backSpeed);
+
+                // Display drive status for the driver.
+                telemetry.addData("Err/St", "%5.1f/%5.1f", error, steer);
+                telemetry.addData("Target", "%7d:%7d:%7d:%7d",
+                        frontLeftTarget,
+                        frontRightTarget,
+                        backLeftTarget,
+                        backRightTarget);
+                telemetry.addData("Actual", "%7d:%7d:%7d:%7d",
+                        wheelFrontLeft.getCurrentPosition(),
+                        wheelFrontRight.getCurrentPosition(),
+                        wheelBackLeft.getCurrentPosition(),
+                        wheelBackRight.getCurrentPosition());
+                telemetry.addData("Sign", "%d", sign);
+                telemetry.addData("Speed", "%5.2f:%5.2f", frontSpeed, backSpeed);
+                telemetry.update();
+            }
+
+            // Turn off RUN_TO_POSITION
+            resetMotors();
+        }
+    }
+
+    private void runToTarget(int frontLeftTarget, int frontRightTarget, int backLeftTarget, int backRightTarget) {
+        wheelFrontLeft.setTargetPosition(frontLeftTarget);
+        wheelFrontRight.setTargetPosition(frontRightTarget);
+        wheelBackLeft.setTargetPosition(backLeftTarget);
+        wheelBackRight.setTargetPosition(backRightTarget);
+
+        wheelFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        wheelFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        wheelBackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        wheelBackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+
+    private void resetMotors() {
+        setPower(0, 0, 0, 0);
+        wheelFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        wheelFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        wheelBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        wheelBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        wheelFrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        wheelFrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        wheelBackLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        wheelBackRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+    private boolean isOffTarget(DcMotor motor, int target, int tolerance) {
+        return Math.abs(motor.getCurrentPosition() - target) >= tolerance;
+    }
+
+    public void setPower(double frontLeftSpeed, double frontRightSpeed, double backLeftSpeed, double backRightSpeed) {
+        wheelFrontLeft.setPower(frontLeftSpeed);
+        wheelFrontRight.setPower(frontRightSpeed);
+        wheelBackLeft.setPower(backLeftSpeed);
+        wheelBackRight.setPower(backRightSpeed);
+
+        telemetry.addData("Front Left Power", "%.2f", frontLeftSpeed);
+        telemetry.addData("Front Right Power", "%.2f", frontRightSpeed);
+        telemetry.addData("Back Left Power", "%.2f", backLeftSpeed);
+        telemetry.addData("Back Right Power", "%.2f", backRightSpeed);
+    }
+
+    private void forward(double speed) {
+        setPower(speed, speed, speed, speed);
+    }
 }
