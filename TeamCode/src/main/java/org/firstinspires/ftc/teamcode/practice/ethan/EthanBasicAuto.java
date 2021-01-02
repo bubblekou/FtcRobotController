@@ -44,17 +44,23 @@ import java.util.concurrent.TimeUnit;
 
 @Autonomous(name="EthanBasicAuto", group="Ethan's Autonomous")
 public class EthanBasicAuto extends LinearOpMode {
-    private TeamRobot bot;
+    private AutonomousTeamRobot bot;
 
     @Override
     public void runOpMode() throws InterruptedException {
 
         //import the team bot so we have access to all the stuff in it.
-        this.bot = new TeamRobot(hardwareMap);
+        this.bot = new AutonomousTeamRobot(hardwareMap);
 
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
+
+        bot.liftArm();
+        TimeUnit.MILLISECONDS.sleep(1000);
+
+
+        /*
         bot.move(75,-1);
         bot.turn(42, -1);
 
@@ -80,6 +86,6 @@ public class EthanBasicAuto extends LinearOpMode {
 
         bot.stopFlywheel();
 
-
+        */
     }
 }

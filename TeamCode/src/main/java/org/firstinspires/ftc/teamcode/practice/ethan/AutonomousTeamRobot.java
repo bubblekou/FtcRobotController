@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.team17099;
+package org.firstinspires.ftc.teamcode.practice.ethan;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
  * This is our team robot, with all the functions necessary to run the Teleop in ManualTeleop.
  */
 
-public class TeamRobot {
+public class AutonomousTeamRobot {
     private HardwareMap hardwareMap;
     // Mecanum dirvetrain. Grabber is in the front
     private DcMotor wheelFrontLeft = null;
@@ -57,7 +57,7 @@ public class TeamRobot {
     private boolean isHeld = false;
     private Servo grabber = null;
 
-    public TeamRobot(HardwareMap hardwareMap) {
+    public AutonomousTeamRobot(HardwareMap hardwareMap) {
         this.hardwareMap = hardwareMap;
         init();
     }
@@ -95,84 +95,45 @@ public class TeamRobot {
         this.isHeld = grabber.getPosition() == 0;
     }
 
-    /**
-     * Increases or decrease drive train turbo. Use higher turbo for fast speed and slower turbo
-     * for better maneuver
-     *
-     * @param increasing
-     */
-    public void updateTurbo(boolean increasing) {
-        if (increasing) {
-            turbo = Math.min(0.75, turbo + pace);
-        } else {
-            turbo = Math.max(0.1, turbo - pace);
-        }
+    public void move(int distance, int scale) throws InterruptedException{
+        wheelFrontLeft.setPower(scale * 1.5);
+        wheelFrontRight.setPower(scale *1.5);
+        wheelBackLeft.setPower(scale *1.5);
+        wheelBackRight.setPower(scale *1.5);
+
+        TimeUnit.MILLISECONDS.sleep(10 * distance);
+
+        wheelFrontLeft.setPower(0);
+        wheelFrontRight.setPower(0);
+        wheelBackLeft.setPower(0);
+        wheelBackRight.setPower(0);
+
     }
-
-    /**
-     * Tilerunner strafing, driving, and turning
-     *
-     * @param gamepad Gamepad
-     */
-    public void strafe(Gamepad gamepad) {
-        lx = gamepad.left_stick_x;
-        ly = gamepad.left_stick_y;
-        rx = gamepad.right_stick_x;
-
-        double wheelFrontRightPower = 1.2 * turbo * (-lx - rx - ly);
-        double wheelBackRightPower = 1.2 * turbo * (lx - rx - ly);
-        double wheelFrontLeftPower = 1.2 * turbo * (lx + rx - ly);
-        double wheelBackLeftPower = 1.2 * turbo * (-lx + rx - ly);
-
-        wheelFrontLeft.setPower(wheelFrontLeftPower);
-        wheelFrontRight.setPower(wheelFrontRightPower);
-        wheelBackLeft.setPower(wheelBackLeftPower);
-        wheelBackRight.setPower(wheelBackRightPower);
-    }
-
     //turns the robot
     //note: angle is not the actual angle it turns
+    public void turn(int angle, int direction) throws InterruptedException{
+        wheelFrontLeft.setPower(-1.5 * direction);
+        wheelFrontRight.setPower(1.5  * direction);
+        wheelBackLeft.setPower(-1.5  * direction);
+        wheelBackRight.setPower(1.5  * direction);
 
-    /**
-     * Intake rings with pasta roller and pulley.
-     */
-    public void inTake() {
-        intake.setPower(1.00);
-        conveyor.setPower(1.00);
+        TimeUnit.MILLISECONDS.sleep(10 * angle);
+
+        wheelFrontLeft.setPower(0);
+        wheelFrontRight.setPower(0);
+        wheelBackLeft.setPower(0);
+        wheelBackRight.setPower(0);
+
     }
 
-    /**
-     * Outtake rings in case ring is stuck or out of place
-     */
-    public void outTake() {
-        intake.setPower(-1.00);
-        conveyor.setPower(-1.00);
-    }
-
-    /**
-     * Stop taking
-     */
-    public void stopTaking() {
-        intake.setPower(0);
-        conveyor.setPower(0);
-    }
 
     /**
      * Flap the ring stabilizer to help to lay the ring in the magazine
      *
      * @throws InterruptedException
      */
-    public void stabilizeRing() throws InterruptedException {
-        stabilizer.setPosition(0);
-        TimeUnit.MILLISECONDS.sleep(250);
-        stabilizer.setPosition(1);
-    }
-    public void sweep() {
-        stabilizer.setPosition(0);
-    }
-    public void stopSweep() {
-        stabilizer.setPosition(1);
-    }
+
+
     /*
     public void openStabilize() throws InterruptedException {
         stabilizer.setPosition(0);

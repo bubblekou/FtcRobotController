@@ -86,7 +86,9 @@ public class ManualTeleop extends LinearOpMode {
             }
             //stabilize the ring so it lies flat in the magazine
             if (gamepad1.right_bumper) {
-                bot.stabilizeRing();
+               bot.sweep();
+            }else{
+                bot.stopSweep();
             }
 
             //launching system
@@ -104,13 +106,19 @@ public class ManualTeleop extends LinearOpMode {
                 }else{
                     bot.startLowFlywheel();
                 }
+            }else{
+                bot.stopFlywheel();
             }
-            else if (gamepad2.x) {
+            /*else if (gamepad2.x) {
                 bot.shootPowerShot();
             }
+
+
             else {
                 bot.stopFlywheel();
             }
+            */
+
             if (gamepad2.left_bumper) {
                 bot.pushRing();
             }
