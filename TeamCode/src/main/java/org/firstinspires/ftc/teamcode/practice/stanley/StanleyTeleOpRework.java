@@ -79,7 +79,7 @@ public class StanleyTeleOpRework extends LinearOpMode {
     private int nextwobble_goal_grabber = 0;
     private int nextStabilizer = 0;
     private int nextPusher = 0;
-
+    private int startingRings=0;
     public static final String VUFORIA_KEY = "AXIXrHj/////AAABmeEMqruXWUCBuoatjfPPvO" +
             "Qv4U/tRYoBqMMvXyAoHLHWYYYQSPx3ZOZ7GcdOCuTHK5HYM6oJ4gX1ZTxVec9RI4xa5ZOSPgTQvSo" +
             "Er2GJeRPohMXHEy6DRer3JDhvcPN32CzBiKJf2i60dFivASvEyU2EGRHGKq41VjsOk09o2q0Wr9ly" +
@@ -165,10 +165,18 @@ public class StanleyTeleOpRework extends LinearOpMode {
                                 recognition.getLeft(), recognition.getTop());
                         telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
                                 recognition.getRight(), recognition.getBottom());
+                        telemetry.addData("rings",startingRings);
+                        if(recognition.getLabel()== "LABEL_FIRST_ELEMENT") {
+                            startingRings = 1;
+                        }else{
+                            startingRings = 4;
+                        }
                     }
                     telemetry.update();
                 }
+
             }
+
             if (tfod != null) {
                 tfod.shutdown();
             }
