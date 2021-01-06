@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.team17099;
+package org.firstinspires.ftc.teamcode.practice.ethan;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
  * This is our team robot, with all the functions necessary to run the Teleop in ManualTeleop.
  */
 
-public class TeamRobot {
+public class AutonomousTeamRobot {
     private HardwareMap hardwareMap;
     // Mecanum dirvetrain. Grabber is in the front
     private DcMotor wheelFrontLeft = null;
@@ -57,7 +57,7 @@ public class TeamRobot {
     private boolean isHeld = false;
     private Servo grabber = null;
 
-    public TeamRobot(HardwareMap hardwareMap) {
+    public AutonomousTeamRobot(HardwareMap hardwareMap) {
         this.hardwareMap = hardwareMap;
         init();
     }
@@ -95,45 +95,11 @@ public class TeamRobot {
         this.isHeld = grabber.getPosition() == 0;
     }
 
-    /**
-     * Increases or decrease drive train turbo. Use higher turbo for fast speed and slower turbo
-     * for better maneuver
-     *
-     * @param increasing
-     */
-    public void updateTurbo(boolean increasing) {
-        if (increasing) {
-            turbo = Math.min(0.75, turbo + pace);
-        } else {
-            turbo = Math.max(0.1, turbo - pace);
-        }
-    }
-
-    /**
-     * Tilerunner strafing, driving, and turning
-     *
-     * @param gamepad Gamepad
-     */
-    public void strafe(Gamepad gamepad) {
-        lx = gamepad.left_stick_x;
-        ly = gamepad.left_stick_y;
-        rx = gamepad.right_stick_x;
-
-        double wheelFrontRightPower = 1.2 * turbo * (-lx - rx - ly);
-        double wheelBackRightPower = 1.2 * turbo * (lx - rx - ly);
-        double wheelFrontLeftPower = 1.2 * turbo * (lx + rx - ly);
-        double wheelBackLeftPower = 1.2 * turbo * (-lx + rx - ly);
-
-        wheelFrontLeft.setPower(wheelFrontLeftPower);
-        wheelFrontRight.setPower(wheelFrontRightPower);
-        wheelBackLeft.setPower(wheelBackLeftPower);
-        wheelBackRight.setPower(wheelBackRightPower);
-    }
     public void move(int distance, int scale) throws InterruptedException{
-        wheelFrontLeft.setPower(scale * 1.5);
-        wheelFrontRight.setPower(scale *1.5);
-        wheelBackLeft.setPower(scale *1.5);
-        wheelBackRight.setPower(scale *1.5);
+        wheelFrontLeft.setPower(scale);
+        wheelFrontRight.setPower(scale);
+        wheelBackLeft.setPower(scale);
+        wheelBackRight.setPower(scale);
 
         TimeUnit.MILLISECONDS.sleep(10 * distance);
 
@@ -160,40 +126,14 @@ public class TeamRobot {
 
     }
 
-    /**
-     * Intake rings with pasta roller and pulley.
-     */
-    public void inTake() {
-        intake.setPower(1.00);
-        conveyor.setPower(1.00);
-    }
-
-    /**
-     * Outtake rings in case ring is stuck or out of place
-     */
-    public void outTake() {
-        intake.setPower(-1.00);
-        conveyor.setPower(-1.00);
-    }
-
-    /**
-     * Stop taking
-     */
-    public void stopTaking() {
-        intake.setPower(0);
-        conveyor.setPower(0);
-    }
 
     /**
      * Flap the ring stabilizer to help to lay the ring in the magazine
      *
      * @throws InterruptedException
      */
-    public void stabilizeRing() throws InterruptedException {
-        stabilizer.setPosition(0);
-        TimeUnit.MILLISECONDS.sleep(250);
-        stabilizer.setPosition(1);
-    }
+
+
     /*
     public void openStabilize() throws InterruptedException {
         stabilizer.setPosition(0);
@@ -217,44 +157,31 @@ public class TeamRobot {
     /**
      * hold the wobble goal in place
      */
-    public void flipGrabber() throws InterruptedException {
-        if (isHeld) {
-            grabber.setPosition(1);
-        }
-        else {
-            grabber.setPosition(0);
-        }
-        isHeld = !isHeld;
-        TimeUnit.MILLISECONDS.sleep(300);
+    public void openGrabber() {
+        grabber.setPosition(1);
     }
+    public void closeGrabber() {
+        grabber.setPosition(0);
+    }
+
 
     /**
      * lifting the arm that will hold the wobble goal so that it can clear the perimeter
      */
     public void liftArm() {
-        arm.setPower(0.3);
+        arm.setPower(0.7);
     }
     public void dropArm() {
-        arm.setPower(-0.3);
+        arm.setPower(-0.7);
     }
     public void stopArm() {
         arm.setPower(0);
     }
+
     /**
      * flywheel for launcher
      */
-    public void startLowFlywheel() {
-        flywheel.setPower(0.7);
-    }
-    public void startHighFlywheel() {
-        flywheel.setPower(1);
-    }
-    public void stopFlywheel() {
-        flywheel.setPower(0);
-    }
-    public void shootPowerShot() { flywheel.setPower(0.75);}
 
-    public void shootFarRing() {
-        flywheel.setPower(0.8);
-    }
+    public void shoot(double distance) { flywheel.setPower(distance); }
+    public void stopShoot() { flywheel.setPower(0); }
 }

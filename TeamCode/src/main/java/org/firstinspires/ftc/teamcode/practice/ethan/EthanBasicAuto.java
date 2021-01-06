@@ -44,29 +44,94 @@ import java.util.concurrent.TimeUnit;
 
 @Autonomous(name="EthanBasicAuto", group="Ethan's Autonomous")
 public class EthanBasicAuto extends LinearOpMode {
-    private TeamRobot bot;
+    private AutonomousTeamRobot bot;
 
     @Override
     public void runOpMode() throws InterruptedException {
 
         //import the team bot so we have access to all the stuff in it.
-        this.bot = new TeamRobot(hardwareMap);
+        this.bot = new AutonomousTeamRobot(hardwareMap);
 
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
-        bot.move(75,-1);
-        bot.turn(42, -1);
 
-        bot.shootFarRing();
+        //lift arm whole time so the wobble doesn't drop
+        TimeUnit.MILLISECONDS.sleep(500);
+
+        bot.closeGrabber();
+        TimeUnit.MILLISECONDS.sleep(800);
+        bot.liftArm();
+        TimeUnit.MILLISECONDS.sleep(1000);
+
+        //move the bot so it has space to turn
+        bot.move(10,-1);
+        TimeUnit.MILLISECONDS.sleep(500);
+
+        //turn towards target zone
+        bot.turn(6, -1);
+
+        //move to target zone
+        TimeUnit.MILLISECONDS.sleep(500);
+        bot.move(43, -1);
+        TimeUnit.MILLISECONDS.sleep(1000);
+
+        //drop off wobble
+        bot.dropArm();
+        TimeUnit.MILLISECONDS.sleep(500);
+        bot.openGrabber();
+        TimeUnit.MILLISECONDS.sleep(500);
+        bot.liftArm();
+        TimeUnit.MILLISECONDS.sleep(1000);
+        bot.stopArm();
+        TimeUnit.MILLISECONDS.sleep(1000);
+
+
+
+        //move back from target zone
+        bot.move(20, 1);
+        TimeUnit.MILLISECONDS.sleep(1000);
+
+        //turn to left of field. Front facing left.
+        bot.turn(20, 1);
+        TimeUnit.MILLISECONDS.sleep(1000);
+
+        //move to launching area
+        bot.move(25,-1);
+        TimeUnit.MILLISECONDS.sleep(1000);
+
+        //turn right towards power shots
+        bot.turn(34, 1);
+
+
+        //fire 3 power shots by turning a little bit each time and having delay to let the function finish
+
+        TimeUnit.MILLISECONDS.sleep(1000);
+        bot.shoot(0.8);
+        TimeUnit.MILLISECONDS.sleep(1500);
+
+        //push ring to launcher
         bot.pushRing();
+        TimeUnit.MILLISECONDS.sleep(1000);
+        bot.shoot(0.82);
+        TimeUnit.MILLISECONDS.sleep(1000);
 
-        bot.turn(2, -1);
+        bot.turn(2, 1);
+        TimeUnit.MILLISECONDS.sleep(1000);
         bot.pushRing();
+        TimeUnit.MILLISECONDS.sleep(1000);
+        bot.shoot(0.85);
+        TimeUnit.MILLISECONDS.sleep(1000);
 
-        bot.turn(2, -1);
+
+
+        bot.turn(1, 1);
+        TimeUnit.MILLISECONDS.sleep(1000);
         bot.pushRing();
+        TimeUnit.MILLISECONDS.sleep(1000);
 
-        bot.stopFlywheel();
+
+        bot.stopShoot();
+        TimeUnit.MILLISECONDS.sleep(1000);
     }
 }
