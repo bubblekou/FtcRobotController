@@ -81,7 +81,6 @@ public class EthanBasicAuto2 extends LinearOpMode {
         bot.move(18, 1);
         TimeUnit.MILLISECONDS.sleep(1000);
 
-
         //spin 180 degrees
         bot.turn(41, 1);
         TimeUnit.MILLISECONDS.sleep(1000);
