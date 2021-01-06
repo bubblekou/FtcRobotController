@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.team17099;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -29,10 +30,6 @@ public class TeamRobot {
     private DcMotor wheelFrontRight = null;
     private DcMotor wheelBackLeft = null;
     private DcMotor wheelBackRight = null;
-
-    public double lx;
-    public double rx;
-    public double ly;
 
     public static final double HD_HEX_COUNTS_PER_ROTATION = 1120; //  Rev HD Hex motor
     public static final double HD_UltraPlanetary_COUNTS_PER_ROTATION = 6000; //  Rev Ultrapanetary Hex motor
@@ -135,7 +132,7 @@ public class TeamRobot {
      *
      * @param gamepad Gamepad
      */
-    public void strafe(Gamepad gamepad) {
+    public void strafetrig(Gamepad gamepad) {
         double r = Math.hypot(gamepad.left_stick_x, gamepad.left_stick_y);
         double robotAngle = Math.atan2(gamepad.left_stick_y, gamepad.left_stick_x) - Math.PI / 4;
         double rightX = gamepad.right_stick_x;
@@ -143,11 +140,23 @@ public class TeamRobot {
         final double v2 = r * Math.sin(robotAngle) - rightX;
         final double v3 = r * Math.sin(robotAngle) + rightX;
         final double v4 = r * Math.cos(robotAngle) - rightX;
-        wheelFrontLeft.setPower(v1);
-        wheelFrontRight.setPower(v2);
-        wheelBackRight.setPower(v3);
-        wheelFrontRight.setPower(v4);
+        wheelFrontLeft.setPower(turbo*v1);
+        wheelFrontRight.setPower(turbo*v2);
+        wheelBackRight.setPower(turbo*0.6*v3);
+        wheelBackLeft.setPower(turbo*0.6*v4);
     }
+
+    public void strafe(Gamepad gamepad) {
+        double lx = gamepad.left_stick_x;
+        double ly = gamepad.left_stick_y;
+        double rx = gamepad.right_stick_x;
+
+        wheelFrontRight.setPower(turbo * (-lx - rx - ly));
+        wheelBackRight.setPower(turbo * (lx - rx - ly));
+        wheelFrontLeft.setPower(turbo * (lx + rx - ly));
+        wheelBackLeft.setPower(turbo * (-lx + rx - ly);
+    }
+
     public void move(int distance, int scale) throws InterruptedException{
         wheelFrontLeft.setPower(scale * 1.5);
         wheelFrontRight.setPower(scale *1.5);
@@ -162,6 +171,7 @@ public class TeamRobot {
         wheelBackRight.setPower(0);
 
     }
+
     //turns the robot
     //note: angle is not the actual angle it turns
     public void turn(int angle, int direction) throws InterruptedException{
@@ -274,7 +284,6 @@ public class TeamRobot {
     public void shootPowerShot() { flywheel.setPower(0.75);}
 
     public void gyroTurn(double speed, double angle) {
-
         // keep looping while we are still active, and not on heading.
         while (opMode.opModeIsActive() && !onHeading(speed, angle, P_TURN_COEFF)) {
             // Update telemetry & Allow time for other processes to run.
