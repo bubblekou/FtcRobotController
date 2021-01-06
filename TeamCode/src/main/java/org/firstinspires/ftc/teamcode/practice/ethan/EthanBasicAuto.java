@@ -73,7 +73,7 @@ public class EthanBasicAuto extends LinearOpMode {
 
         //move to target zone
         TimeUnit.MILLISECONDS.sleep(500);
-        bot.move(43, -1);
+        bot.move(40, -1);
         TimeUnit.MILLISECONDS.sleep(1000);
 
         //drop off wobble
@@ -92,46 +92,35 @@ public class EthanBasicAuto extends LinearOpMode {
         bot.move(20, 1);
         TimeUnit.MILLISECONDS.sleep(1000);
 
-        //turn to left of field. Front facing left.
-        bot.turn(20, 1);
+        //turn towards high shot
+        //usually scores the goal when the angle is around 42-44
+        bot.turn(43, 1);
         TimeUnit.MILLISECONDS.sleep(1000);
 
         //move to launching area
-        bot.move(25,-1);
+        bot.move(20,1);
         TimeUnit.MILLISECONDS.sleep(1000);
 
-        //turn right towards power shots
-        bot.turn(34, 1);
-
-
-        //fire 3 power shots by turning a little bit each time and having delay to let the function finish
-
-        TimeUnit.MILLISECONDS.sleep(1000);
-        bot.shoot(0.8);
+        bot.shoot(1);
         TimeUnit.MILLISECONDS.sleep(1500);
 
         //push ring to launcher
         bot.pushRing();
         TimeUnit.MILLISECONDS.sleep(1000);
-        bot.shoot(0.82);
-        TimeUnit.MILLISECONDS.sleep(1000);
-
-        bot.turn(2, 1);
-        TimeUnit.MILLISECONDS.sleep(1000);
         bot.pushRing();
         TimeUnit.MILLISECONDS.sleep(1000);
-        bot.shoot(0.85);
-        TimeUnit.MILLISECONDS.sleep(1000);
-
-
-
-        bot.turn(1, 1);
-        TimeUnit.MILLISECONDS.sleep(1000);
         bot.pushRing();
-        TimeUnit.MILLISECONDS.sleep(1000);
+        TimeUnit.MILLISECONDS.sleep(1500);
 
 
         bot.stopShoot();
         TimeUnit.MILLISECONDS.sleep(1000);
+
+
+        //move onto launch line
+        bot.move(7,1);
+        TimeUnit.MILLISECONDS.sleep(1000);
+
+
     }
 }
