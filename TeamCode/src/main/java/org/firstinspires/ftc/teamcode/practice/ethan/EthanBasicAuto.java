@@ -69,11 +69,11 @@ public class EthanBasicAuto extends LinearOpMode {
         TimeUnit.MILLISECONDS.sleep(500);
 
         //turn towards target zone
-        bot.turn(6, -1);
+        bot.turn(7, -1);
 
         //move to target zone
         TimeUnit.MILLISECONDS.sleep(500);
-        bot.move(40, -1);
+        bot.move(43, -1);
         TimeUnit.MILLISECONDS.sleep(1000);
 
         //drop off wobble

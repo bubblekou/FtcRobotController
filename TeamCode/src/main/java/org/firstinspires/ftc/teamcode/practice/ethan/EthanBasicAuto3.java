@@ -39,14 +39,13 @@ import java.util.concurrent.TimeUnit;
  *
  */
 
-@Autonomous(name="EthanBasicAuto2", group="Ethan's Autonomous")
-public class EthanBasicAuto2 extends LinearOpMode {
+@Autonomous(name="EthanBasicAuto3", group="Ethan's Autonomous")
+public class EthanBasicAuto3 extends LinearOpMode {
     private AutonomousTeamRobot bot;
 
     @Override
     public void runOpMode() throws InterruptedException {
 
-        //IMPORTANT: TURN THE ROBOT A LITTLE BIT LEFT BECAUSE THERE IS NO GYRO
         //import the team bot so we have access to all the stuff in it.
         this.bot = new AutonomousTeamRobot(hardwareMap);
 
@@ -62,10 +61,17 @@ public class EthanBasicAuto2 extends LinearOpMode {
         bot.liftArm();
         TimeUnit.MILLISECONDS.sleep(1000);
 
-        //move the bot to target zone
-        bot.move(55,-1);
-        TimeUnit.MILLISECONDS.sleep(1000);
+        //move the bot so it has space to turn
+        bot.move(10,-1);
+        TimeUnit.MILLISECONDS.sleep(500);
 
+        //turn towards target zone
+        bot.turn(6, -1);
+
+        //move to target zone
+        TimeUnit.MILLISECONDS.sleep(500);
+        bot.move(40, -1);
+        TimeUnit.MILLISECONDS.sleep(1000);
 
         //drop off wobble
         bot.dropArm();
@@ -77,17 +83,23 @@ public class EthanBasicAuto2 extends LinearOpMode {
         bot.stopArm();
         TimeUnit.MILLISECONDS.sleep(1000);
 
-        //move back from target zone and into launching area
-        bot.move(18, 1);
+
+
+        //move back from target zone
+        bot.move(20, 1);
         TimeUnit.MILLISECONDS.sleep(1000);
 
-        //spin 180 degrees
+        //turn towards high shot
+        //usually scores the goal when the angle is around 42-44
         bot.turn(43, 1);
         TimeUnit.MILLISECONDS.sleep(1000);
 
-        //turn on flywheel
-        bot.shoot(0.95);
-        TimeUnit.MILLISECONDS.sleep(2000);
+        //move to launching area
+        bot.move(20,1);
+        TimeUnit.MILLISECONDS.sleep(1000);
+
+        bot.shoot(1);
+        TimeUnit.MILLISECONDS.sleep(1500);
 
         //push ring to launcher
         bot.pushRing();
@@ -97,13 +109,13 @@ public class EthanBasicAuto2 extends LinearOpMode {
         bot.pushRing();
         TimeUnit.MILLISECONDS.sleep(1500);
 
-        //turn off flywheel
+
         bot.stopShoot();
         TimeUnit.MILLISECONDS.sleep(1000);
 
 
         //move onto launch line
-        bot.move(15,1);
+        bot.move(7,1);
         TimeUnit.MILLISECONDS.sleep(1000);
 
 
