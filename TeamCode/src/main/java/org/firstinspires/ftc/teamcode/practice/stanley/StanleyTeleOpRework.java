@@ -60,7 +60,7 @@ import java.util.concurrent.TimeUnit;
  */
 
 @TeleOp(name="Stanley: AlmostFinalTeleOp", group="Stanley's Teleops")
-@Disabled
+
 
 public class StanleyTeleOpRework extends LinearOpMode {
     private static final String TFOD_MODEL_ASSET = "UltimateGoal.tflite";
