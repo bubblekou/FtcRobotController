@@ -96,10 +96,10 @@ public class AutonomousTeamRobot {
     }
 
     public void move(int distance, int scale) throws InterruptedException{
-        wheelFrontLeft.setPower(scale * 1.5);
-        wheelFrontRight.setPower(scale *1.5);
-        wheelBackLeft.setPower(scale *1.5);
-        wheelBackRight.setPower(scale *1.5);
+        wheelFrontLeft.setPower(scale);
+        wheelFrontRight.setPower(scale);
+        wheelBackLeft.setPower(scale);
+        wheelBackRight.setPower(scale);
 
         TimeUnit.MILLISECONDS.sleep(10 * distance);
 
@@ -157,16 +157,13 @@ public class AutonomousTeamRobot {
     /**
      * hold the wobble goal in place
      */
-    public void flipGrabber() throws InterruptedException {
-        if (isHeld) {
-            grabber.setPosition(1);
-        }
-        else {
-            grabber.setPosition(0);
-        }
-        isHeld = !isHeld;
-        TimeUnit.MILLISECONDS.sleep(300);
+    public void openGrabber() {
+        grabber.setPosition(1);
     }
+    public void closeGrabber() {
+        grabber.setPosition(0);
+    }
+
 
     /**
      * lifting the arm that will hold the wobble goal so that it can clear the perimeter
@@ -180,21 +177,11 @@ public class AutonomousTeamRobot {
     public void stopArm() {
         arm.setPower(0);
     }
+
     /**
      * flywheel for launcher
      */
-    public void startLowFlywheel() {
-        flywheel.setPower(0.75);
-    }
-    public void startHighFlywheel() {
-        flywheel.setPower(1);
-    }
-    public void stopFlywheel() {
-        flywheel.setPower(0);
-    }
-    //public void shootPowerShot() { flywheel.setPower(0.75);}
 
-    public void shootFarRing() {
-        flywheel.setPower(0.8);
-    }
+    public void shoot(double distance) { flywheel.setPower(distance); }
+    public void stopShoot() { flywheel.setPower(0); }
 }
