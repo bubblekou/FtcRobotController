@@ -95,7 +95,7 @@ public class AutonomousTeamRobot {
         this.isHeld = grabber.getPosition() == 0;
     }
 
-    public void move(int distance, int scale) throws InterruptedException{
+    public void move(int distance, double scale) throws InterruptedException{
         wheelFrontLeft.setPower(scale);
         wheelFrontRight.setPower(scale);
         wheelBackLeft.setPower(scale);
@@ -109,6 +109,7 @@ public class AutonomousTeamRobot {
         wheelBackRight.setPower(0);
 
     }
+
     //turns the robot
     //note: angle is not the actual angle it turns
     public void turn(int angle, int direction) throws InterruptedException{

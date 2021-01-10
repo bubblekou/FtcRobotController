@@ -60,7 +60,7 @@ import java.util.concurrent.TimeUnit;
  */
 
 @TeleOp(name="Stanley: AlmostFinalTeleOp", group="Stanley's Teleops")
-@Disabled
+
 
 public class StanleyTeleOpRework extends LinearOpMode {
     private static final String TFOD_MODEL_ASSET = "UltimateGoal.tflite";
@@ -80,12 +80,7 @@ public class StanleyTeleOpRework extends LinearOpMode {
     private int nextStabilizer = 0;
     private int nextPusher = 0;
     private int startingRings=0;
-    public static final String VUFORIA_KEY = "AXIXrHj/////AAABmeEMqruXWUCBuoatjfPPvO" +
-            "Qv4U/tRYoBqMMvXyAoHLHWYYYQSPx3ZOZ7GcdOCuTHK5HYM6oJ4gX1ZTxVec9RI4xa5ZOSPgTQvSo" +
-            "Er2GJeRPohMXHEy6DRer3JDhvcPN32CzBiKJf2i60dFivASvEyU2EGRHGKq41VjsOk09o2q0Wr9ly" +
-            "oEzdhNjMgAf8OfPn8wl93IM0Bo2+hH0ZtUSmZUoyBu53qlB0wgZ+FJYHxOOXdhim0ka+qa0CkFOkn" +
-            "lN35bbLE6yNSyBOV86FaSZ0UuBNXfCX4O0IWh7qSBXcU/cQVMw3faOu8Hx3LiReY1lcQ1I4q0QP05" +
-            "IUr5l71eQEMFLO71ByBWG95IkHucF5iyrA";
+    public static final String VUFORIA_KEY = "AWPSm1P/////AAABmfp26UJ0EUAui/y06avE/y84xKk68LTTAP3wBE75aIweAnuSt/zSSyaSoqeWdTFVB5eDsZZOP/N/ISBYhlSM4zrkb4q1YLVLce0aYvIrsoGnQ4Iw/KT12StcpQsraoLewErwZwf3IZENT6aWUwODR7vnE4JhHU4+2IyftSR0meDfUO6DAb4VDVmXCYbxT//lPixaJK/rXiI4o8NQt59EIN/W0RqTReAehAZ6FwBRGtZFyIkWNIWZiuAPXKvGI+YqqNdL7ufeGxITzc/iAuhJzNZOxGXfnW4sHGn6Tp+meZWHFwCYbkslYHvV5/Sii2hR5HGApDW0oDml6gOlDmy1Wmw6TwJTwzACYLKl43dLL35G";
     private VuforiaLocalizer vuforia;
     private TFObjectDetector tfod;
 

@@ -31,9 +31,6 @@ package org.firstinspires.ftc.teamcode.practice.ethan;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-
-import org.firstinspires.ftc.teamcode.team17099.TeamRobot;
 
 import java.util.concurrent.TimeUnit;
 
@@ -42,8 +39,8 @@ import java.util.concurrent.TimeUnit;
  *
  */
 
-@Autonomous(name="EthanBasicAuto", group="Ethan's Autonomous")
-public class EthanBasicAuto extends LinearOpMode {
+@Autonomous(name="EthanBasicAuto3", group="Ethan's Autonomous")
+public class EthanBasicAuto3 extends LinearOpMode {
     private AutonomousTeamRobot bot;
 
     @Override
@@ -69,11 +66,11 @@ public class EthanBasicAuto extends LinearOpMode {
         TimeUnit.MILLISECONDS.sleep(500);
 
         //turn towards target zone
-        bot.turn(7, -1);
+        bot.turn(6, -1);
 
         //move to target zone
         TimeUnit.MILLISECONDS.sleep(500);
-        bot.move(43, -1);
+        bot.move(40, -1);
         TimeUnit.MILLISECONDS.sleep(1000);
 
         //drop off wobble
