@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.team17099;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -14,23 +13,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import java.util.concurrent.TimeUnit;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-
-import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Gamepad;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
-
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
@@ -55,11 +37,12 @@ public class TeamRobot {
     public static final double HD_HEX_COUNTS_PER_ROTATION = 1120; //  Rev HD Hex motor
     public static final double HD_UltraPlanetary_COUNTS_PER_ROTATION = 1120; //  Rev HD Hex motor
     public static final double CORE_HEX_COUNTS_PER_ROTATION = 288; //  Rev Core Hex motor
+    public static final double NERVEREST20_COUNTS_PER_ROTATION = 537.6;
 
-    public static final double DRIVE_GEAR_REDUCTION = 1.29;     // This is < 1.0 if geared UP
+    public static final double DRIVE_GEAR_REDUCTION = 0.77;     // This is < 1.0 if geared UP
     public static final double WHEEL_DIAMETER_INCHES = 4;     // 4in Andymark HD Mecanum Wheels
-    public static final double CORE_HEX_COUNTS_PER_INCH =
-            (CORE_HEX_COUNTS_PER_ROTATION * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415);
+    public static final double NERVEREST20_COUNTS_PER_INCH =
+            (NERVEREST20_COUNTS_PER_ROTATION * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415);
 
     private static final double HEADING_THRESHOLD = 1;      // As tight as we can make it with an integer gyro
     private static final double P_TURN_COEFF = 0.1;     // Larger is more responsive, but also less stable
@@ -217,7 +200,7 @@ public class TeamRobot {
      */
     public void inTake() {
         intake.setPower(1.00);
-        conveyor.setPower(5/6);
+        conveyor.setPower(1.00);
     }
 
     /**
@@ -225,7 +208,7 @@ public class TeamRobot {
      */
     public void outTake() {
         intake.setPower(-1.00);
-        conveyor.setPower(-5/6);
+        conveyor.setPower(-1.00);
     }
 
     /**
@@ -366,7 +349,7 @@ public class TeamRobot {
             resetMotors();
 
             // Determine new target position, and pass to motor controller
-            moveCounts = (int) (distance * CORE_HEX_COUNTS_PER_INCH);
+            moveCounts = (int) (distance * NERVEREST20_COUNTS_PER_INCH);
 
             // Set Target and Turn On RUN_TO_POSITION
             int frontLeftTarget = wheelFrontLeft.getCurrentPosition()+ moveCounts;
@@ -425,7 +408,7 @@ public class TeamRobot {
             resetMotors();
 
             // Determine new target position, and pass to motor controller
-            moveCounts = (int) Math.abs(distance * CORE_HEX_COUNTS_PER_INCH);
+            moveCounts = (int) Math.abs(distance * NERVEREST20_COUNTS_PER_INCH);
 
             // Set Target and Turn On RUN_TO_POSITION
             int sign = distance > 0 ? 1 : -1;
@@ -466,7 +449,7 @@ public class TeamRobot {
                     backSpeed /= max;
                 }
 
-                setPower(sign * frontSpeed, -sign * frontSpeed, -sign * backSpeed, sign * backSpeed);
+                setPower(sign * frontSpeed, -sign * frontSpeed, -sign * 0.6 * backSpeed, sign * 0.6 * backSpeed);
 
                 // Display drive status for the driver.
             }
@@ -524,10 +507,10 @@ public class TeamRobot {
      * lifting the arm that will hold the wobble goal so that it can clear the perimeter
      */
     public void liftArm() {
-        arm.setPower(0.3);
+        arm.setPower(1.0);
     }
     public void dropArm() {
-        arm.setPower(-0.3);
+        arm.setPower(-1.0);
     }
     public void stopArm() {
         arm.setPower(0);
