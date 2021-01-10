@@ -223,7 +223,7 @@ public class StanleyTeleOpRework extends LinearOpMode {
                 TimeUnit.MILLISECONDS.sleep(500);
             }
             if (gamepad1.right_bumper) {
-                bot.stabilizeRing();
+                bot.sweep();
             }
 
             //Intake

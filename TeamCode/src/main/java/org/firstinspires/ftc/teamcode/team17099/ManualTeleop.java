@@ -87,8 +87,6 @@ public class ManualTeleop extends LinearOpMode {
             //stabilize the ring so it lies flat in the magazine
             if (gamepad1.right_bumper) {
                bot.sweep();
-            }else{
-                bot.stopSweep();
             }
 
             //launching system
