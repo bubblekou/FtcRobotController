@@ -202,9 +202,9 @@ public class StanleyTeleOpRework extends LinearOpMode {
                                 recognition.getLeft(), recognition.getTop());
                         telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
                                 recognition.getRight(), recognition.getBottom());
-                        if(recognition.getLabel()=="Quad") {
+                        if(recognition.getLabel()==LABEL_FIRST_ELEMENT) {
                             return 4;
-                        } else if (recognition.getLabel()=="Single"){
+                        } else if (recognition.getLabel()==LABEL_SECOND_ELEMENT){
                             return 1;
                     }
                     telemetry.update();
