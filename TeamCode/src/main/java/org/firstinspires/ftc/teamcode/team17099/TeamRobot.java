@@ -532,4 +532,6 @@ public class TeamRobot {
     public void shootFarRing() {
         flywheel.setPower(0.8);
     }
+
+
 }
