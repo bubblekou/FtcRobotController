@@ -37,6 +37,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
@@ -62,56 +63,53 @@ import java.util.concurrent.TimeUnit;
 @TeleOp(name="Stanley: AlmostFinalTeleOp", group="Stanley's Teleops")
 
 
+
+
 public class StanleyTeleOpRework extends LinearOpMode {
     private static final String TFOD_MODEL_ASSET = "UltimateGoal.tflite";
     private static final String LABEL_FIRST_ELEMENT = "Quad";
     private static final String LABEL_SECOND_ELEMENT = "Single";
-    private TeamRobot bot;
 
-    public Servo wobble_goal_grabber = null;
-    public Servo pusher = null;
+    /*
+     * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with which
+     * 'parameters.vuforiaLicenseKey' is initialized is for illustration only, and will not function.
+     * A Vuforia 'Development' license key, can be obtained free of charge from the Vuforia developer
+     * web site at https://developer.vuforia.com/license-manager.
+     *
+     * Vuforia license keys are always 380 characters long, and look as if they contain mostly
+     * random data. As an example, here is a example of a fragment of a valid key:
+     *      ... yIgIzTqZ4mWjk9wd3cZO9T1axEqzuhxoGlfOOI2dRzKS4T0hQ8kT ...
+     * Once you've obtained a license key, copy the string from the Vuforia web site
+     * and paste it in to your code on the next line, between the double quotes.
+     */
+    private static final String VUFORIA_KEY =
+            "AWPSm1P/////AAABmfp26UJ0EUAui/y06avE/y84xKk68LTTAP3wBE75aIweAnuSt/zSSyaSoqeWdTFVB5eDsZZOP/N/ISBYhlSM4zrkb4q1YLVLce0aYvIrsoGnQ4Iw/KT12StcpQsraoLewErwZwf3IZENT6aWUwODR7vnE4JhHU4+2IyftSR0meDfUO6DAb4VDVmXCYbxT//lPixaJK/rXiI4o8NQt59EIN/W0RqTReAehAZ6FwBRGtZFyIkWNIWZiuAPXKvGI+YqqNdL7ufeGxITzc/iAuhJzNZOxGXfnW4sHGn6Tp+meZWHFwCYbkslYHvV5/Sii2hR5HGApDW0oDml6gOlDmy1Wmw6TwJTwzACYLKl43dLL35G";
 
-    public DcMotor flywheel = null;
-    public DcMotor grabber = null;
-
-    public double turbo = 0.5;
-
-    private int nextwobble_goal_grabber = 0;
-    private int nextStabilizer = 0;
-    private int nextPusher = 0;
-    private int startingRings=0;
-    public static final String VUFORIA_KEY = "AWPSm1P/////AAABmfp26UJ0EUAui/y06avE/y84xKk68LTTAP3wBE75aIweAnuSt/zSSyaSoqeWdTFVB5eDsZZOP/N/ISBYhlSM4zrkb4q1YLVLce0aYvIrsoGnQ4Iw/KT12StcpQsraoLewErwZwf3IZENT6aWUwODR7vnE4JhHU4+2IyftSR0meDfUO6DAb4VDVmXCYbxT//lPixaJK/rXiI4o8NQt59EIN/W0RqTReAehAZ6FwBRGtZFyIkWNIWZiuAPXKvGI+YqqNdL7ufeGxITzc/iAuhJzNZOxGXfnW4sHGn6Tp+meZWHFwCYbkslYHvV5/Sii2hR5HGApDW0oDml6gOlDmy1Wmw6TwJTwzACYLKl43dLL35G";
+    /**
+     * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
+     * localization engine.
+     */
     private VuforiaLocalizer vuforia;
+
+    public WebcamName WebcamName;
+
+    /**
+     * {@link #tfod} is the variable we will use to store our instance of the TensorFlow Object
+     * Detection engine.
+     */
     private TFObjectDetector tfod;
 
-    private void initVuforia() {
-        /*
-         * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
-         */
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
-
-        parameters.vuforiaLicenseKey = VUFORIA_KEY;
-        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
-
-        //  Instantiate the Vuforia engine
-        vuforia = ClassFactory.getInstance().createVuforia(parameters);
-
-        // Loading trackables is not necessary for the TensorFlow Object Detection engine.
-    }
-    private void initTfod() {
-        int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
-                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-        tfodParameters.minResultConfidence = 0.8f;
-        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
-        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
-    }
-
-    public void runOpMode() throws InterruptedException {
-        telemetry.addData("Status", "Initialized");
-        telemetry.update();
+    @Override
+    public void runOpMode() {
+        // The TFObjectDetector uses the camera frames from the VuforiaLocalizer, so we create that
+        // first.
         initVuforia();
         initTfod();
+
+        /**
+         * Activate TensorFlow Object Detection before we wait for the start command.
+         * Do it here so that the Camera Stream window will have the TensorFlow annotations visible.
+         **/
         if (tfod != null) {
             tfod.activate();
 
@@ -126,125 +124,81 @@ public class StanleyTeleOpRework extends LinearOpMode {
             //tfod.setZoom(2.5, 1.78);
         }
 
-        this.bot = new TeamRobot(hardwareMap);
-
-        bot.init();
-
-        grabber = hardwareMap.get(DcMotor.class, "grabber");
-        flywheel = hardwareMap.get(DcMotor.class, "flywheel");
-
-        wobble_goal_grabber = hardwareMap.get(Servo.class, "wobble_goal_grabber");
-        pusher = hardwareMap.get(Servo.class, "pusher");
-
-
-        flywheel.setDirection(DcMotor.Direction.REVERSE);
-        grabber.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        // Wait for the game to start (driver presses PLAY)
+        /** Wait for the game to begin */
+        telemetry.addData(">", "Press Play to start op mode");
+        telemetry.update();
         waitForStart();
 
-        // run until the end of the match (driver presses STOP)
-        while (opModeIsActive()) {
-            if (tfod != null) {
-                // getUpdatedRecognitions() will return null if no new information is available since
-                // the last time that call was made.
-                List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
-                if (updatedRecognitions != null) {
-                    telemetry.addData("# Object Detected", updatedRecognitions.size());
+        if (opModeIsActive()) {
 
-                    // step through the list of recognitions and display boundary info.
-                    int i = 0;
-                    for (Recognition recognition : updatedRecognitions) {
-                        telemetry.addData(String.format("label (%d)", i), recognition.getLabel());
-                        telemetry.addData(String.format("  left,top (%d)", i), "%.03f , %.03f",
-                                recognition.getLeft(), recognition.getTop());
-                        telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
-                                recognition.getRight(), recognition.getBottom());
-                        telemetry.addData("rings",startingRings);
-                        if(recognition.getLabel()== "LABEL_FIRST_ELEMENT") {
-                            startingRings = 1;
-                        }else{
-                            startingRings = 4;
-                        }
-                    }
-                    telemetry.update();
-                }
-
+            while (opModeIsActive()) {
+                telemetry.addData("rings", ringAmount());
+                telemetry.update();
+                sleep (100);
             }
-
-            if (tfod != null) {
-                tfod.shutdown();
-            }
-            //Update turbo speed by dpad
-            if (gamepad1.dpad_up) {
-                bot.updateTurbo(true);
-            }
-            else if (gamepad1.dpad_down) {
-                bot.updateTurbo(false);
-            }
-            //Strafe drive
-            bot.strafe(gamepad1);
-
-            double grabberpower;
-
-            if (gamepad2.dpad_down) {
-                grabberpower = 1;
-            }
-            else if (gamepad2.dpad_up) {
-                grabberpower = -1;
-            }
-            else {
-                grabberpower = 0;
-            }
-
-            double flywheelpower = 0.00;
-
-            if (gamepad2.left_bumper) {
-                nextPusher++;
-                if(nextPusher % 2 == 0){
-                    pusher.setPosition(1);
-                } else {
-                    pusher.setPosition(0);
-                }
-                TimeUnit.MILLISECONDS.sleep(500);
-            }
-            if (gamepad2.right_bumper) {
-                nextwobble_goal_grabber++;
-                if(nextwobble_goal_grabber % 2 == 0){
-                    wobble_goal_grabber.setPosition(1);
-                } else {
-                    wobble_goal_grabber.setPosition(0);
-                }
-                TimeUnit.MILLISECONDS.sleep(500);
-            }
-            if (gamepad1.right_bumper) {
-                bot.sweep();
-            }
-
-            //Intake
-            if (gamepad1.dpad_right) {
-                bot.inTake();
-            }
-            else if (gamepad1.dpad_left) {
-                bot.outTake();
-            }
-            else {
-                bot.stopTaking();
-            }
-
-
-            if (gamepad2.y) {
-                flywheelpower = 1.00;
-            }
-            else if (gamepad2.x) {
-                flywheelpower = -1.00;
-            }
-            else {
-                flywheelpower = 0.00;
-            }
-
-            flywheel.setPower(flywheelpower);
-            grabber.setPower(grabberpower);
         }
+
+        if (tfod != null) {
+            tfod.shutdown();
+        }
+    }
+
+    /**
+     * Initialize the Vuforia localization engine.
+     */
+    private void initVuforia() {
+        /*
+         * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
+         */
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+
+        parameters.vuforiaLicenseKey = VUFORIA_KEY;
+        parameters.cameraName = hardwareMap.get(WebcamName.class, "webcam 1");
+
+        //  Instantiate the Vuforia engine
+        vuforia = ClassFactory.getInstance().createVuforia(parameters);
+
+        // Loading trackables is not necessary for the TensorFlow Object Detection engine.
+    }
+
+    /**
+     * Initialize the TensorFlow Object Detection engine.
+     */
+    private void initTfod() {
+        int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
+                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+        tfodParameters.minResultConfidence = 0.6f;
+        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
+        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
+    }
+
+    public int ringAmount(){
+        if (tfod != null) {
+            // getUpdatedRecognitions() will return null if no new information is available since
+            // the last time that call was made.
+            List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+            if (updatedRecognitions != null) {
+                telemetry.addData("# Object Detected", updatedRecognitions.size());
+                // step through the list of recognitions and display boundary info.
+                int i = 0;
+                for (Recognition recognition : updatedRecognitions) {
+                    telemetry.addData(String.format("label (%d)", i), recognition.getLabel());
+                    telemetry.addData(String.format("  left,top (%d)", i), "%.03f , %.03f",
+                            recognition.getLeft(), recognition.getTop());
+                    telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
+                            recognition.getRight(), recognition.getBottom());
+                    telemetry.update();
+
+                    if(recognition.getLabel()==LABEL_FIRST_ELEMENT) {
+                        return 4;
+                    } else if (recognition.getLabel()==LABEL_SECOND_ELEMENT) {
+                        return 1;
+                    }
+
+                }
+            }
+        }
+        return 0;
     }
 }
