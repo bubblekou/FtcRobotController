@@ -515,15 +515,18 @@ public class TeamRobot {
     public void stopArm() {
         arm.setPower(0);
     }
+
     /**
      * flywheel for launcher
      */
     public void startLowFlywheel() {
         flywheel.setPower(0.7);
     }
+
     public void startHighFlywheel() {
         flywheel.setPower(1);
     }
+
     public void stopFlywheel() {
         flywheel.setPower(0);
     }
