@@ -81,11 +81,8 @@ public class DanielGyroTest extends LinearOpMode {
         this.bot = new TeamRobot(hardwareMap);
         bot.init();
 
-        bot.gyroDrive(this, 0.50, -24, 0);
-        bot.gyroTurn(this, 0.5, 90);
-        bot.gyroDrive(this, 0.50, -10, 0);
-        bot.gyroTurn(this, 0.5, -90);
-        bot.shootPowerShot();
+        bot.gyroDrive(this, 0.10, 46, 0);
+        sleep(1000);
 
         // make sure the gyro is calibrated before continuing
         while (!isStopRequested() && !bot.imu.isGyroCalibrated())  {
