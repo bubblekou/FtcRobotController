@@ -83,11 +83,5 @@ public class DanielGyroTest extends LinearOpMode {
 
         bot.gyroDrive(this, 0.10, 46, 0);
         sleep(1000);
-
-        while (!isStarted()) {
-
-            sleep(10);
-            idle();
-        }
     }
 }
