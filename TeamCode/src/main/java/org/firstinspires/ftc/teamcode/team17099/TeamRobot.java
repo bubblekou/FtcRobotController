@@ -17,6 +17,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.teamcode.practice.daniel.DanielGyroTest;
 
 /**
  * This is our team robot, with all the functions necessary to run the Teleop in ManualTeleop.
@@ -114,6 +115,14 @@ public class TeamRobot {
 
         imu = hardwareMap.get(BNO055IMU.class, "imu2");
         imu.initialize(parameters);
+    }
+
+    public void calibrateGyro(LinearOpMode linearOpMode) {
+        // make sure the gyro is calibrated before continuing
+        while (!linearOpMode.isStopRequested() && !imu.isGyroCalibrated())  {
+            linearOpMode.sleep(50);
+            linearOpMode.idle();
+        }
     }
 
     /**

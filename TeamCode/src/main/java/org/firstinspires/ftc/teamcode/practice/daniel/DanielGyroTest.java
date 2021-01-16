@@ -80,8 +80,16 @@ public class DanielGyroTest extends LinearOpMode {
          */
         this.bot = new TeamRobot(hardwareMap);
         bot.init();
+        bot.calibrateGyro(this);
+
+        while (!isStarted()) {
+            sleep(10);
+            idle();
+        }
 
         bot.gyroDrive(this, 0.10, 46, 0);
         sleep(1000);
+        bot.calibrateGyro(this);
+
     }
 }
