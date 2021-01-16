@@ -113,10 +113,10 @@ public class AutonomousTeamRobot {
     //turns the robot
     //note: angle is not the actual angle it turns
     public void turn(int angle, int direction) throws InterruptedException{
-        wheelFrontLeft.setPower(-1.5 * direction);
-        wheelFrontRight.setPower(1.5  * direction);
-        wheelBackLeft.setPower(-1.5  * direction);
-        wheelBackRight.setPower(1.5  * direction);
+        wheelFrontLeft.setPower(-0.5 * direction);
+        wheelFrontRight.setPower(0.5  * direction);
+        wheelBackLeft.setPower(-0.5  * direction);
+        wheelBackRight.setPower(0.5  * direction);
 
         TimeUnit.MILLISECONDS.sleep(10 * angle);
 
