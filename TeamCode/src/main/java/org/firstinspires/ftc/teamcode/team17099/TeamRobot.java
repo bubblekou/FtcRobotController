@@ -66,7 +66,7 @@ public class TeamRobot {
     // Grabber system
     private DcMotor arm = null;
     private boolean isHeld = false;
-    private Servo grabber = null;
+    public Servo grabber = null;
 
     public BNO055IMU imu;
 

@@ -90,16 +90,11 @@ public class DanielAuto extends LinearOpMode {
         this.bot = new TeamRobot(hardwareMap);
         bot.init();
 
-
-//        bot.gyroDrive(this, 0.25, 60, 0);
-//        TimeUnit.SECONDS.sleep(1);
-//        bot.gyroDrive(this, 0.25, -36, 0);
-//        TimeUnit.SECONDS.sleep(1);
-        bot.gyroStrafeSideway(this, 0.25, 18, 0);
-        TimeUnit.SECONDS.sleep(1);
-        bot.gyroStrafeSideway(this, 0.25, 18, 0);
-        TimeUnit.SECONDS.sleep(1);
-        bot.gyroTurn(this, 0.25, 90);
+        bot.grabber.setPosition(0);
+        bot.gyroDrive(this, 0.50, -45, 0);
+        bot.gyroTurn(this, 0.50, -60);
+        bot.dropArm();
+        bot.flipGrabber();
 
         // make sure the gyro is calibrated before continuing
         while (!isStopRequested() && !bot.imu.isGyroCalibrated())  {
