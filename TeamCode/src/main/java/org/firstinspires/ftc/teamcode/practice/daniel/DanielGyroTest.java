@@ -84,12 +84,6 @@ public class DanielGyroTest extends LinearOpMode {
         bot.gyroDrive(this, 0.10, 46, 0);
         sleep(1000);
 
-        // make sure the gyro is calibrated before continuing
-        while (!isStopRequested() && !bot.imu.isGyroCalibrated())  {
-            sleep(50);
-            idle();
-        }
-
         while (!isStarted()) {
 
             sleep(10);

@@ -97,12 +97,6 @@ public class DanielAuto extends LinearOpMode {
         bot.dropArm();
         bot.flipGrabber();
 
-        // make sure the gyro is calibrated before continuing
-        while (!isStopRequested() && !bot.imu.isGyroCalibrated())  {
-            sleep(50);
-            idle();
-        }
-
         while (!isStarted()) {
 
             sleep(10);
