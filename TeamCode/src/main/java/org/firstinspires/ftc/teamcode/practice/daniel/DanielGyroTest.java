@@ -31,17 +31,8 @@ package org.firstinspires.ftc.teamcode.practice.daniel;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.teamcode.practice.ethan.AutonomousTeamRobot;
 import org.firstinspires.ftc.teamcode.team17099.TeamRobot;
-
-import java.util.concurrent.TimeUnit;
 
 /**
  * This file illustrates the concept of driving a path based on Gyro heading and encoder counts.
@@ -76,9 +67,9 @@ import java.util.concurrent.TimeUnit;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="DanielAuto", group="Daniel's Teleops")
+@Autonomous(name="DanielGyroTest", group="Daniel's Teleops")
 //@Disabled
-public class DanielAuto extends LinearOpMode {
+public class DanielGyroTest extends LinearOpMode {
     private TeamRobot bot;
     @Override
     public void runOpMode() throws InterruptedException {
@@ -90,12 +81,11 @@ public class DanielAuto extends LinearOpMode {
         this.bot = new TeamRobot(hardwareMap);
         bot.init();
 
-        bot.grabber.setPosition(0);
-        bot.gyroDrive(this, 0.50, -45, 0);
-        bot.gyroTurn(this, 0.50, -60);
-        bot.gyroDrive(this, 0.50, -3, 0);
-        bot.dropArm();
-        bot.flipGrabber();
+        bot.gyroDrive(this, 0.50, -24, 0);
+        bot.gyroTurn(this, 0.5, 90);
+        bot.gyroDrive(this, 0.50, -10, 0);
+        bot.gyroTurn(this, 0.5, -90);
+        bot.shootPowerShot();
 
         // make sure the gyro is calibrated before continuing
         while (!isStopRequested() && !bot.imu.isGyroCalibrated())  {
