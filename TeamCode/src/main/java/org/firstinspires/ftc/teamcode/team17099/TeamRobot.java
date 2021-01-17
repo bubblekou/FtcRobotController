@@ -117,14 +117,6 @@ public class TeamRobot {
         imu.initialize(parameters);
     }
 
-    public void calibrateGyro(LinearOpMode linearOpMode) {
-        // make sure the gyro is calibrated before continuing
-        while (!linearOpMode.isStopRequested() && !imu.isGyroCalibrated())  {
-            linearOpMode.sleep(50);
-            linearOpMode.idle();
-        }
-    }
-
     /**
      * Increases or decrease drive train turbo. Use higher turbo for fast speed and slower turbo
      * for better maneuver
@@ -281,7 +273,6 @@ public class TeamRobot {
     }
 
     public void gyroHold(LinearOpMode opMode, double speed, double angle, double holdTime) {
-
         ElapsedTime holdTimer = new ElapsedTime();
 
         // keep looping while we have time remaining.
@@ -334,7 +325,8 @@ public class TeamRobot {
         double robotError;
 
         // calculate error in -179 to +180 range  (
-        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        // We choose XYZ because the control hub is mounted vertically
+        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
         robotError = targetAngle - angles.firstAngle;
         while (robotError > 180) robotError -= 360;
         while (robotError <= -180) robotError += 360;
@@ -368,7 +360,7 @@ public class TeamRobot {
 
             runToTarget(frontLeftTarget, frontRightTarget, backLeftTarget, backRightTarget);
 
-            // start motion.
+            // Start motion.
             speed = Range.clip(Math.abs(speed), 0.0, 1.0);
             forward(speed);
 
@@ -398,6 +390,18 @@ public class TeamRobot {
                 }
 
                 setPower(leftSpeed, rightSpeed, leftSpeed, rightSpeed);
+
+                // Display drive status for the driver.
+                opMode.telemetry.addData("Err/St",  "%5.1f/%5.1f",  error, steer);
+                opMode.telemetry.addData("Target",  "%7d:%7d:%7d:%7d",
+                        wheelFrontLeft,  wheelFrontRight, wheelBackLeft, wheelBackRight);
+                opMode.telemetry.addData("Actual",  "%7d:%7d:%7d:%7d",
+                        wheelFrontLeft.getCurrentPosition(),
+                        wheelFrontRight.getCurrentPosition(),
+                        wheelBackLeft.getCurrentPosition(),
+                        wheelBackRight.getCurrentPosition());
+                opMode.telemetry.addData("Speed",   "%5.2f:%5.2f",  leftSpeed, rightSpeed);
+                opMode.telemetry.update();
             }
 
             resetMotors();
