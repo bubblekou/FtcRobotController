@@ -87,9 +87,17 @@ public class DanielGyroTest extends LinearOpMode {
             idle();
         }
 
-        bot.gyroDrive(this, 0.10, 46, 0);
-        sleep(1000);
-        bot.calibrateGyro(this);
+        bot.gyroDrive(this, 0.30, 51, 0);
+        int count = 0;
+        bot.startHighFlywheel();
+        while (opModeIsActive() && count < 5) {
+            count++;
+            telemetry.addData(">", "Ring " + count);
+            telemetry.update();
 
+            bot.pushRing();
+            sleep(1000);
+        }
+        bot.stopFlywheel();
     }
 }
