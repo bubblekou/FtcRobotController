@@ -49,6 +49,7 @@ public class GyroDriveRobot extends TeamRobot {
         imu.initialize(parameters);
 
         this.opMode = opMode;
+        calibrateGyro();
     }
 
     public void calibrateGyro() {

@@ -80,8 +80,6 @@ public class DanielGyroTest extends LinearOpMode {
          * The init() method of the hardware class does most of the work here
          */
         this.bot = new GyroDriveRobot(hardwareMap, this);
-        bot.init();
-        bot.calibrateGyro(this);
 
         while (!isStarted()) {
             sleep(10);
@@ -91,7 +89,7 @@ public class DanielGyroTest extends LinearOpMode {
         bot.gyroDrive(this, 0.30, 51, 0);
         int count = 0;
         bot.startHighFlywheel();
-        while (opModeIsActive() && count < 5) {
+        while (opModeIsActive() && count < 4) {
             count++;
             telemetry.addData(">", "Ring " + count);
             telemetry.update();
