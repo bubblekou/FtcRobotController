@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode.practice.daniel;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.teamcode.team17099.GyroDriveRobot;
 import org.firstinspires.ftc.teamcode.team17099.TeamRobot;
 
 /**
@@ -70,7 +71,7 @@ import org.firstinspires.ftc.teamcode.team17099.TeamRobot;
 @Autonomous(name="DanielGyroTest", group="Daniel's Teleops")
 //@Disabled
 public class DanielGyroTest extends LinearOpMode {
-    private TeamRobot bot;
+    private GyroDriveRobot bot;
     @Override
     public void runOpMode() throws InterruptedException {
 
@@ -78,7 +79,7 @@ public class DanielGyroTest extends LinearOpMode {
          * Initialize the standard drive system variables.
          * The init() method of the hardware class does most of the work here
          */
-        this.bot = new TeamRobot(hardwareMap);
+        this.bot = new GyroDriveRobot(hardwareMap, this);
         bot.init();
         bot.calibrateGyro(this);
 
