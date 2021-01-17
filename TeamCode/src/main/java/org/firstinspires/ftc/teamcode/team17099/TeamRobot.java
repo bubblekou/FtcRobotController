@@ -19,8 +19,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.practice.daniel.DanielGyroTest;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
-
 /**
  * This is our team robot, with all the functions necessary to run the Teleop in ManualTeleop.
  */
@@ -117,24 +115,14 @@ public class TeamRobot {
 
         imu = hardwareMap.get(BNO055IMU.class, "imu2");
         imu.initialize(parameters);
-
-        wheelFrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        wheelFrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        wheelBackLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        wheelBackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     public void calibrateGyro(LinearOpMode linearOpMode) {
         // make sure the gyro is calibrated before continuing
         while (!linearOpMode.isStopRequested() && !imu.isGyroCalibrated())  {
-            linearOpMode.telemetry.addData(">", "Calibrating ...");
-            linearOpMode.telemetry.update();
             linearOpMode.sleep(50);
             linearOpMode.idle();
         }
-
-        linearOpMode.telemetry.addData(">", "Calibrated!");
-        linearOpMode.telemetry.update();
     }
 
     /**
@@ -288,6 +276,7 @@ public class TeamRobot {
 
         // keep looping while we are still active, and not on heading.
         while (opMode.opModeIsActive() && !onHeading(speed, angle, P_TURN_COEFF)) {
+            // Update telemetry & Allow time for other processes to run.
         }
     }
 
@@ -298,6 +287,7 @@ public class TeamRobot {
         // keep looping while we have time remaining.
         holdTimer.reset();
         while (opMode.opModeIsActive() && (holdTimer.time() < holdTime)) {
+            // Update telemetry & Allow time for other processes to run.
             onHeading(speed, angle, P_TURN_COEFF);
         }
 
@@ -376,15 +366,10 @@ public class TeamRobot {
             int backLeftTarget = wheelBackLeft.getCurrentPosition() + moveCounts;
             int backRightTarget = wheelBackRight.getCurrentPosition() + moveCounts;
 
-            opMode.telemetry.addData(">", String.format("Target (%d, %d, %d, %d)", frontLeftTarget,
-                    frontRightTarget, backLeftTarget, backRightTarget));
-            opMode.telemetry.update();
             runToTarget(frontLeftTarget, frontRightTarget, backLeftTarget, backRightTarget);
 
             // start motion.
             speed = Range.clip(Math.abs(speed), 0.0, 1.0);
-            opMode.telemetry.addData(">", String.format("Speed .1f", speed));
-            opMode.telemetry.update();
             forward(speed);
 
             // keep looping while we are still active, and BOTH motors are running.
@@ -413,8 +398,6 @@ public class TeamRobot {
                 }
 
                 setPower(leftSpeed, rightSpeed, leftSpeed, rightSpeed);
-                opMode.telemetry.addData(">", String.format("Speed (.1f, .1f)", leftSpeed, rightSpeed));
-                opMode.telemetry.update();
             }
 
             resetMotors();
