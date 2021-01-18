@@ -210,11 +210,8 @@ public class GyroDriveRobot extends TeamRobot {
                         wheelFrontRight.getCurrentPosition(),
                         wheelBackLeft.getCurrentPosition(),
                         wheelBackRight.getCurrentPosition());
-                opMode.telemetry.addData("Speed",   "%5.1f:%5.1f:%5.1f:%5.1f",
-                        wheelFrontLeft.getPower(),
-                        wheelFrontRight.getPower(),
-                        wheelBackLeft.getPower(),
-                        wheelBackRight.getPower());
+                opMode.telemetry.addData("Speed",   "%5.1f:%5.1f",
+                        leftSpeed, rightSpeed);
                 opMode.telemetry.update();
             }
 
@@ -298,6 +295,11 @@ public class GyroDriveRobot extends TeamRobot {
 
     private void resetMotors() {
         setPower(0, 0, 0, 0);
+        wheelFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        wheelFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        wheelBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        wheelBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         wheelFrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         wheelFrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         wheelBackLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -362,20 +364,20 @@ public class GyroDriveRobot extends TeamRobot {
                     }
                 });
 
-        telemetry.addLine()
-                .addData("grvty", new Func<String>() {
-                    @Override public String value() {
-                        return gravity.toString();
-                    }
-                })
-                .addData("mag", new Func<String>() {
-                    @Override public String value() {
-                        return String.format(Locale.getDefault(), "%.3f",
-                                Math.sqrt(gravity.xAccel*gravity.xAccel
-                                        + gravity.yAccel*gravity.yAccel
-                                        + gravity.zAccel*gravity.zAccel));
-                    }
-                });
+//        telemetry.addLine()
+//                .addData("grvty", new Func<String>() {
+//                    @Override public String value() {
+//                        return gravity.toString();
+//                    }
+//                })
+//                .addData("mag", new Func<String>() {
+//                    @Override public String value() {
+//                        return String.format(Locale.getDefault(), "%.3f",
+//                                Math.sqrt(gravity.xAccel*gravity.xAccel
+//                                        + gravity.yAccel*gravity.yAccel
+//                                        + gravity.zAccel*gravity.zAccel));
+//                    }
+//                });
     }
 
     //----------------------------------------------------------------------------------------------
