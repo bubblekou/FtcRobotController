@@ -5,9 +5,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.team17099.GyroDriveRobot;
 
-@Autonomous(name="Daniel: Gryo Straight", group="Daniel's Teleops")
+@Autonomous(name="Daniel: Gyro Hold", group="Daniel's Teleops")
 //@Disabled
-public class DanielGyroStraight extends LinearOpMode {
+public class DanielGyroHeading extends LinearOpMode {
     private GyroDriveRobot bot;
     @Override
     public void runOpMode() throws InterruptedException {
@@ -24,7 +24,7 @@ public class DanielGyroStraight extends LinearOpMode {
             idle();
         }
 
-        bot.gyroDrive(0.30, 50, 0);
-//        bot.gyroDrive(0.30, -25, 0);
+        bot.gyroHold(0.30, -45, 30);
+//        bot.gyroHold(0.30, 45, 30);
     }
 }
