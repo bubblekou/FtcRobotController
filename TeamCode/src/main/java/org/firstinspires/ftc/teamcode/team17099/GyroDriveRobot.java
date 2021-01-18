@@ -143,7 +143,7 @@ public class GyroDriveRobot extends TeamRobot {
         return Range.clip(error * PCoeff, -1, 1);
     }
 
-    public void gyroDrive(LinearOpMode opMode, double speed, double distance, double angle) {
+    public void gyroDrive(double speed, double distance, double angle) {
         int moveCounts;
         double max;
         double error;
@@ -169,6 +169,12 @@ public class GyroDriveRobot extends TeamRobot {
             // start motion.
             speed = Range.clip(Math.abs(speed), 0.0, 1.0);
             forward(speed);
+            opMode.telemetry.addData("Speed",   "%5.1f:%5.1f:%5.1f:%5.1f",
+                    wheelFrontLeft.getPower(),
+                    wheelFrontRight.getPower(),
+                    wheelBackLeft.getPower(),
+                    wheelBackRight.getPower());
+            opMode.telemetry.update();
 
             // keep looping while we are still active, and BOTH motors are running.
             while (opMode.opModeIsActive() &&
@@ -180,7 +186,6 @@ public class GyroDriveRobot extends TeamRobot {
                 // adjust relative speed based on heading error.
                 error = getError(angle);
                 steer = getSteer(error, P_DRIVE_COEFF);
-                opMode.telemetry.addData(">", "Error %3.1f, steer %3.1f ", error, steer );
 
                 // if driving in reverse, the motor correction also needs to be reversed
                 if (distance < 0)
@@ -197,7 +202,19 @@ public class GyroDriveRobot extends TeamRobot {
                 }
 
                 setPower(leftSpeed, rightSpeed, leftSpeed, rightSpeed);
-                opMode.telemetry.addData(">", "Speed %3.1f, Speed %3.1f ", leftSpeed, rightSpeed );
+                opMode.telemetry.addData("Err/St",  "%5.1f/%5.1f",  error, steer);
+                opMode.telemetry.addData("Target",  "%7d:%7d:%7d:%7d",
+                        frontLeftTarget,  frontRightTarget, backLeftTarget, backRightTarget);
+                opMode.telemetry.addData("Actual",  "%7d:%7d:%7d:%7d",
+                        wheelFrontLeft.getCurrentPosition(),
+                        wheelFrontRight.getCurrentPosition(),
+                        wheelBackLeft.getCurrentPosition(),
+                        wheelBackRight.getCurrentPosition());
+                opMode.telemetry.addData("Speed",   "%5.1f:%5.1f:%5.1f:%5.1f",
+                        wheelFrontLeft.getPower(),
+                        wheelFrontRight.getPower(),
+                        wheelBackLeft.getPower(),
+                        wheelBackRight.getPower());
                 opMode.telemetry.update();
             }
 
@@ -215,8 +232,6 @@ public class GyroDriveRobot extends TeamRobot {
 
         // Ensure that the opmode is still active
         if (opMode.opModeIsActive()) {
-            resetMotors();
-
             // Determine new target position, and pass to motor controller
             moveCounts = (int) Math.abs(distance * NERVEREST20_COUNTS_PER_INCH);
 
@@ -283,11 +298,6 @@ public class GyroDriveRobot extends TeamRobot {
 
     private void resetMotors() {
         setPower(0, 0, 0, 0);
-        wheelFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        wheelFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        wheelBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        wheelBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
         wheelFrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         wheelFrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         wheelBackLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
