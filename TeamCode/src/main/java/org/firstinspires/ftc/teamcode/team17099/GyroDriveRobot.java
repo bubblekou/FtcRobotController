@@ -70,11 +70,12 @@ public class GyroDriveRobot extends TeamRobot {
         setPower(speed, speed, speed, speed);
     }
 
-    public void gyroTurn(LinearOpMode opMode, double speed, double angle) {
+    public void gyroTurn(double speed, double angle) {
 
         // keep looping while we are still active, and not on heading.
         while (opMode.opModeIsActive() && !onHeading(speed, angle, P_TURN_COEFF)) {
             // Update telemetry & Allow time for other processes to run.
+            opMode.telemetry.update();
         }
     }
 
@@ -124,6 +125,9 @@ public class GyroDriveRobot extends TeamRobot {
         wheelBackRight.setPower(rightSpeed);
 
         // Display it for the driver.
+        opMode.telemetry.addData("Target", "%5.2f", angle);
+        opMode.telemetry.addData("Err/St", "%5.2f/%5.2f", error, steer);
+        opMode.telemetry.addData("Speed.", "%5.2f:%5.2f", leftSpeed, rightSpeed);
 
         return onTarget;
     }
@@ -219,7 +223,7 @@ public class GyroDriveRobot extends TeamRobot {
         }
     }
 
-    public void gyroStrafeSideway(LinearOpMode opMode, double speed, double distance, double angle) {
+    public void gyroStrafeSideway(double speed, double distance, double angle) {
         int moveCounts;
         double max;
         double error;
@@ -271,7 +275,7 @@ public class GyroDriveRobot extends TeamRobot {
                     backSpeed /= max;
                 }
 
-                setPower(sign * frontSpeed, -sign * frontSpeed, -sign * 0.6 * backSpeed, sign * 0.6 * backSpeed);
+                setPower(sign * frontSpeed, -sign * frontSpeed, -sign * 0.9 * backSpeed, sign * 0.9 * backSpeed);
 
                 // Display drive status for the driver.
             }
