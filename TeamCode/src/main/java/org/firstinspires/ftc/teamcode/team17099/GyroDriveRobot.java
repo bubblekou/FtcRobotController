@@ -32,7 +32,7 @@ public class GyroDriveRobot extends TeamRobot {
     private static final double HEADING_THRESHOLD = 1;      // As tight as we can make it with an integer gyro
     private static final double P_TURN_COEFF = 0.1;     // Larger is more responsive, but also less stable
     private static final double P_DRIVE_COEFF = 0.075;     // Larger is more responsive, but also less stable
-    private static final double WEIGHT_DISTRUBUTION_RATIO = 0.83;
+    private static final double WEIGHT_DISTRUBUTION_RATIO = 0.5;
 
     public BNO055IMU imu;
     private LinearOpMode opMode;
@@ -206,7 +206,7 @@ public class GyroDriveRobot extends TeamRobot {
     }
 
     private void updateStrafeTelemetry(double error, double steer, int frontLeftTarget, int frontRightTarget, int backLeftTarget, int backRightTarget) {
-        opMode.telemetry.addData("Err/St",  "%5.2f/%5.2f",  error, steer);
+//        opMode.telemetry.addData("Err/St",  "%.2f/%.2f",  error, steer);
         opMode.telemetry.addData("Target",  "%7d:%7d:%7d:%7d",
                 frontLeftTarget,  frontRightTarget, backLeftTarget, backRightTarget);
         opMode.telemetry.addData("Actual",  "%7d:%7d:%7d:%7d",
@@ -214,7 +214,7 @@ public class GyroDriveRobot extends TeamRobot {
                 wheelFrontRight.getCurrentPosition(),
                 wheelBackLeft.getCurrentPosition(),
                 wheelBackRight.getCurrentPosition());
-        opMode.telemetry.addData("Speed",   "%5.2f:%5.2f:%5.2f:%5.2f",
+        opMode.telemetry.addData("Speed",   "%.2f:%.2f:%.2f:%.2f",
                 wheelFrontLeft.getPower(), wheelFrontRight.getPower(),
                 wheelBackLeft.getPower(), wheelBackRight.getPower());
         opMode.telemetry.update();
