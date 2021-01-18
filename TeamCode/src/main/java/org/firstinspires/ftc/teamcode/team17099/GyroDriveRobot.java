@@ -31,8 +31,8 @@ public class GyroDriveRobot extends TeamRobot {
             (NERVEREST20_COUNTS_PER_ROTATION * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415);
     private static final double HEADING_THRESHOLD = 1;      // As tight as we can make it with an integer gyro
     private static final double P_TURN_COEFF = 0.1;     // Larger is more responsive, but also less stable
-    private static final double P_DRIVE_COEFF = 0.075;     // Larger is more responsive, but also less stable
-    private static final double WEIGHT_DISTRUBUTION_RATIO = 0.5;
+    private static final double P_DRIVE_COEFF = 0.025;     // Larger is more responsive, but also less stable
+    public static final double STRAFE_DISTANCE_MULTIPLIER = 0.7;
 
     public BNO055IMU imu;
     private LinearOpMode opMode;
@@ -73,6 +73,12 @@ public class GyroDriveRobot extends TeamRobot {
         setPower(speed, speed, speed, speed);
     }
 
+    /**
+     * Turning robot by gyro. Left is positive
+     *
+     * @param speed
+     * @param angle
+     */
     public void gyroTurn(double speed, double angle) {
         // keep looping while we are still active, and not on heading.
         while (opMode.opModeIsActive() && !onHeading(speed, angle, P_TURN_COEFF)) {
@@ -81,6 +87,12 @@ public class GyroDriveRobot extends TeamRobot {
         }
     }
 
+    /**
+     * Hold at the angle
+     * @param speed
+     * @param angle Left is positive
+     * @param holdTime
+     */
     public void gyroHold(double speed, double angle, double holdTime) {
         ElapsedTime holdTimer = new ElapsedTime();
 
@@ -119,8 +131,8 @@ public class GyroDriveRobot extends TeamRobot {
         // Send desired speeds to motors.
         wheelFrontLeft.setPower(leftSpeed);
         wheelFrontRight.setPower(rightSpeed);
-        wheelBackLeft.setPower(0.9*leftSpeed);
-        wheelBackRight.setPower(0.9*rightSpeed);
+        wheelBackLeft.setPower(leftSpeed);
+        wheelBackRight.setPower(rightSpeed);
 
         // Display it for the driver.
         opMode.telemetry.addData("Target", "%5.2f", angle);
@@ -172,7 +184,7 @@ public class GyroDriveRobot extends TeamRobot {
             speed = Range.clip(Math.abs(speed), 0.0, 1.0);
             forward(speed);
 
-            // keep looping while we are still active, and BOTH motors are running.
+            // keep looping while we are still active, and all motors are running.
             while (opMode.opModeIsActive() &&
                     wheelBackLeft.isBusy() &&
                     wheelBackRight.isBusy() &&
@@ -206,7 +218,7 @@ public class GyroDriveRobot extends TeamRobot {
     }
 
     private void updateStrafeTelemetry(double error, double steer, int frontLeftTarget, int frontRightTarget, int backLeftTarget, int backRightTarget) {
-//        opMode.telemetry.addData("Err/St",  "%.2f/%.2f",  error, steer);
+        opMode.telemetry.addData("Err/St",  "%5.2f/%5.2f",  error, steer);
         opMode.telemetry.addData("Target",  "%7d:%7d:%7d:%7d",
                 frontLeftTarget,  frontRightTarget, backLeftTarget, backRightTarget);
         opMode.telemetry.addData("Actual",  "%7d:%7d:%7d:%7d",
@@ -233,7 +245,7 @@ public class GyroDriveRobot extends TeamRobot {
             resetMotors();
 
             // Determine new target position, and pass to motor controller
-            moveCounts = (int) Math.abs(distance * NERVEREST20_COUNTS_PER_INCH);
+            moveCounts = (int) Math.abs(distance * NERVEREST20_COUNTS_PER_INCH / STRAFE_DISTANCE_MULTIPLIER);
 
             // Set Target and Turn On RUN_TO_POSITION
             int sign = distance > 0 ? 1 : -1;
@@ -249,12 +261,12 @@ public class GyroDriveRobot extends TeamRobot {
             setPower(sign * speed, -sign * speed, -sign * speed,
                     sign * speed);
 
-            // keep looping while we are still active, and BOTH motors are running.
+            // keep looping while we are still active, and all motors are running.
             while (opMode.opModeIsActive() &&
-                    (isOffTarget(wheelFrontLeft, frontLeftTarget, 5)
-                            && isOffTarget(wheelFrontRight, frontRightTarget, 5)
-                            && isOffTarget(wheelBackLeft, backLeftTarget, 5)
-                            && isOffTarget(wheelBackRight, backRightTarget, 5))) {
+                    wheelBackLeft.isBusy() &&
+                    wheelBackRight.isBusy() &&
+                    wheelFrontLeft.isBusy() &&
+                    wheelFrontRight.isBusy()) {
 
                 // adjust relative speed based on heading error.
                 error = getError(angle);
@@ -274,10 +286,10 @@ public class GyroDriveRobot extends TeamRobot {
                     backSpeed /= max;
                 }
 
-                setPower(sign * frontSpeed,
+                setPower(sign  * frontSpeed,
                         -sign * frontSpeed,
-                        -sign * WEIGHT_DISTRUBUTION_RATIO * backSpeed,
-                        sign * WEIGHT_DISTRUBUTION_RATIO * backSpeed);
+                        -sign  * backSpeed,
+                        sign  *  backSpeed);
 
                 // Display drive status for the driver.
                 updateStrafeTelemetry(error, steer, frontLeftTarget, frontRightTarget, backLeftTarget, backRightTarget);
@@ -318,10 +330,6 @@ public class GyroDriveRobot extends TeamRobot {
         wheelFrontRight.setPower(frontRightSpeed);
         wheelBackLeft.setPower(backLeftSpeed);
         wheelBackRight.setPower(backRightSpeed);
-    }
-
-    private boolean isOffTarget(DcMotor motor, int target, int tolerance) {
-        return Math.abs(motor.getCurrentPosition() - target) >= tolerance;
     }
 
     private void stopAllMotors() {
