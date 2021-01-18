@@ -31,18 +31,9 @@ package org.firstinspires.ftc.teamcode.practice.daniel;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.teamcode.practice.ethan.AutonomousTeamRobot;
 import org.firstinspires.ftc.teamcode.team17099.GyroDriveRobot;
 import org.firstinspires.ftc.teamcode.team17099.TeamRobot;
-
-import java.util.concurrent.TimeUnit;
 
 /**
  * This file illustrates the concept of driving a path based on Gyro heading and encoder counts.
@@ -77,9 +68,9 @@ import java.util.concurrent.TimeUnit;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="DanielAuto", group="Daniel's Teleops")
+@Autonomous(name="DanielGyroTest", group="Daniel's Teleops")
 //@Disabled
-public class DanielAuto extends LinearOpMode {
+public class DanielGyroTest extends LinearOpMode {
     private GyroDriveRobot bot;
     @Override
     public void runOpMode() throws InterruptedException {
@@ -89,13 +80,30 @@ public class DanielAuto extends LinearOpMode {
          * The init() method of the hardware class does most of the work here
          */
         this.bot = new GyroDriveRobot(hardwareMap, this);
-        bot.init();
 
-        bot.grabber.setPosition(0);
-        bot.gyroDrive( 0.10, -51, 0);
-//        bot.gyroTurn(this, 0.10, -60);
-//        bot.gyroDrive( 0.10, -3, 0);
-//        bot.dropArm();
-//        bot.flipGrabber();
+        telemetry.update();
+        while (!isStarted()) {
+            sleep(10);
+            idle();
+        }
+
+        bot.gyroDrive(0.30, 51, 0);
+        sleep(1000);
+        bot.gyroStrafeSideway( 0.30, 6, 0);
+        sleep(1000);
+        bot.gyroStrafeSideway( 0.30, -6, 0);
+        sleep(1000);
+        bot.gyroTurn(0.30, 90);
+//        int count = 0;
+//        bot.startHighFlywheel();
+//        while (opModeIsActive() && count < 4) {
+//            count++;
+//            telemetry.addData(">", "Ring " + count);
+//            telemetry.update();
+//
+//            bot.pushRing();
+//            sleep(1000);
+//        }
+//        bot.stopFlywheel();
     }
 }
