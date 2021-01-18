@@ -59,6 +59,8 @@ public class GyroDriveRobot extends TeamRobot {
     public void calibrateGyro() {
         // make sure the gyro is calibrated before continuing
         while (!opMode.isStopRequested() && !imu.isGyroCalibrated())  {
+            opMode.telemetry.addData("Mode", "calibrating...");
+            opMode.telemetry.update();
             opMode.sleep(50);
             opMode.idle();
         }
