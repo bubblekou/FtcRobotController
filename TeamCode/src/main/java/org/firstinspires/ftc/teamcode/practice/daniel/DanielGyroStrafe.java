@@ -35,42 +35,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.team17099.GyroDriveRobot;
 import org.firstinspires.ftc.teamcode.team17099.TeamRobot;
 
-/**
- * This file illustrates the concept of driving a path based on Gyro heading and encoder counts.
- * It uses the common Pushbot hardware class to define the drive on the robot.
- * The code is structured as a LinearOpMode
- *
- * The code REQUIRES that you DO have encoders on the wheels,
- *   otherwise you would use: PushbotAutoDriveByTime;
- *
- *  This code ALSO requires that you have a Modern Robotics I2C gyro with the name "gyro"
- *   otherwise you would use: PushbotAutoDriveByEncoder;
- *
- *  This code requires that the drive Motors have been configured such that a positive
- *  power command moves them forward, and causes the encoders to count UP.
- *
- *  This code uses the RUN_TO_POSITION mode to enable the Motor controllers to generate the run profile
- *
- *  In order to calibrate the Gyro correctly, the robot must remain stationary during calibration.
- *  This is performed when the INIT button is pressed on the Driver Station.
- *  This code assumes that the robot is stationary when the INIT button is pressed.
- *  If this is not the case, then the INIT should be performed again.
- *
- *  Note: in this example, all angles are referenced to the initial coordinate frame set during the
- *  the Gyro Calibration process, or whenever the program issues a resetZAxisIntegrator() call on the Gyro.
- *
- *  The angle of movement/rotation is assumed to be a standardized rotation around the robot Z axis,
- *  which means that a Positive rotation is Counter Clock Wise, looking down on the field.
- *  This is consistent with the FTC field coordinate conventions set out in the document:
- *  ftc_app\doc\tutorial\FTC_FieldCoordinateSystemDefinition.pdf
- *
- * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
- */
-
-@Autonomous(name="DanielGyroTest", group="Daniel's Teleops")
+@Autonomous(name="Daniel: Gyro Strafe", group="Daniel's Teleops")
 //@Disabled
-public class DanielGyroTest extends LinearOpMode {
+public class DanielGyroStrafe extends LinearOpMode {
     private GyroDriveRobot bot;
     @Override
     public void runOpMode() throws InterruptedException {
@@ -88,16 +55,6 @@ public class DanielGyroTest extends LinearOpMode {
         }
 
         bot.gyroStrafeSideway(0.30, 50, 0);
-//        int count = 0;
-//        bot.startHighFlywheel();
-//        while (opModeIsActive() && count < 4) {
-//            count++;s
-//            telemetry.addData(">", "Ring " + count);
-//            telemetry.update();
-//
-//            bot.pushRing();
-//            sleep(1000);
-//        }
-//        bot.stopFlywheel();
+        bot.gyroStrafeSideway(0.30, -25, 0);
     }
 }

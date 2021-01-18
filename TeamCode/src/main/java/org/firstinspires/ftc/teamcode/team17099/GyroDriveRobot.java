@@ -31,8 +31,7 @@ public class GyroDriveRobot extends TeamRobot {
             (NERVEREST20_COUNTS_PER_ROTATION * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415);
     private static final double HEADING_THRESHOLD = 1;      // As tight as we can make it with an integer gyro
     private static final double P_TURN_COEFF = 0.1;     // Larger is more responsive, but also less stable
-    private static final double P_DRIVE_COEFF = 0.075;     // Larger is more responsive, but also less stable
-    private static final double WEIGHT_DISTRUBUTION_RATIO = 0.83;
+    private static final double P_DRIVE_COEFF = 0.025;     // Larger is more responsive, but also less stable
 
     public BNO055IMU imu;
     private LinearOpMode opMode;
@@ -119,8 +118,8 @@ public class GyroDriveRobot extends TeamRobot {
         // Send desired speeds to motors.
         wheelFrontLeft.setPower(leftSpeed);
         wheelFrontRight.setPower(rightSpeed);
-        wheelBackLeft.setPower(0.9*leftSpeed);
-        wheelBackRight.setPower(0.9*rightSpeed);
+        wheelBackLeft.setPower(leftSpeed);
+        wheelBackRight.setPower(rightSpeed);
 
         // Display it for the driver.
         opMode.telemetry.addData("Target", "%5.2f", angle);
@@ -214,7 +213,7 @@ public class GyroDriveRobot extends TeamRobot {
                 wheelFrontRight.getCurrentPosition(),
                 wheelBackLeft.getCurrentPosition(),
                 wheelBackRight.getCurrentPosition());
-        opMode.telemetry.addData("Speed",   "%5.2f:%5.2f:%5.2f:%5.2f",
+        opMode.telemetry.addData("Speed",   "%.2f:%.2f:%.2f:%.2f",
                 wheelFrontLeft.getPower(), wheelFrontRight.getPower(),
                 wheelBackLeft.getPower(), wheelBackRight.getPower());
         opMode.telemetry.update();
@@ -274,10 +273,10 @@ public class GyroDriveRobot extends TeamRobot {
                     backSpeed /= max;
                 }
 
-                setPower(sign * frontSpeed,
+                setPower(sign  * frontSpeed,
                         -sign * frontSpeed,
-                        -sign * WEIGHT_DISTRUBUTION_RATIO * backSpeed,
-                        sign * WEIGHT_DISTRUBUTION_RATIO * backSpeed);
+                        -sign  * backSpeed,
+                        sign  *  backSpeed);
 
                 // Display drive status for the driver.
                 updateStrafeTelemetry(error, steer, frontLeftTarget, frontRightTarget, backLeftTarget, backRightTarget);
