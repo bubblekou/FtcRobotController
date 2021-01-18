@@ -89,9 +89,9 @@ public class DanielGyroTest extends LinearOpMode {
 
         bot.gyroDrive(0.30, 51, 0);
         sleep(1000);
-        bot.gyroStrafeSideway(this, 0.30, 6, 0);
+        bot.gyroStrafeSideway( 0.30, 6, 0);
         sleep(1000);
-        bot.gyroStrafeSideway(this, 0.30, -6, 0);
+        bot.gyroStrafeSideway( 0.30, -6, 0);
         sleep(1000);
         bot.gyroTurn(0.30, 90);
         sleep(1000);

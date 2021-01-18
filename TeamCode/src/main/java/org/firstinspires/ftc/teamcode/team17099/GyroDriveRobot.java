@@ -121,8 +121,8 @@ public class GyroDriveRobot extends TeamRobot {
         // Send desired speeds to motors.
         wheelFrontLeft.setPower(leftSpeed);
         wheelFrontRight.setPower(rightSpeed);
-        wheelBackLeft.setPower(leftSpeed);
-        wheelBackRight.setPower(rightSpeed);
+        wheelBackLeft.setPower(0.9*leftSpeed);
+        wheelBackRight.setPower(0.9*rightSpeed);
 
         // Display it for the driver.
         opMode.telemetry.addData("Target", "%5.2f", angle);
