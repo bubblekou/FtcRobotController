@@ -267,7 +267,7 @@ public class GyroDriveRobot extends TeamRobot {
                     backSpeed /= max;
                 }
 
-                setPower(sign * frontSpeed, -sign * frontSpeed, -sign * 0.9 * backSpeed, sign * 0.9 * backSpeed);
+                setPower(sign * frontSpeed, -sign * frontSpeed, -sign * backSpeed, sign * backSpeed);
 
                 // Display drive status for the driver.
                 updateStrafeTelemetry(error, steer, frontLeftTarget, frontRightTarget, backLeftTarget, backRightTarget);
