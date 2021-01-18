@@ -92,10 +92,10 @@ public class DanielAuto extends LinearOpMode {
         bot.init();
 
         bot.grabber.setPosition(0);
-        bot.gyroDrive(this, 0.10, -51, 0);
-        bot.gyroTurn(this, 0.10, -60);
-        bot.gyroDrive(this, 0.10, -3, 0);
-        bot.dropArm();
-        bot.flipGrabber();
+        bot.gyroDrive( 0.10, -51, 0);
+//        bot.gyroTurn(this, 0.10, -60);
+//        bot.gyroDrive( 0.10, -3, 0);
+//        bot.dropArm();
+//        bot.flipGrabber();
     }
 }
