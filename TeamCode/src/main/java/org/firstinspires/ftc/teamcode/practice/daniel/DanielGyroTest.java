@@ -94,8 +94,6 @@ public class DanielGyroTest extends LinearOpMode {
         bot.gyroStrafeSideway( 0.30, -6, 0);
         sleep(1000);
         bot.gyroTurn(0.30, 90);
-        sleep(1000);
-        bot.gyroTurn( 0.30, -90);
 //        int count = 0;
 //        bot.startHighFlywheel();
 //        while (opModeIsActive() && count < 4) {
