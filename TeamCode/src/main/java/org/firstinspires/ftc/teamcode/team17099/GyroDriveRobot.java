@@ -71,7 +71,6 @@ public class GyroDriveRobot extends TeamRobot {
     }
 
     public void gyroTurn(double speed, double angle) {
-
         // keep looping while we are still active, and not on heading.
         while (opMode.opModeIsActive() && !onHeading(speed, angle, P_TURN_COEFF)) {
             // Update telemetry & Allow time for other processes to run.
@@ -79,8 +78,7 @@ public class GyroDriveRobot extends TeamRobot {
         }
     }
 
-    public void gyroHold(LinearOpMode opMode, double speed, double angle, double holdTime) {
-
+    public void gyroHold(double speed, double angle, double holdTime) {
         ElapsedTime holdTimer = new ElapsedTime();
 
         // keep looping while we have time remaining.
@@ -91,10 +89,7 @@ public class GyroDriveRobot extends TeamRobot {
         }
 
         // Stop all motion;
-        wheelBackRight.setPower(0);
-        wheelBackLeft.setPower(0);
-        wheelFrontRight.setPower(0);
-        wheelFrontLeft.setPower(0);
+        stopAllMotors();
     }
 
     boolean onHeading(double speed, double angle, double PCoeff) {
@@ -127,7 +122,7 @@ public class GyroDriveRobot extends TeamRobot {
         // Display it for the driver.
         opMode.telemetry.addData("Target", "%5.2f", angle);
         opMode.telemetry.addData("Err/St", "%5.2f/%5.2f", error, steer);
-        opMode.telemetry.addData("Speed.", "%5.2f:%5.2f", leftSpeed, rightSpeed);
+        opMode.telemetry.addData("Speed", "%5.2f:%5.2f", leftSpeed, rightSpeed);
 
         return onTarget;
     }
@@ -173,12 +168,6 @@ public class GyroDriveRobot extends TeamRobot {
             // start motion.
             speed = Range.clip(Math.abs(speed), 0.0, 1.0);
             forward(speed);
-            opMode.telemetry.addData("Speed",   "%5.1f:%5.1f:%5.1f:%5.1f",
-                    wheelFrontLeft.getPower(),
-                    wheelFrontRight.getPower(),
-                    wheelBackLeft.getPower(),
-                    wheelBackRight.getPower());
-            opMode.telemetry.update();
 
             // keep looping while we are still active, and BOTH motors are running.
             while (opMode.opModeIsActive() &&
@@ -206,21 +195,26 @@ public class GyroDriveRobot extends TeamRobot {
                 }
 
                 setPower(leftSpeed, rightSpeed, leftSpeed, rightSpeed);
-                opMode.telemetry.addData("Err/St",  "%5.1f/%5.1f",  error, steer);
-                opMode.telemetry.addData("Target",  "%7d:%7d:%7d:%7d",
-                        frontLeftTarget,  frontRightTarget, backLeftTarget, backRightTarget);
-                opMode.telemetry.addData("Actual",  "%7d:%7d:%7d:%7d",
-                        wheelFrontLeft.getCurrentPosition(),
-                        wheelFrontRight.getCurrentPosition(),
-                        wheelBackLeft.getCurrentPosition(),
-                        wheelBackRight.getCurrentPosition());
-                opMode.telemetry.addData("Speed",   "%5.1f:%5.1f",
-                        leftSpeed, rightSpeed);
-                opMode.telemetry.update();
+                updateStrafeTelemetry(error, steer, frontLeftTarget, frontRightTarget, backLeftTarget, backRightTarget);
             }
 
             resetMotors();
         }
+    }
+
+    private void updateStrafeTelemetry(double error, double steer, int frontLeftTarget, int frontRightTarget, int backLeftTarget, int backRightTarget) {
+        opMode.telemetry.addData("Err/St",  "%5.1f/%5.1f",  error, steer);
+        opMode.telemetry.addData("Target",  "%7d:%7d:%7d:%7d",
+                frontLeftTarget,  frontRightTarget, backLeftTarget, backRightTarget);
+        opMode.telemetry.addData("Actual",  "%7d:%7d:%7d:%7d",
+                wheelFrontLeft.getCurrentPosition(),
+                wheelFrontRight.getCurrentPosition(),
+                wheelBackLeft.getCurrentPosition(),
+                wheelBackRight.getCurrentPosition());
+        opMode.telemetry.addData("Speed",   "%5.1f:%5.1f:%5.1f:%5.1f",
+                wheelFrontLeft.getPower(), wheelFrontRight.getPower(),
+                wheelBackLeft.getPower(), wheelBackRight.getPower());
+        opMode.telemetry.update();
     }
 
     public void gyroStrafeSideway(double speed, double distance, double angle) {
@@ -252,10 +246,8 @@ public class GyroDriveRobot extends TeamRobot {
 
             // keep looping while we are still active, and BOTH motors are running.
             while (opMode.opModeIsActive() &&
-                    (isOffTarget(wheelFrontLeft, frontLeftTarget, 10)
-                            && isOffTarget(wheelFrontRight, frontRightTarget, 10)
-                            && isOffTarget(wheelBackLeft, backLeftTarget, 10)
-                            && isOffTarget(wheelBackRight, backRightTarget, 10))) {
+                    wheelFrontLeft.isBusy() && wheelFrontRight.isBusy() &&
+                    wheelBackLeft.isBusy() && wheelBackRight.isBusy()) {
 
                 // adjust relative speed based on heading error.
                 error = getError(angle);
@@ -278,6 +270,7 @@ public class GyroDriveRobot extends TeamRobot {
                 setPower(sign * frontSpeed, -sign * frontSpeed, -sign * 0.9 * backSpeed, sign * 0.9 * backSpeed);
 
                 // Display drive status for the driver.
+                updateStrafeTelemetry(error, steer, frontLeftTarget, frontRightTarget, backLeftTarget, backRightTarget);
             }
 
             // Turn off RUN_TO_POSITION
@@ -310,10 +303,6 @@ public class GyroDriveRobot extends TeamRobot {
         wheelBackRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    private boolean isOffTarget(DcMotor motor, int target, int tolerance) {
-        return Math.abs(motor.getCurrentPosition() - target) >= tolerance;
-    }
-
     public void setPower(double frontLeftSpeed, double frontRightSpeed, double backLeftSpeed, double backRightSpeed) {
         wheelFrontLeft.setPower(frontLeftSpeed);
         wheelFrontRight.setPower(frontRightSpeed);
@@ -321,7 +310,7 @@ public class GyroDriveRobot extends TeamRobot {
         wheelBackRight.setPower(backRightSpeed);
     }
 
-    private void stop() {
+    private void stopAllMotors() {
         setPower(0, 0, 0, 0);
     }
 
@@ -368,20 +357,23 @@ public class GyroDriveRobot extends TeamRobot {
                     }
                 });
 
-//        telemetry.addLine()
-//                .addData("grvty", new Func<String>() {
-//                    @Override public String value() {
-//                        return gravity.toString();
-//                    }
-//                })
-//                .addData("mag", new Func<String>() {
-//                    @Override public String value() {
-//                        return String.format(Locale.getDefault(), "%.3f",
-//                                Math.sqrt(gravity.xAccel*gravity.xAccel
-//                                        + gravity.yAccel*gravity.yAccel
-//                                        + gravity.zAccel*gravity.zAccel));
-//                    }
-//                });
+        /*
+         // We don't use gravity
+        telemetry.addLine()
+                .addData("grvty", new Func<String>() {
+                    @Override public String value() {
+                        return gravity.toString();
+                    }
+                })
+                .addData("mag", new Func<String>() {
+                    @Override public String value() {
+                        return String.format(Locale.getDefault(), "%.3f",
+                                Math.sqrt(gravity.xAccel*gravity.xAccel
+                                        + gravity.yAccel*gravity.yAccel
+                                        + gravity.zAccel*gravity.zAccel));
+                    }
+                });
+         */
     }
 
     //----------------------------------------------------------------------------------------------
