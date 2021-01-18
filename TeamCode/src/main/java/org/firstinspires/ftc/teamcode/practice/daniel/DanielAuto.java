@@ -39,6 +39,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.practice.ethan.AutonomousTeamRobot;
+import org.firstinspires.ftc.teamcode.team17099.GyroDriveRobot;
 import org.firstinspires.ftc.teamcode.team17099.TeamRobot;
 
 import java.util.concurrent.TimeUnit;
@@ -79,7 +80,7 @@ import java.util.concurrent.TimeUnit;
 @Autonomous(name="DanielAuto", group="Daniel's Teleops")
 //@Disabled
 public class DanielAuto extends LinearOpMode {
-    private TeamRobot bot;
+    private GyroDriveRobot bot;
     @Override
     public void runOpMode() throws InterruptedException {
 
@@ -87,13 +88,13 @@ public class DanielAuto extends LinearOpMode {
          * Initialize the standard drive system variables.
          * The init() method of the hardware class does most of the work here
          */
-        this.bot = new TeamRobot(hardwareMap);
+        this.bot = new GyroDriveRobot(hardwareMap, this);
         bot.init();
 
         bot.grabber.setPosition(0);
-        bot.gyroDrive(this, 0.50, -45, 0);
-        bot.gyroTurn(this, 0.50, -60);
-        bot.gyroDrive(this, 0.50, -3, 0);
+        bot.gyroDrive(this, 0.10, -51, 0);
+        bot.gyroTurn(this, 0.10, -60);
+        bot.gyroDrive(this, 0.10, -3, 0);
         bot.dropArm();
         bot.flipGrabber();
     }

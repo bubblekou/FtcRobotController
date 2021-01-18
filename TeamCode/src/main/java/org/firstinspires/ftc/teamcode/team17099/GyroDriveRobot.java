@@ -7,10 +7,15 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.Func;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+
+import java.util.Locale;
 
 /**
  * Define a gyro drive using team bot
@@ -31,14 +36,13 @@ public class GyroDriveRobot extends TeamRobot {
     public BNO055IMU imu;
     private LinearOpMode opMode;
 
+    // State used for updating telemetry
+    Orientation angles;
+    Acceleration gravity;
+
     public GyroDriveRobot(HardwareMap hardwareMap, LinearOpMode opMode) {
         super(hardwareMap);
         init();
-
-        wheelBackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        wheelBackLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        wheelFrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        wheelFrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.mode = BNO055IMU.SensorMode.IMU;
@@ -58,6 +62,8 @@ public class GyroDriveRobot extends TeamRobot {
             opMode.sleep(50);
             opMode.idle();
         }
+
+        composeTelemetry(opMode.telemetry);
     }
 
     private void forward(double speed) {
@@ -126,7 +132,7 @@ public class GyroDriveRobot extends TeamRobot {
         double robotError;
 
         // calculate error in -179 to +180 range  (
-        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
+        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         robotError = targetAngle - angles.firstAngle;
         while (robotError > 180) robotError -= 360;
         while (robotError <= -180) robotError += 360;
@@ -166,14 +172,15 @@ public class GyroDriveRobot extends TeamRobot {
 
             // keep looping while we are still active, and BOTH motors are running.
             while (opMode.opModeIsActive() &&
-                    (isOffTarget(wheelFrontLeft, frontLeftTarget, 10)
-                            && isOffTarget(wheelFrontRight, frontRightTarget, 10)
-                            && isOffTarget(wheelBackLeft, backLeftTarget, 10)
-                            && isOffTarget(wheelBackRight, backRightTarget, 10))) {
+                    wheelBackLeft.isBusy() &&
+                    wheelBackRight.isBusy() &&
+                    wheelFrontLeft.isBusy() &&
+                    wheelFrontRight.isBusy()) {
 
                 // adjust relative speed based on heading error.
                 error = getError(angle);
                 steer = getSteer(error, P_DRIVE_COEFF);
+                opMode.telemetry.addData(">", "Error %3.1f, steer %3.1f ", error, steer );
 
                 // if driving in reverse, the motor correction also needs to be reversed
                 if (distance < 0)
@@ -190,6 +197,8 @@ public class GyroDriveRobot extends TeamRobot {
                 }
 
                 setPower(leftSpeed, rightSpeed, leftSpeed, rightSpeed);
+                opMode.telemetry.addData(">", "Speed %3.1f, Speed %3.1f ", leftSpeed, rightSpeed );
+                opMode.telemetry.update();
             }
 
             resetMotors();
@@ -298,5 +307,76 @@ public class GyroDriveRobot extends TeamRobot {
 
     private void stop() {
         setPower(0, 0, 0, 0);
+    }
+
+    void composeTelemetry(Telemetry telemetry) {
+
+        // At the beginning of each telemetry update, grab a bunch of data
+        // from the IMU that we will then display in separate lines.
+        telemetry.addAction(new Runnable() { @Override public void run()
+        {
+            // Acquiring the angles is relatively expensive; we don't want
+            // to do that in each of the three items that need that info, as that's
+            // three times the necessary expense.
+            angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            gravity  = imu.getGravity();
+        }
+        });
+
+        telemetry.addLine()
+                .addData("status", new Func<String>() {
+                    @Override public String value() {
+                        return imu.getSystemStatus().toShortString();
+                    }
+                })
+                .addData("calib", new Func<String>() {
+                    @Override public String value() {
+                        return imu.getCalibrationStatus().toString();
+                    }
+                });
+
+        telemetry.addLine()
+                .addData("heading", new Func<String>() {
+                    @Override public String value() {
+                        return formatAngle(angles.angleUnit, angles.firstAngle);
+                    }
+                })
+                .addData("roll", new Func<String>() {
+                    @Override public String value() {
+                        return formatAngle(angles.angleUnit, angles.secondAngle);
+                    }
+                })
+                .addData("pitch", new Func<String>() {
+                    @Override public String value() {
+                        return formatAngle(angles.angleUnit, angles.thirdAngle);
+                    }
+                });
+
+        telemetry.addLine()
+                .addData("grvty", new Func<String>() {
+                    @Override public String value() {
+                        return gravity.toString();
+                    }
+                })
+                .addData("mag", new Func<String>() {
+                    @Override public String value() {
+                        return String.format(Locale.getDefault(), "%.3f",
+                                Math.sqrt(gravity.xAccel*gravity.xAccel
+                                        + gravity.yAccel*gravity.yAccel
+                                        + gravity.zAccel*gravity.zAccel));
+                    }
+                });
+    }
+
+    //----------------------------------------------------------------------------------------------
+    // Formatting
+    //----------------------------------------------------------------------------------------------
+
+    String formatAngle(AngleUnit angleUnit, double angle) {
+        return formatDegrees(AngleUnit.DEGREES.fromUnit(angleUnit, angle));
+    }
+
+    String formatDegrees(double degrees){
+        return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
     }
 }
