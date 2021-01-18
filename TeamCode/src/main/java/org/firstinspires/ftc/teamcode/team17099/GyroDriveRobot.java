@@ -32,6 +32,7 @@ public class GyroDriveRobot extends TeamRobot {
     private static final double HEADING_THRESHOLD = 1;      // As tight as we can make it with an integer gyro
     private static final double P_TURN_COEFF = 0.1;     // Larger is more responsive, but also less stable
     private static final double P_DRIVE_COEFF = 0.0075;     // Larger is more responsive, but also less stable
+    private static final double WEIGHT_DISTRUBUTION_RATIO = 0.83;
 
     public BNO055IMU imu;
     private LinearOpMode opMode;
@@ -227,6 +228,8 @@ public class GyroDriveRobot extends TeamRobot {
 
         // Ensure that the opmode is still active
         if (opMode.opModeIsActive()) {
+            resetMotors();
+
             // Determine new target position, and pass to motor controller
             moveCounts = (int) Math.abs(distance * NERVEREST20_COUNTS_PER_INCH);
 
@@ -246,8 +249,10 @@ public class GyroDriveRobot extends TeamRobot {
 
             // keep looping while we are still active, and BOTH motors are running.
             while (opMode.opModeIsActive() &&
-                    wheelFrontLeft.isBusy() && wheelFrontRight.isBusy() &&
-                    wheelBackLeft.isBusy() && wheelBackRight.isBusy()) {
+                    (isOffTarget(wheelFrontLeft, frontLeftTarget, 5)
+                            && isOffTarget(wheelFrontRight, frontRightTarget, 5)
+                            && isOffTarget(wheelBackLeft, backLeftTarget, 5)
+                            && isOffTarget(wheelBackRight, backRightTarget, 5))) {
 
                 // adjust relative speed based on heading error.
                 error = getError(angle);
@@ -267,7 +272,7 @@ public class GyroDriveRobot extends TeamRobot {
                     backSpeed /= max;
                 }
 
-                setPower(sign * frontSpeed, -sign * frontSpeed, -sign * backSpeed, sign * backSpeed);
+                setPower(sign * frontSpeed, -sign * frontSpeed, -sign * WEIGHT_DISTRUBUTION_RATIO * backSpeed, sign * WEIGHT_DISTRUBUTION_RATIO * backSpeed);
 
                 // Display drive status for the driver.
                 updateStrafeTelemetry(error, steer, frontLeftTarget, frontRightTarget, backLeftTarget, backRightTarget);
@@ -308,6 +313,10 @@ public class GyroDriveRobot extends TeamRobot {
         wheelFrontRight.setPower(frontRightSpeed);
         wheelBackLeft.setPower(backLeftSpeed);
         wheelBackRight.setPower(backRightSpeed);
+    }
+
+    private boolean isOffTarget(DcMotor motor, int target, int tolerance) {
+        return Math.abs(motor.getCurrentPosition() - target) >= tolerance;
     }
 
     private void stopAllMotors() {
