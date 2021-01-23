@@ -42,6 +42,8 @@ public class GyroDriveRobot extends TeamRobot {
     Orientation angles;
     Acceleration gravity;
 
+    PIDController pidStrafe;
+
     public GyroDriveRobot(HardwareMap hardwareMap, LinearOpMode opMode) {
         super(hardwareMap);
         init();
@@ -53,6 +55,10 @@ public class GyroDriveRobot extends TeamRobot {
 
         imu = hardwareMap.get(BNO055IMU.class, "imu2");
         imu.initialize(parameters);
+
+        // Set PID proportional value to produce non-zero correction value when robot veers off
+        // straight line. P value controls how sensitive the correction is.
+        pidStrafe = new PIDController(.05, 0, 0);
 
         this.opMode = opMode;
         calibrateGyro();
@@ -211,15 +217,15 @@ public class GyroDriveRobot extends TeamRobot {
                 }
 
                 setPower(leftSpeed, rightSpeed, leftSpeed, rightSpeed);
-                updateStrafeTelemetry(error, steer, frontLeftTarget, frontRightTarget, backLeftTarget, backRightTarget);
+                updateStrafeTelemetry(steer, frontLeftTarget, frontRightTarget, backLeftTarget, backRightTarget);
             }
 
             resetMotors();
         }
     }
 
-    private void updateStrafeTelemetry(double error, double steer, int frontLeftTarget, int frontRightTarget, int backLeftTarget, int backRightTarget) {
-        opMode.telemetry.addData("Err/St",  "%5.2f/%5.2f",  error, steer);
+    private void updateStrafeTelemetry(double steer, int frontLeftTarget, int frontRightTarget, int backLeftTarget, int backRightTarget) {
+        opMode.telemetry.addData("Steer",  "%5.2f", steer);
         opMode.telemetry.addData("Target",  "%7d:%7d:%7d:%7d",
                 frontLeftTarget,  frontRightTarget, backLeftTarget, backRightTarget);
         opMode.telemetry.addData("Actual",  "%7d:%7d:%7d:%7d",
@@ -255,6 +261,13 @@ public class GyroDriveRobot extends TeamRobot {
             int backLeftTarget = wheelBackLeft.getCurrentPosition() - sign * moveCounts;
             int backRightTarget = wheelBackRight.getCurrentPosition() + sign * moveCounts;
 
+
+            // Set up parameters for driving in a straight line.
+            pidStrafe.setSetpoint(0);
+            pidStrafe.setOutputRange(0, speed);
+            pidStrafe.setInputRange(-90, 90);
+            pidStrafe.enable();
+
             runToTarget(frontLeftTarget, frontRightTarget, backLeftTarget, backRightTarget);
 
             // start motion.
@@ -270,8 +283,11 @@ public class GyroDriveRobot extends TeamRobot {
                     wheelFrontRight.isBusy()) {
 
                 // adjust relative speed based on heading error.
-                error = getError(angle);
-                steer = getSteer(error, P_DRIVE_COEFF);
+//                error = getError(angle);
+//                steer = getSteer(error, P_DRIVE_COEFF);
+                Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+
+                steer = pidStrafe.performPID(angles.firstAngle);
 
                 // if driving in reverse, the motor correction also needs to be reversed
                 if (distance < 0)
@@ -293,7 +309,7 @@ public class GyroDriveRobot extends TeamRobot {
                         sign  *  backSpeed);
 
                 // Display drive status for the driver.
-                updateStrafeTelemetry(error, steer, frontLeftTarget, frontRightTarget, backLeftTarget, backRightTarget);
+                updateStrafeTelemetry(steer, frontLeftTarget, frontRightTarget, backLeftTarget, backRightTarget);
             }
 
             // Turn off RUN_TO_POSITION

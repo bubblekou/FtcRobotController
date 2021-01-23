@@ -21,6 +21,8 @@ public class PIDController
     private double m_error = 0.0;
     private double m_result = 0.0;
 
+    private GyroDriveRobot bot;
+
     /**
      * Allocate a PID object with the given constants for P, I, D
      * @param Kp the proportional coefficient
@@ -41,7 +43,7 @@ public class PIDController
      */
     private void calculate()
     {
-        int     sign = 1;
+        int sign = 1;
 
         // If enabled then proceed into controller calculations
         if (m_enabled)
