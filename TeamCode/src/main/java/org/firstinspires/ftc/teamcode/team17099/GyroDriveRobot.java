@@ -31,7 +31,8 @@ public class GyroDriveRobot extends TeamRobot {
             (NERVEREST20_COUNTS_PER_ROTATION * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415);
     private static final double HEADING_THRESHOLD = 1;      // As tight as we can make it with an integer gyro
     private static final double P_TURN_COEFF = 0.1;     // Larger is more responsive, but also less stable
-    private static final double P_DRIVE_COEFF = 0.025;     // Larger is more responsive, but also less stable
+    //private static final double P_DRIVE_COEFF = 0.025;     // Larger is more responsive, but also less stable
+    private static final double P_DRIVE_COEFF = 0.002;
     public static final double STRAFE_DISTANCE_MULTIPLIER = 0.7;
 
     public BNO055IMU imu;
