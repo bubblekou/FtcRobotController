@@ -14,7 +14,7 @@ import org.openftc.easyopencv.OpenCvPipeline;
 public class EasyOpenCVCameraTest extends LinearOpMode{
     OpenCvCamera webcam;
     //name of webcam - can be changed to fit
-    final String camName = "Webcam 1";
+    final String camName = "webcam 1";
 
     @Override
     public void runOpMode() {
