@@ -86,7 +86,7 @@ public class PushbotAutoDriveToLine_Linear extends LinearOpMode {
         lightSensor.enableLed(true);
 
         // Send telemetry message to signify robot waiting;
-        telemetry.addData("Status", "Ready to run");    //
+        telemetry.addData(">", "Ready to run");    //
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)

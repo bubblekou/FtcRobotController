@@ -39,6 +39,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.practice.ethan.AutonomousTeamRobot;
+import org.firstinspires.ftc.teamcode.team17099.GyroDriveRobot;
 import org.firstinspires.ftc.teamcode.team17099.TeamRobot;
 
 import java.util.concurrent.TimeUnit;
@@ -79,7 +80,7 @@ import java.util.concurrent.TimeUnit;
 @Autonomous(name="DanielAuto", group="Daniel's Teleops")
 //@Disabled
 public class DanielAuto extends LinearOpMode {
-    private TeamRobot bot;
+    private GyroDriveRobot bot;
     @Override
     public void runOpMode() throws InterruptedException {
 
@@ -87,30 +88,26 @@ public class DanielAuto extends LinearOpMode {
          * Initialize the standard drive system variables.
          * The init() method of the hardware class does most of the work here
          */
-        this.bot = new TeamRobot(hardwareMap);
+        this.bot = new GyroDriveRobot(hardwareMap, this);
         bot.init();
 
+        bot.grabber.setPosition(0);
+        bot.gyroDrive( 0.30, 48, 0);
+        int count = 0;
+        bot.startHighFlywheel();
+        while (opModeIsActive() && count < 4) {
+            count++;
+            telemetry.addData(">", "Ring " + count);
+            telemetry.update();
 
-//        bot.gyroDrive(this, 0.25, 60, 0);
-//        TimeUnit.SECONDS.sleep(1);
-//        bot.gyroDrive(this, 0.25, -36, 0);
-//        TimeUnit.SECONDS.sleep(1);
-        bot.gyroStrafeSideway(this, 0.25, 18, 0);
-        TimeUnit.SECONDS.sleep(1);
-        bot.gyroStrafeSideway(this, 0.25, 18, 0);
-        TimeUnit.SECONDS.sleep(1);
-        bot.gyroTurn(this, 0.25, 90);
-
-        // make sure the gyro is calibrated before continuing
-        while (!isStopRequested() && !bot.imu.isGyroCalibrated())  {
-            sleep(50);
-            idle();
+            bot.pushRing();
+            sleep(1000);
         }
-
-        while (!isStarted()) {
-
-            sleep(10);
-            idle();
-        }
+        bot.gyroTurn(0.30, 135);
+        bot.dropArm();
+        bot.flipGrabber();
+        bot.liftArm();
+        bot.gyroTurn(0.30, -225);
+        bot.gyroDrive(0.30, 6, 0);
     }
 }

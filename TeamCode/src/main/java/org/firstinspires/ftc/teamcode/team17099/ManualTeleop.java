@@ -56,8 +56,7 @@ public class ManualTeleop extends LinearOpMode {
 
         //import the team bot so we have access to all the stuff in it.
         this.bot = new TeamRobot(hardwareMap);
-        boolean far = true;
-        boolean opened = false;
+        boolean isAimingForHighGoal = true;
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -91,31 +90,19 @@ public class ManualTeleop extends LinearOpMode {
 
             //launching system
             if(gamepad2.b) {
-                if (far){
-                    far = false;
-                }else{
-                    far = true;
-                }
-                TimeUnit.MILLISECONDS.sleep(500);
+                isAimingForHighGoal = !isAimingForHighGoal;
+                TimeUnit.MILLISECONDS.sleep(200);
             }
+
             if (gamepad2.y) {
-                if (far) {
+                if (isAimingForHighGoal) {
                     bot.startHighFlywheel();
-                }else{
+                } else{
                     bot.startLowFlywheel();
                 }
-            }else{
+            } else{
                 bot.stopFlywheel();
             }
-            /*else if (gamepad2.x) {
-                bot.shootPowerShot();
-            }
-
-
-            else {
-                bot.stopFlywheel();
-            }
-            */
 
             if (gamepad2.left_bumper) {
                 bot.pushRing();
@@ -131,11 +118,12 @@ public class ManualTeleop extends LinearOpMode {
             else {
                 bot.stopArm();
             }
+
+            // Grabber cuddle
             if (gamepad2.right_bumper) {
                 bot.flipGrabber();
             }
-            telemetry.addData("lx: ", + bot.lx);
-            telemetry.addData("rx: ", + bot.rx);
+
             telemetry.update();
         }
     }
