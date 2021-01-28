@@ -88,24 +88,24 @@ public class RingPresenceDetection extends LinearOpMode {
                 REGION3_TOPLEFT_ANCHOR_POINT.y + REGION_HEIGHT);
 
         //variables to work with - this includes matrices for the image/color schemes
-        Mat region1_Cb, region2_Cb, region3_Cb;
+        Mat region1_Cr, region2_Cr, region3_Cr;
         Mat YCrCb = new Mat();
-        Mat Cb = new Mat();
+        Mat Cr = new Mat();
         int avg1, avg2, avg3;
 
         private volatile RingState state = RingState.ABSENT;
 
         void inputToCb(Mat input) {
             Imgproc.cvtColor(input, YCrCb, Imgproc.COLOR_RGB2YCrCb);
-            Core.extractChannel(YCrCb, Cb, 2);
+            Core.extractChannel(YCrCb, Cr, 1);
         }
 
         @Override
         public void init(Mat firstFrame) {
             inputToCb(firstFrame);
-            region1_Cb = Cb.submat(new Rect(region1_pointA, region1_pointB));
-            region2_Cb = Cb.submat(new Rect(region2_pointA, region2_pointB));
-            region3_Cb = Cb.submat(new Rect(region3_pointA, region3_pointB));
+            region1_Cr = Cr.submat(new Rect(region1_pointA, region1_pointB));
+            region2_Cr = Cr.submat(new Rect(region2_pointA, region2_pointB));
+            region3_Cr = Cr.submat(new Rect(region3_pointA, region3_pointB));
         }
 
         @Override
@@ -113,9 +113,9 @@ public class RingPresenceDetection extends LinearOpMode {
             //this is how sensitive the detection will be - higher means less sensitive, lower means more sensitive
             final int sensitivity = 40;
             inputToCb(input);
-            avg1 = (int) Core.mean(region1_Cb).val[0];
-            avg2 = (int) Core.mean(region2_Cb).val[0];
-            avg3 = (int) Core.mean(region3_Cb).val[0];
+            avg1 = (int) Core.mean(region1_Cr).val[0];
+            avg2 = (int) Core.mean(region2_Cr).val[0];
+            avg3 = (int) Core.mean(region3_Cr).val[0];
             double diff12 = abs(avg1 - avg2);
             double diff23 = abs(avg2 - avg3);
             double diff13 = abs(avg1 - avg3);
