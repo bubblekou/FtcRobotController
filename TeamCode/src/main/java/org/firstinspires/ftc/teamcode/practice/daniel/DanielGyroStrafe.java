@@ -25,7 +25,7 @@ public class DanielGyroStrafe extends LinearOpMode {
             idle();
         }
 
-        bot.gyroStrafeSideway(0.15, 50, 0);
+        bot.gyroStrafeSideway(0.30, 24, 0);
 //        bot.gyroStrafeSideway(0.30, -25, 0);
     }
 }
