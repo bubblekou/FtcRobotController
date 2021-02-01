@@ -94,7 +94,7 @@ public class EthanBasicAuto extends LinearOpMode {
 
         //turn towards high shot
         //usually scores the goal when the angle is around
-        bot.turn(128, 1);
+        bot.turn(87, -1);
         TimeUnit.MILLISECONDS.sleep(1000);
 
         //move to launching area
@@ -118,7 +118,7 @@ public class EthanBasicAuto extends LinearOpMode {
 
 
         //move onto launch line
-        bot.move(20,0.5);
+        bot.move(14,0.5);
         TimeUnit.MILLISECONDS.sleep(1000);
 
 

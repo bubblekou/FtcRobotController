@@ -62,10 +62,11 @@ public class EthanBasicAuto2 extends LinearOpMode {
         bot.liftArm();
         TimeUnit.MILLISECONDS.sleep(1000);
 
-        //move the bot to target zone
-        bot.move(55,-1);
-        TimeUnit.MILLISECONDS.sleep(1000);
+        bot.turn(3, 1);
 
+        //move the bot to target zone
+        bot.move(190,-0.5);
+        TimeUnit.MILLISECONDS.sleep(1000);
 
         //drop off wobble
         bot.dropArm();
@@ -78,11 +79,11 @@ public class EthanBasicAuto2 extends LinearOpMode {
         TimeUnit.MILLISECONDS.sleep(1000);
 
         //move back from target zone and into launching area
-        bot.move(18, 1);
+        bot.move(36, 0.5);
         TimeUnit.MILLISECONDS.sleep(1000);
 
         //spin 180 degrees
-        bot.turn(43, 1);
+        bot.turn(114, 1);
         TimeUnit.MILLISECONDS.sleep(1000);
 
         //turn on flywheel
@@ -103,7 +104,7 @@ public class EthanBasicAuto2 extends LinearOpMode {
 
 
         //move onto launch line
-        bot.move(15,1);
+        bot.move(14,0.5);
         TimeUnit.MILLISECONDS.sleep(1000);
 
 
