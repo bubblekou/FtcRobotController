@@ -62,15 +62,15 @@ public class EthanBasicAuto3 extends LinearOpMode {
         TimeUnit.MILLISECONDS.sleep(1000);
 
         //move the bot so it has space to turn
-        bot.move(10,-1);
+        bot.move(20,-0.5);
         TimeUnit.MILLISECONDS.sleep(500);
 
         //turn towards target zone
-        bot.turn(6, -1);
+        bot.turn(5, -1);
 
         //move to target zone
         TimeUnit.MILLISECONDS.sleep(500);
-        bot.move(40, -1);
+        bot.move(235, -0.5);
         TimeUnit.MILLISECONDS.sleep(1000);
 
         //drop off wobble
@@ -86,16 +86,15 @@ public class EthanBasicAuto3 extends LinearOpMode {
 
 
         //move back from target zone
-        bot.move(20, 1);
+        bot.move(90, 0.5);
         TimeUnit.MILLISECONDS.sleep(1000);
 
         //turn towards high shot
-        //usually scores the goal when the angle is around 42-44
-        bot.turn(43, 1);
+        bot.turn(128, 1);
         TimeUnit.MILLISECONDS.sleep(1000);
 
-        //move to launching area
-        bot.move(20,1);
+        //move towards launch zone
+        bot.move(14,0.5);
         TimeUnit.MILLISECONDS.sleep(1000);
 
         bot.shoot(1);
@@ -115,7 +114,7 @@ public class EthanBasicAuto3 extends LinearOpMode {
 
 
         //move onto launch line
-        bot.move(7,1);
+        bot.move(10,0.5);
         TimeUnit.MILLISECONDS.sleep(1000);
 
 

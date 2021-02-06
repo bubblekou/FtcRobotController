@@ -58,7 +58,7 @@ public class GyroDriveRobot extends TeamRobot {
 
         // Set PID proportional value to produce non-zero correction value when robot veers off
         // straight line. P value controls how sensitive the correction is.
-        pidStrafe = new PIDController(.05, 0, 0);
+        pidStrafe = new PIDController(.01, .00003, 0);
 
         this.opMode = opMode;
         calibrateGyro();
