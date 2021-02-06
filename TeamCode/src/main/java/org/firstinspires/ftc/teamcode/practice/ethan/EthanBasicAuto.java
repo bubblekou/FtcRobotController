@@ -62,7 +62,7 @@ public class EthanBasicAuto extends LinearOpMode {
         bot.closeGrabber();
         TimeUnit.MILLISECONDS.sleep(800);
         bot.liftArm();
-        TimeUnit.MILLISECONDS.sleep(1000);
+        TimeUnit.MILLISECONDS.sleep(700);
 
         //move the bot so it has space to turn
         bot.move(20,-0.5);
