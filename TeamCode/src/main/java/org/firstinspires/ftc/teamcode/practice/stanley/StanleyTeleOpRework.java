@@ -60,7 +60,7 @@ import java.util.concurrent.TimeUnit;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Stanley: AlmostFinalTeleOp", group="Stanley's Teleops")
+@TeleOp(name="Stanley: TensorTest", group="Stanley's Teleops")
 
 
 
