@@ -79,6 +79,7 @@ public class StanleyTeleOpRework extends LinearOpMode {
 
 
     private TFObjectDetector tfod;
+    private double zoom=1.5;
 
     @Override
     public void runOpMode() {
@@ -133,10 +134,11 @@ public class StanleyTeleOpRework extends LinearOpMode {
         tfodParameters.minResultConfidence = 0.6f;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
+        tfod.setZoom(zoom, 16.0/9.0);
     }
 
     public int ringAmount(){
-        tfod.setZoom(5, 16.0/9.0);
+
         if (tfod != null) {
 
             List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
