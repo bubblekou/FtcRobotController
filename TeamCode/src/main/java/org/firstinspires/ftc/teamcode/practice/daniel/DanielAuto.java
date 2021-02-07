@@ -106,8 +106,11 @@ public class DanielAuto extends LinearOpMode {
         sleep(200);
         bot.liftArm();
 
-        bot.gyroDrive( 0.30, -54, 0);
-        bot.gyroHold(0.2, 0, 0.2);
+        //avoid the ring in the path
+        bot.gyroDrive(0.3, -12, 0);
+        bot.gyroStrafeSideway(0.3, 12, 0);
+        bot.gyroDrive( 0.30, -42, 0);
+        bot.gyroStrafeSideway(0.3, -12, 0);
 
         bot.gyroTurn(0.2, 90);
         bot.gyroHold(0.2, 90, 0.2);
@@ -128,11 +131,11 @@ public class DanielAuto extends LinearOpMode {
             bot.pushRing();
             sleep(1000);
         }
-//        bot.gyroTurn(0.30, 90);
-//        bot.gyroDrive(0.3, -20, 0);
-//        bot.dropArm();
-//        bot.flipGrabber();
-//        bot.liftArm();
+        bot.gyroTurn(0.30, 90);
+        bot.gyroDrive(0.3, -20, 0);
+        bot.dropArm();
+        bot.flipGrabber();
+        bot.liftArm();
 //        bot.gyroTurn(0.30, 90);
 //        bot.gyroDrive(0.30, -36, 0);
 //        bot.flipGrabber();
