@@ -42,6 +42,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.teamcode.team17099.GyroDriveRobot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,6 +89,8 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
 @TeleOp(name="Daniel: Navigation", group ="Daniel's Teleops")
 //@Disabled
 public class DanielNavigation extends LinearOpMode {
+
+    private GyroDriveRobot bot;
 
     // IMPORTANT: If you are using a USB WebCam, you must select CAMERA_CHOICE = BACK; and PHONE_IS_PORTRAIT = false;
     private static final VuforiaLocalizer.CameraDirection CAMERA_CHOICE = BACK;
@@ -139,6 +142,9 @@ public class DanielNavigation extends LinearOpMode {
     private float phoneZRotate    = 0;
 
     @Override public void runOpMode() {
+
+        this.bot = new GyroDriveRobot(hardwareMap, this);
+        bot.init();
         /*
          * Retrieve the camera we are to use.
          */

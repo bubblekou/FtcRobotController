@@ -91,7 +91,7 @@ public class DanielAuto extends LinearOpMode {
         this.bot = new GyroDriveRobot(hardwareMap, this);
         bot.init();
 
-        bot.grabber.setPosition(0);
+        bot.grabber.setPosition(1);
         bot.gyroDrive( 0.30, 48, 0);
         int count = 0;
         bot.startHighFlywheel();
@@ -103,11 +103,24 @@ public class DanielAuto extends LinearOpMode {
             bot.pushRing();
             sleep(1000);
         }
-        bot.gyroTurn(0.30, 135);
+        bot.gyroTurn(0.50, 105);
+        bot.gyroDrive(0.30, 24, 0);
         bot.dropArm();
         bot.flipGrabber();
         bot.liftArm();
-        bot.gyroTurn(0.30, -225);
-        bot.gyroDrive(0.30, 6, 0);
+        bot.gyroDrive(0.30, -24, 0);
+        bot.gyroTurn(0.50, 345);
+        bot.gyroDrive(0.30, 24, 0);
+        bot.gyroTurn(0.5, 90);
+        bot.dropArm();
+        bot.gyroDrive(0.3, 33, 0);
+        bot.flipGrabber();
+        bot.gyroDrive(0.3, -33, 0);
+        bot.gyroTurn(0.5, -135);
+        bot.dropArm();
+        bot.flipGrabber();
+        bot.liftArm();
+        bot.gyroTurn(0.5, 135);
+        bot.gyroDrive(0.3, 6, 0);
     }
 }
