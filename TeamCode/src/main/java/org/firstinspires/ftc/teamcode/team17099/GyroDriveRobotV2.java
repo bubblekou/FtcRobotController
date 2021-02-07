@@ -29,7 +29,6 @@ public class GyroDriveRobotV2 extends TeamRobot {
 
     public GyroDriveRobotV2(HardwareMap hardwareMap, LinearOpMode opMode) {
         super(hardwareMap);
-        init();
 
         wheelBackLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         wheelBackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

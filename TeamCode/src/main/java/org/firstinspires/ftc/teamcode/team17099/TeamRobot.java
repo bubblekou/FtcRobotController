@@ -118,7 +118,7 @@ public class TeamRobot {
         init();
     }
 
-    public void init() {
+    private void init() {
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
@@ -148,6 +148,7 @@ public class TeamRobot {
         arm = hardwareMap.get(DcMotor.class, "arm");
         arm.setDirection(DcMotorSimple.Direction.REVERSE);
         grabber = hardwareMap.get(Servo.class, "grabber");
+        grabber.setPosition(0);
         this.isHeld = grabber.getPosition() == 0;
 
         /*

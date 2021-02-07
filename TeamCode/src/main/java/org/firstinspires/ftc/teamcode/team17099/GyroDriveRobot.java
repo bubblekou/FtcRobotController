@@ -109,25 +109,14 @@ public class GyroDriveRobot extends TeamRobot {
 
     public GyroDriveRobot(HardwareMap hardwareMap, LinearOpMode opMode) {
         super(hardwareMap);
-        init();
-
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.mode = BNO055IMU.SensorMode.IMU;
-        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-
-        imu = hardwareMap.get(BNO055IMU.class, "imu2");
-        imu.initialize(parameters);
 
         // Set PID proportional value to produce non-zero correction value when robot veers off
         // straight line. P value controls how sensitive the correction is.
         pidStrafe = new PIDController(.01, .00003, 0);
 
         this.opMode = opMode;
-        calibrateGyro();
+        initGyroImu();
         initNavigation();
-
-        targetsUltimateGoal.activate();
     }
 
     private void initNavigation() {
@@ -257,9 +246,18 @@ public class GyroDriveRobot extends TeamRobot {
         // CONSEQUENTLY do not put any driving commands in this loop.
         // To restore the normal opmode structure, just un-comment the following line:
 
+        targetsUltimateGoal.activate();
     }
 
-    public void calibrateGyro() {
+    public void initGyroImu() {
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.mode = BNO055IMU.SensorMode.IMU;
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+
+        imu = hardwareMap.get(BNO055IMU.class, "imu2");
+        imu.initialize(parameters);
+
         // make sure the gyro is calibrated before continuing
         while (!opMode.isStopRequested() && !imu.isGyroCalibrated())  {
             opMode.telemetry.addData("Mode", "calibrating...");
