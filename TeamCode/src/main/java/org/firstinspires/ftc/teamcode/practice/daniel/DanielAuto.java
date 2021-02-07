@@ -44,6 +44,8 @@ import org.firstinspires.ftc.teamcode.team17099.TeamRobot;
 
 import java.util.concurrent.TimeUnit;
 
+import static java.lang.Thread.sleep;
+
 /**
  * This file illustrates the concept of driving a path based on Gyro heading and encoder counts.
  * It uses the common Pushbot hardware class to define the drive on the robot.
@@ -89,13 +91,31 @@ public class DanielAuto extends LinearOpMode {
          * The init() method of the hardware class does most of the work here
          */
         this.bot = new GyroDriveRobot(hardwareMap, this);
-        bot.init();
 
-        bot.grabber.setPosition(1);
-        bot.gyroDrive( 0.30, 48, 0);
+        while (!isStarted()) {
+            sleep(100);
+            idle();
+        }
+
+        bot.flipGrabber();
+        sleep(200);
+        bot.liftArm();
+
+        bot.gyroDrive( 0.30, -54, 0);
+        bot.gyroHold(0.2, 0, 0.2);
+
+        bot.gyroTurn(0.2, 90);
+        bot.gyroHold(0.2, 90, 0.2);
+
+        bot.gyroTurn(0.2, 90);
+        bot.gyroHold(0.2, 90, 0.2);
+
+        sleep(500);
         int count = 0;
         bot.startHighFlywheel();
+
         while (opModeIsActive() && count < 4) {
+            sleep(500);
             count++;
             telemetry.addData(">", "Ring " + count);
             telemetry.update();
@@ -103,24 +123,17 @@ public class DanielAuto extends LinearOpMode {
             bot.pushRing();
             sleep(1000);
         }
-        bot.gyroTurn(0.50, 105);
-        bot.gyroDrive(0.30, 24, 0);
-        bot.dropArm();
-        bot.flipGrabber();
-        bot.liftArm();
-        bot.gyroDrive(0.30, -24, 0);
-        bot.gyroTurn(0.50, 345);
-        bot.gyroDrive(0.30, 24, 0);
-        bot.gyroTurn(0.5, 90);
-        bot.dropArm();
-        bot.gyroDrive(0.3, 33, 0);
-        bot.flipGrabber();
-        bot.gyroDrive(0.3, -33, 0);
-        bot.gyroTurn(0.5, -135);
-        bot.dropArm();
-        bot.flipGrabber();
-        bot.liftArm();
-        bot.gyroTurn(0.5, 135);
-        bot.gyroDrive(0.3, 6, 0);
+//        bot.gyroTurn(0.30, 90);
+//        bot.gyroDrive(0.3, -20, 0);
+//        bot.dropArm();
+//        bot.flipGrabber();
+//        bot.liftArm();
+//        bot.gyroTurn(0.30, 90);
+//        bot.gyroDrive(0.30, -36, 0);
+//        bot.flipGrabber();
+//        bot.gyroDrive(0.3, 36, 0);
+//        bot.gyroTurn(0.3, -90);
+//        bot.dropArm();
+//        bot.flipGrabber();
     }
 }
