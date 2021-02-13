@@ -85,14 +85,14 @@ public class FinalAuto extends LinearOpMode {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-        tfodParameters.minResultConfidence = 0.6f;
+        tfodParameters.minResultConfidence = 0.8f;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
     }
     private AutonomousTeamRobot bot;
 
     public int ringAmount(){
-        tfod.setZoom(5, 16.0/9.0);
+        tfod.setZoom(1.5, 16.0/9.0);
         if (tfod != null) {
 
             List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();

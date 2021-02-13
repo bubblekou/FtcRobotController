@@ -102,8 +102,6 @@ public class DanielAuto extends LinearOpMode {
             idle();
         }
 
-        bot.flipGrabber();
-        sleep(200);
         bot.liftArm();
 
         //avoid the ring in the path
@@ -115,15 +113,14 @@ public class DanielAuto extends LinearOpMode {
         bot.gyroTurn(0.2, 90);
         bot.gyroHold(0.2, 90, 0.2);
 
-        bot.gyroTurn(0.2, 90);
-        bot.gyroHold(0.2, 90, 0.2);
+        bot.gyroTurn(0.2, 180);
+        bot.gyroHold(0.2, 180, 0.2);
 
-        sleep(500);
         int count = 0;
         bot.startHighFlywheel();
+        sleep(500);
 
         while (opModeIsActive() && count < 4) {
-            sleep(500);
             count++;
             telemetry.addData(">", "Ring " + count);
             telemetry.update();
@@ -131,10 +128,12 @@ public class DanielAuto extends LinearOpMode {
             bot.pushRing();
             sleep(1000);
         }
-        bot.gyroTurn(0.30, 90);
+        bot.gyroTurn(0.30, -90);
         bot.gyroDrive(0.3, -20, 0);
         bot.dropArm();
+        sleep(200);
         bot.flipGrabber();
+        sleep(200);
         bot.liftArm();
 //        bot.gyroTurn(0.30, 90);
 //        bot.gyroDrive(0.30, -36, 0);

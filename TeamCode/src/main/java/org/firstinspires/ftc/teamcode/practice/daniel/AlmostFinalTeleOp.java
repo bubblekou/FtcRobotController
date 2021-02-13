@@ -77,8 +77,6 @@ public class AlmostFinalTeleOp extends LinearOpMode {
 
         this.bot = new TeamRobot(hardwareMap);
 
-        bot.init();
-
         grabber = hardwareMap.get(DcMotor.class, "grabber");
         flywheel = hardwareMap.get(DcMotor.class, "flywheel");
 

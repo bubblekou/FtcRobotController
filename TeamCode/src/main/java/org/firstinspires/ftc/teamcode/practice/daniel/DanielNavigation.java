@@ -104,8 +104,13 @@ public class DanielNavigation extends LinearOpMode {
 
         while (!isStopRequested()) {
             VectorF lastLocation = bot.getLocation();
-            telemetry.addData("Pos (in)", "{X, Y, Z} = %.1f, %.1f, %.1f",
-                    lastLocation.get(0) / bot.mmPerInch, lastLocation.get(1) / bot.mmPerInch, lastLocation.get(2) / bot.mmPerInch);
+            if (lastLocation != null) {
+                telemetry.addData("Pos (in)", "{X, Y, Z} = %.1f, %.1f, %.1f",
+                        lastLocation.get(0) / bot.mmPerInch, lastLocation.get(1) / bot.mmPerInch, lastLocation.get(2) / bot.mmPerInch);
+            } else {
+                telemetry.addData("Pos (in)", "unknown");
+            }
+
 
             telemetry.update();
         }
