@@ -92,7 +92,7 @@ public class FinalAuto extends LinearOpMode {
     private AutonomousTeamRobot bot;
 
     public int ringAmount(){
-        tfod.setZoom(5, 16.0/9.0);
+        tfod.setZoom(1.5, 16.0/9.0);
         if (tfod != null) {
 
             List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
