@@ -52,7 +52,7 @@ public class AutoTeleop extends LinearOpMode {
             sum += bot.getRingAmount();
             sleep (100);
         }
-        double rings = Math.round(sum / 10.0);
+        long rings = Math.round(sum/10.0);
         telemetry.addData("rings", bot.getRingAmount());
         telemetry.update();
         bot.shutdownTfod();
@@ -98,6 +98,7 @@ public class AutoTeleop extends LinearOpMode {
             bot.pushRing();
             sleep(1000);
         }
+        bot.stopFlywheel();
         bot.gyroTurn(0.30, -90);
         bot.gyroDrive(0.3, -20, 0);
         bot.dropArm();
@@ -134,6 +135,7 @@ public class AutoTeleop extends LinearOpMode {
             bot.pushRing();
             sleep(1000);
         }
+        bot.stopFlywheel();
         bot.gyroTurn(0.30, 90);
         bot.gyroHold(0.30,90, 0.2);
 
@@ -175,6 +177,7 @@ public class AutoTeleop extends LinearOpMode {
             bot.pushRing();
             sleep(1000);
         }
+        bot.stopFlywheel();
         bot.gyroTurn(0.30, 90);
         bot.gyroHold(0.30,90, 0.2);
 
