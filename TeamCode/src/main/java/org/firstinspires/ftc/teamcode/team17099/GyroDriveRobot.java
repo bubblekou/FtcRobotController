@@ -21,6 +21,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +51,11 @@ public class GyroDriveRobot extends TeamRobot {
     //private static final double P_DRIVE_COEFF = 0.025;     // Larger is more responsive, but also less stable
     private static final double P_DRIVE_COEFF = 0.002;
     public static final double STRAFE_DISTANCE_MULTIPLIER = 0.7;
+
+    // Tensor flow
+    private static final String TFOD_MODEL_ASSET = "UltimateGoal.tflite";
+    private static final String LABEL_FIRST_ELEMENT = "Quad";
+    private static final String LABEL_SECOND_ELEMENT = "Single";
 
     public BNO055IMU imu;
     private LinearOpMode opMode;
@@ -106,6 +113,7 @@ public class GyroDriveRobot extends TeamRobot {
     private VuforiaTrackables targetsUltimateGoal;
     private List<VuforiaTrackable> allTrackables;
 
+    private TFObjectDetector tfod;
 
     public GyroDriveRobot(HardwareMap hardwareMap, LinearOpMode opMode) {
         super(hardwareMap);
@@ -117,6 +125,7 @@ public class GyroDriveRobot extends TeamRobot {
         this.opMode = opMode;
         initGyroImu();
         initNavigation();
+        initTfod();
     }
 
     private void initNavigation() {
@@ -269,6 +278,54 @@ public class GyroDriveRobot extends TeamRobot {
         composeTelemetry(opMode.telemetry);
     }
 
+    private void initTfod() {
+        int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
+                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+        tfodParameters.minResultConfidence = 0.8f;
+        this.tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
+        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
+
+        tfod.setZoom(1.5, 16.0/9.0);
+
+        if (tfod != null) {
+            tfod.activate();
+        }
+    }
+
+    public void shutdownTfod() {
+        if (tfod != null) {
+            tfod.shutdown();
+        }
+    }
+
+    public int getRingAmount(){
+        if (tfod != null) {
+
+            List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+            if (updatedRecognitions != null) {
+                opMode.telemetry.addData("# Object Detected", updatedRecognitions.size());
+                // step through the list of recognitions and display boundary info.
+                int i = 0;
+                for (Recognition recognition : updatedRecognitions) {
+                    opMode.telemetry.addData(String.format("label (%d)", i), recognition.getLabel());
+                    opMode.telemetry.addData(String.format("  left,top (%d)", i), "%.03f , %.03f",
+                            recognition.getLeft(), recognition.getTop());
+                    opMode.telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
+                            recognition.getRight(), recognition.getBottom());
+                    opMode.telemetry.update();
+
+                    if(recognition.getLabel()==LABEL_FIRST_ELEMENT) {
+                        return 4;
+                    } else if (recognition.getLabel()==LABEL_SECOND_ELEMENT) {
+                        return 1;
+                    }
+
+                }
+            }
+        }
+        return 0;
+    }
 
     public VuforiaTrackables getTargetsUltimateGoal() {
         return targetsUltimateGoal;

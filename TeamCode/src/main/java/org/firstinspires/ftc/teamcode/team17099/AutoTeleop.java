@@ -26,93 +26,58 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package org.firstinspires.ftc.teamcode.team17099;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
-import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
-import org.firstinspires.ftc.teamcode.team17099.GyroDriveRobot;
-
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-
 /**
- *
+ * This file is Nah Robotic's autonomous teleop for ultimate goal.
  */
-
-@Autonomous(name="AutoTeleop", group="Autonomous")
+@Autonomous(name="17099: Auto", group="Team's Teleops")
 public class AutoTeleop extends LinearOpMode {
-    private static final String TFOD_MODEL_ASSET = "UltimateGoal.tflite";
-    private static final String LABEL_FIRST_ELEMENT = "Quad";
-    private static final String LABEL_SECOND_ELEMENT = "Single";
-
-    private static final String VUFORIA_KEY =
-            "AWPSm1P/////AAABmfp26UJ0EUAui/y06avE/y84xKk68LTTAP3wBE75aIweAnuSt/zSSyaSoqeWdTFVB5eDsZZOP/N/ISBYhlSM4zrkb4q1YLVLce0aYvIrsoGnQ4Iw/KT12StcpQsraoLewErwZwf3IZENT6aWUwODR7vnE4JhHU4+2IyftSR0meDfUO6DAb4VDVmXCYbxT//lPixaJK/rXiI4o8NQt59EIN/W0RqTReAehAZ6FwBRGtZFyIkWNIWZiuAPXKvGI+YqqNdL7ufeGxITzc/iAuhJzNZOxGXfnW4sHGn6Tp+meZWHFwCYbkslYHvV5/Sii2hR5HGApDW0oDml6gOlDmy1Wmw6TwJTwzACYLKl43dLL35G";
-
-    private VuforiaLocalizer vuforia;
-
-    public WebcamName WebcamName;
-
-
-    private TFObjectDetector tfod;
-    private void initVuforia() {
-
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
-
-        parameters.vuforiaLicenseKey = VUFORIA_KEY;
-        parameters.cameraName = hardwareMap.get(WebcamName.class, "webcam 1");
-
-        //  Instantiate the Vuforia engine
-        vuforia = ClassFactory.getInstance().createVuforia(parameters);
-
-        // Loading trackables is not necessary for the TensorFlow Object Detection engine.
-    }
-
-
-    private void initTfod() {
-        int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
-                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-        tfodParameters.minResultConfidence = 0.8f;
-        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
-        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
-    }
     private GyroDriveRobot bot;
 
-    public int ringAmount(){
-
-        if (tfod != null) {
-
-            List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
-            if (updatedRecognitions != null) {
-                telemetry.addData("# Object Detected", updatedRecognitions.size());
-                // step through the list of recognitions and display boundary info.
-                int i = 0;
-                for (Recognition recognition : updatedRecognitions) {
-                    telemetry.addData(String.format("label (%d)", i), recognition.getLabel());
-                    telemetry.addData(String.format("  left,top (%d)", i), "%.03f , %.03f",
-                            recognition.getLeft(), recognition.getTop());
-                    telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
-                            recognition.getRight(), recognition.getBottom());
-                    telemetry.update();
-
-                    if(recognition.getLabel()==LABEL_FIRST_ELEMENT) {
-                        return 4;
-                    } else if (recognition.getLabel()==LABEL_SECOND_ELEMENT) {
-                        return 1;
-                    }
-
-                }
-            }
+    @Override
+    public void runOpMode() throws InterruptedException {
+        //import the team bot so we have access to all the stuff in it.
+        this.bot = new GyroDriveRobot(hardwareMap, this);
+        while (!isStarted()) {
+            sleep(100);
+            idle();
         }
-        return 0;
+
+        sleep (1000);
+        double sum = 0;
+        for (int i = 0; i < 10; i++){
+            sum += bot.getRingAmount();
+            sleep (100);
+        }
+        double rings = Math.round(sum / 10.0);
+        telemetry.addData("rings", bot.getRingAmount());
+        telemetry.update();
+        sleep (100);
+
+        bot.shutdownTfod();
+
+        telemetry.addData(">", "Press Play to start op mode");
+        telemetry.update();
+        waitForStart();
+
+
+
+        // Wait for the game to start (driver presses PLAY)
+        waitForStart();
+
+        sleep (100);
+
+        if (rings == 0){
+            TargetA();
+        }else if (rings == 1){
+            TargetB();
+        }else{
+            TargetC();
+        }
     }
 
     private void TargetA() throws InterruptedException{
@@ -242,57 +207,5 @@ public class AutoTeleop extends LinearOpMode {
         bot.gyroHold(0.30,0, 0.2);
 
         bot.gyroDrive(0.3, 16, 0);
-    }
-
-    @Override
-    public void runOpMode() throws InterruptedException {
-
-        //import the team bot so we have access to all the stuff in it.
-        this.bot = new GyroDriveRobot(hardwareMap, this);
-        while (!isStarted()) {
-            sleep(100);
-            idle();
-        }
-
-        initVuforia();
-        initTfod();
-        tfod.setZoom(1.5, 16.0/9.0);
-
-        if (tfod != null) {
-            tfod.activate();
-        }
-        sleep (1000);
-        double sum = 0;
-        for (int i = 0; i < 10; i++){
-            sum += ringAmount();
-            sleep (100);
-        }
-        double rings = Math.round(sum / 10.0);
-        telemetry.addData("rings", ringAmount());
-        telemetry.update();
-        sleep (100);
-
-        if (tfod != null) {
-            tfod.shutdown();
-        }
-
-        telemetry.addData(">", "Press Play to start op mode");
-        telemetry.update();
-        waitForStart();
-
-
-
-        // Wait for the game to start (driver presses PLAY)
-        waitForStart();
-
-        sleep (100);
-
-        if (rings == 0){
-            TargetA();
-        }else if (rings == 1){
-            TargetB();
-        }else{
-            TargetC();
-        }
     }
 }
