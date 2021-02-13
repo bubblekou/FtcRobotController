@@ -112,6 +112,7 @@ public class DanielAuto3 extends LinearOpMode {
             bot.pushRing();
             sleep(1000);
         }
+        bot.stopFlywheel();
         bot.gyroTurn(0.30, 90);
         bot.gyroHold(0.30,90, 0.2);
 
