@@ -31,24 +31,8 @@ package org.firstinspires.ftc.teamcode.practice.daniel;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.teamcode.practice.ethan.AutonomousTeamRobot;
 import org.firstinspires.ftc.teamcode.team17099.GyroDriveRobot;
-import org.firstinspires.ftc.teamcode.team17099.TeamRobot;
-
-import java.util.concurrent.TimeUnit;
-
-import static java.lang.Thread.sleep;
-import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.BACK;
 
 /**
  * This file illustrates the concept of driving a path based on Gyro heading and encoder counts.
@@ -83,9 +67,9 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="DanielAuto", group="Daniel's Teleops")
+@Autonomous(name="DanielAuto3", group="Daniel's Teleops")
 //@Disabled
-public class DanielAuto extends LinearOpMode {
+public class DanielAuto3 extends LinearOpMode {
     private GyroDriveRobot bot;
 
     @Override
@@ -128,13 +112,31 @@ public class DanielAuto extends LinearOpMode {
             bot.pushRing();
             sleep(1000);
         }
+        bot.gyroTurn(0.30, 90);
+        bot.gyroHold(0.30,90, 0.2);
+
+        bot.gyroTurn(0.30, 0);
+        bot.gyroHold(0.30,0, 0.2);
+        bot.gyroDrive(0.3, -40, 0);
+
         bot.gyroTurn(0.30, -90);
-        bot.gyroDrive(0.3, -20, 0);
+        bot.gyroHold(0.30,-90, 0.2);
+
+        bot.gyroDrive(0.30, -24, 0);
         bot.dropArm();
         sleep(200);
         bot.flipGrabber();
         sleep(200);
         bot.liftArm();
+        bot.gyroDrive(0.3, 24, 0);
+
+        bot.gyroTurn(0.30, 0);
+        bot.gyroHold(0.30,0, 0.2);
+
+        bot.gyroTurn(0.30, 0);
+        bot.gyroHold(0.30,0, 0.2);
+
+        bot.gyroDrive(0.3, 16, 0);
 //        bot.gyroTurn(0.30, 90);
 //        bot.gyroDrive(0.30, -36, 0);
 //        bot.flipGrabber();
