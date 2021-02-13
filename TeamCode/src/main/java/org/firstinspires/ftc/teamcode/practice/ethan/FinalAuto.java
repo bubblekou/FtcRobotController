@@ -279,7 +279,7 @@ public class FinalAuto extends LinearOpMode {
         double sum = 0;
         for (int i = 0; i < 10; i++){
             sum += ringAmount();
-            sleep (500);
+            sleep (100);
         }
         double rings = Math.round(sum / 10.0);
         telemetry.addData("rings", ringAmount());

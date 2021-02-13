@@ -118,7 +118,7 @@ public class DanielAuto extends LinearOpMode {
 
         int count = 0;
         bot.startHighFlywheel();
-        sleep(500);
+        sleep(1000);
 
         while (opModeIsActive() && count < 4) {
             count++;
