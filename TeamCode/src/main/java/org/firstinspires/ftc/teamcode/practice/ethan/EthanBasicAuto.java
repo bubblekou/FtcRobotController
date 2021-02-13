@@ -62,19 +62,35 @@ public class EthanBasicAuto extends LinearOpMode {
         bot.closeGrabber();
         TimeUnit.MILLISECONDS.sleep(800);
         bot.liftArm();
-        TimeUnit.MILLISECONDS.sleep(700);
-
-        //move the bot so it has space to turn
-        bot.move(20,-0.5);
-        TimeUnit.MILLISECONDS.sleep(500);
-
-        //turn towards target zone
-        bot.turn(10, -1);
-
-        //move to target zone
-        TimeUnit.MILLISECONDS.sleep(500);
-        bot.move(110, -0.5);
         TimeUnit.MILLISECONDS.sleep(1000);
+
+        bot.turn(3, 1);
+
+        //move around rings
+        bot.move(20,-0.5);
+        TimeUnit.MILLISECONDS.sleep(1000);
+        bot.turn(30, -1);
+        TimeUnit.MILLISECONDS.sleep(1000);
+        bot.move(50,-0.5);
+        TimeUnit.MILLISECONDS.sleep(1000);
+        bot.turn(30, 1);
+        TimeUnit.MILLISECONDS.sleep(1000);
+        bot.move(35,-0.5);
+        TimeUnit.MILLISECONDS.sleep(1000);
+        bot.turn(30, 1);
+        TimeUnit.MILLISECONDS.sleep(1000);
+        bot.move(50,-0.5);
+        TimeUnit.MILLISECONDS.sleep(1000);
+        bot.turn(27, -1);
+
+        //turn to target zone
+        TimeUnit.MILLISECONDS.sleep(500);
+        bot.turn(50, -1);
+        TimeUnit.MILLISECONDS.sleep(1000);
+
+        bot.move(25,-0.5);
+        TimeUnit.MILLISECONDS.sleep(500);
+
 
         //drop off wobble
         bot.dropArm();
@@ -87,18 +103,16 @@ public class EthanBasicAuto extends LinearOpMode {
         TimeUnit.MILLISECONDS.sleep(1000);
 
 
+        bot.move(25,0.5);
+        TimeUnit.MILLISECONDS.sleep(500);
+
+        bot.turn(50, -1);
+        TimeUnit.MILLISECONDS.sleep(500);
+
+
 
         //move back from target zone
-        bot.move(40, 0.5);
-        TimeUnit.MILLISECONDS.sleep(1000);
-
-        //turn towards high shot
-        //usually scores the goal when the angle is around
-        bot.turn(87, -1);
-        TimeUnit.MILLISECONDS.sleep(1000);
-
-        //move to launching area
-        bot.move(40,0.5);
+        bot.move(22, -0.5);
         TimeUnit.MILLISECONDS.sleep(1000);
 
         bot.shoot(1);
@@ -118,7 +132,7 @@ public class EthanBasicAuto extends LinearOpMode {
 
 
         //move onto launch line
-        bot.move(14,0.5);
+        bot.move(20,0.5);
         TimeUnit.MILLISECONDS.sleep(1000);
 
 
