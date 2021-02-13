@@ -47,7 +47,6 @@ public class AutoTeleop extends LinearOpMode {
             idle();
         }
 
-        sleep (1000);
         double sum = 0;
         for (int i = 0; i < 10; i++){
             sum += bot.getRingAmount();
@@ -56,31 +55,23 @@ public class AutoTeleop extends LinearOpMode {
         double rings = Math.round(sum / 10.0);
         telemetry.addData("rings", bot.getRingAmount());
         telemetry.update();
-        sleep (100);
-
         bot.shutdownTfod();
 
         telemetry.addData(">", "Press Play to start op mode");
         telemetry.update();
-        waitForStart();
-
-
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
-
-        sleep (100);
-
         if (rings == 0){
-            TargetA();
+            gotoTargetA();
         }else if (rings == 1){
-            TargetB();
+            gotoTargetB();
         }else{
-            TargetC();
+            gotoTargetC();
         }
     }
 
-    private void TargetA() throws InterruptedException{
+    private void gotoTargetA() throws InterruptedException{
         bot.liftArm();
 
         //avoid the ring in the path
@@ -115,7 +106,8 @@ public class AutoTeleop extends LinearOpMode {
         sleep(200);
         bot.liftArm();
     }
-    private void TargetB() throws InterruptedException{
+
+    private void gotoTargetB() throws InterruptedException{
         bot.liftArm();
 
         //avoid the ring in the path
@@ -155,7 +147,8 @@ public class AutoTeleop extends LinearOpMode {
         bot.liftArm();
         bot.gyroDrive(0.3, 6, 0);
     }
-    private void TargetC() throws InterruptedException{
+
+    private void gotoTargetC() throws InterruptedException{
         bot.liftArm();
 
         //avoid the ring in the path
