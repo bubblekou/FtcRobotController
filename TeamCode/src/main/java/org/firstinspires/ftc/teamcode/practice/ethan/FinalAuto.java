@@ -92,7 +92,7 @@ public class FinalAuto extends LinearOpMode {
     private AutonomousTeamRobot bot;
 
     public int ringAmount(){
-        tfod.setZoom(1.5, 16.0/9.0);
+
         if (tfod != null) {
 
             List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
@@ -158,7 +158,7 @@ public class FinalAuto extends LinearOpMode {
         bot.pushRing();
         TimeUnit.MILLISECONDS.sleep(1000);
         bot.pushRing();
-        TimeUnit.MILLISECONDS.sleep(1500);
+        TimeUnit.MILLISECONDS.sleep(1000);
     }
     private void TargetA() throws InterruptedException{
 
@@ -265,17 +265,12 @@ public class FinalAuto extends LinearOpMode {
 
         initVuforia();
         initTfod();
-
+        tfod.setZoom(1.5, 16.0/9.0);
 
         if (tfod != null) {
             tfod.activate();
         }
-
-        telemetry.addData(">", "Press Play to start op mode");
-        telemetry.update();
-        waitForStart();
-
-        sleep (300);
+        sleep (1000);
         double sum = 0;
         for (int i = 0; i < 10; i++){
             sum += ringAmount();
@@ -289,6 +284,12 @@ public class FinalAuto extends LinearOpMode {
         if (tfod != null) {
             tfod.shutdown();
         }
+
+        telemetry.addData(">", "Press Play to start op mode");
+        telemetry.update();
+        waitForStart();
+
+
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
