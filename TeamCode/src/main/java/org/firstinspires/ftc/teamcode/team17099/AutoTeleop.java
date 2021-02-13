@@ -37,7 +37,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
-import org.firstinspires.ftc.teamcode.practice.ethan.AutonomousTeamRobot;
+import org.firstinspires.ftc.teamcode.team17099.GyroDriveRobot;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -84,7 +84,7 @@ public class AutoTeleop extends LinearOpMode {
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
     }
-    private AutonomousTeamRobot bot;
+    private GyroDriveRobot bot;
 
     public int ringAmount(){
 
@@ -114,149 +114,145 @@ public class AutoTeleop extends LinearOpMode {
         }
         return 0;
     }
-    private void moveAroundRing() throws InterruptedException{
-        //move around rings
-        bot.move(20,-0.5);
-        TimeUnit.MILLISECONDS.sleep(700);
-        bot.turn(30, -1);
-        TimeUnit.MILLISECONDS.sleep(700);
-        bot.move(50,-0.5);
-        TimeUnit.MILLISECONDS.sleep(700);
-        bot.turn(30, 1);
-        TimeUnit.MILLISECONDS.sleep(700);
-        bot.move(35,-0.5);
-        TimeUnit.MILLISECONDS.sleep(700);
-        bot.turn(30, 1);
-        TimeUnit.MILLISECONDS.sleep(700);
-        bot.move(50,-0.5);
-        TimeUnit.MILLISECONDS.sleep(700);
-        bot.turn(27, -1);
-    }
-    private void wobbleDrop() throws InterruptedException{
-        //drop off wobble
-        bot.dropArm();
-        TimeUnit.MILLISECONDS.sleep(500);
-        bot.openGrabber();
-        TimeUnit.MILLISECONDS.sleep(500);
-        bot.liftArm();
-        TimeUnit.MILLISECONDS.sleep(500);
-        bot.stopArm();
-        TimeUnit.MILLISECONDS.sleep(500);
-    }
-    private void fireRings(double distance) throws InterruptedException{
-        bot.shoot(distance);
-        TimeUnit.MILLISECONDS.sleep(1500);
 
-        //push ring to launcher
-        bot.pushRing();
-        TimeUnit.MILLISECONDS.sleep(1000);
-        bot.pushRing();
-        TimeUnit.MILLISECONDS.sleep(1000);
-        bot.pushRing();
-        TimeUnit.MILLISECONDS.sleep(1000);
-    }
     private void TargetA() throws InterruptedException{
+        bot.liftArm();
 
-        //turn to target zone
-        TimeUnit.MILLISECONDS.sleep(500);
-        bot.turn(50, -1);
-        TimeUnit.MILLISECONDS.sleep(1000);
+        //avoid the ring in the path
+        bot.gyroDrive(0.3, -12, 0);
+        bot.gyroStrafeSideway(0.3, 12, 0);
+        bot.gyroDrive( 0.30, -42, 0);
+        bot.gyroStrafeSideway(0.3, -12, 0);
 
-        bot.move(25,-0.5);
-        TimeUnit.MILLISECONDS.sleep(500);
+        bot.gyroTurn(0.2, 90);
+        bot.gyroHold(0.2, 90, 0.2);
 
+        bot.gyroTurn(0.2, 180);
+        bot.gyroHold(0.2, 180, 0.2);
 
-        wobbleDrop();
+        int count = 0;
+        bot.startHighFlywheel();
+        sleep(1000);
 
+        while (opModeIsActive() && count < 4) {
+            count++;
+            telemetry.addData(">", "Ring " + count);
+            telemetry.update();
 
-        bot.move(25,0.5);
-        TimeUnit.MILLISECONDS.sleep(500);
-
-        bot.turn(50, -1);
-        TimeUnit.MILLISECONDS.sleep(500);
-
-
-
-        //move back from target zone
-        bot.move(22, -0.5);
-        TimeUnit.MILLISECONDS.sleep(1000);
-
-        fireRings(1);
-
-        bot.stopShoot();
-        TimeUnit.MILLISECONDS.sleep(1000);
-
-
-        //move onto launch line
-        bot.move(20,0.5);
-        TimeUnit.MILLISECONDS.sleep(1000);
+            bot.pushRing();
+            sleep(1000);
+        }
+        bot.gyroTurn(0.30, -90);
+        bot.gyroDrive(0.3, -20, 0);
+        bot.dropArm();
+        sleep(200);
+        bot.flipGrabber();
+        sleep(200);
+        bot.liftArm();
     }
     private void TargetB() throws InterruptedException{
-        TimeUnit.MILLISECONDS.sleep(1000);
-        bot.move(20,-0.5);
-        TimeUnit.MILLISECONDS.sleep(1000);
+        bot.liftArm();
 
-        wobbleDrop();
+        //avoid the ring in the path
+        bot.gyroDrive(0.3, -12, 0);
+        bot.gyroStrafeSideway(0.3, 12, 0);
+        bot.gyroDrive( 0.30, -42, 0);
+        bot.gyroStrafeSideway(0.3, -12, 0);
 
-        //move back from target zone and into launching area
-        bot.move(36, 0.5);
-        TimeUnit.MILLISECONDS.sleep(1000);
+        bot.gyroTurn(0.2, 90);
+        bot.gyroHold(0.2, 90, 0.2);
 
-        //spin 180 degrees
-        bot.turn(95, -1);
-        TimeUnit.MILLISECONDS.sleep(1000);
+        bot.gyroTurn(0.2, 180);
+        bot.gyroHold(0.2, 180, 0.2);
 
-        fireRings(0.95);
+        int count = 0;
+        bot.startHighFlywheel();
+        sleep(1000);
 
-        //turn off flywheel
-        bot.stopShoot();
-        TimeUnit.MILLISECONDS.sleep(500);
+        while (opModeIsActive() && count < 4) {
+            count++;
+            telemetry.addData(">", "Ring " + count);
+            telemetry.update();
 
+            bot.pushRing();
+            sleep(1000);
+        }
+        bot.gyroTurn(0.30, 90);
+        bot.gyroHold(0.30,90, 0.2);
 
-        //move onto launch line
-        bot.move(30,0.5);
-        TimeUnit.MILLISECONDS.sleep(1000);
-
+        bot.gyroTurn(0.30, 0);
+        bot.gyroHold(0.30,0, 0.2);
+        bot.gyroDrive(0.3, -24, 0);
+        bot.dropArm();
+        sleep(200);
+        bot.flipGrabber();
+        sleep(200);
+        bot.liftArm();
+        bot.gyroDrive(0.3, 6, 0);
     }
     private void TargetC() throws InterruptedException{
-        //turn to target zone
-        TimeUnit.MILLISECONDS.sleep(500);
-        bot.turn(14, -1);
-        TimeUnit.MILLISECONDS.sleep(500);
+        bot.liftArm();
 
-        bot.move(82,-0.5);
-        TimeUnit.MILLISECONDS.sleep(500);
+        //avoid the ring in the path
+        bot.gyroDrive(0.3, -12, 0);
+        bot.gyroStrafeSideway(0.3, 12, 0);
+        bot.gyroDrive( 0.30, -42, 0);
+        bot.gyroStrafeSideway(0.3, -12, 0);
 
-        wobbleDrop();
+        bot.gyroTurn(0.2, 90);
+        bot.gyroHold(0.2, 90, 0.2);
 
-        bot.move(82,0.5);
-        TimeUnit.MILLISECONDS.sleep(500);
+        bot.gyroTurn(0.2, 180);
+        bot.gyroHold(0.2, 180, 0.2);
 
-        bot.turn(77, -1);
-        TimeUnit.MILLISECONDS.sleep(500);
+        int count = 0;
+        bot.startHighFlywheel();
+        sleep(1000);
 
+        while (opModeIsActive() && count < 4) {
+            count++;
+            telemetry.addData(">", "Ring " + count);
+            telemetry.update();
 
+            bot.pushRing();
+            sleep(1000);
+        }
+        bot.gyroTurn(0.30, 90);
+        bot.gyroHold(0.30,90, 0.2);
 
-        //move back from target zone
-        bot.move(20, -0.5);
-        TimeUnit.MILLISECONDS.sleep(1000);
+        bot.gyroTurn(0.30, 0);
+        bot.gyroHold(0.30,0, 0.2);
+        bot.gyroDrive(0.3, -40, 0);
 
-        fireRings(1);
+        bot.gyroTurn(0.30, -90);
+        bot.gyroHold(0.30,-90, 0.2);
 
-        bot.stopShoot();
-        TimeUnit.MILLISECONDS.sleep(1000);
+        bot.gyroDrive(0.30, -24, 0);
+        bot.dropArm();
+        sleep(200);
+        bot.flipGrabber();
+        sleep(200);
+        bot.liftArm();
+        bot.gyroDrive(0.3, 24, 0);
 
+        bot.gyroTurn(0.30, 0);
+        bot.gyroHold(0.30,0, 0.2);
 
-        //move onto launch line
-        bot.move(20,0.5);
-        TimeUnit.MILLISECONDS.sleep(1000);
+        bot.gyroTurn(0.30, 0);
+        bot.gyroHold(0.30,0, 0.2);
+
+        bot.gyroDrive(0.3, 16, 0);
     }
 
     @Override
     public void runOpMode() throws InterruptedException {
 
         //import the team bot so we have access to all the stuff in it.
-        this.bot = new AutonomousTeamRobot(hardwareMap);
+        this.bot = new GyroDriveRobot(hardwareMap, this);
+        while (!isStarted()) {
+            sleep(100);
+            idle();
+        }
 
         initVuforia();
         initTfod();
@@ -289,17 +285,7 @@ public class AutoTeleop extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        //lift arm whole time so the wobble doesn't drop
-        TimeUnit.MILLISECONDS.sleep(500);
-
-        bot.closeGrabber();
-        TimeUnit.MILLISECONDS.sleep(800);
-        bot.liftArm();
-        TimeUnit.MILLISECONDS.sleep(800);
-
-        bot.turn(3, 1);
-
-        moveAroundRing();
+        sleep (100);
 
         if (rings == 0){
             TargetA();
