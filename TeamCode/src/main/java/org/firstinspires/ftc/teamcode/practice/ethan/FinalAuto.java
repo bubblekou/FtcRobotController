@@ -85,14 +85,14 @@ public class FinalAuto extends LinearOpMode {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-        tfodParameters.minResultConfidence = 0.6f;
+        tfodParameters.minResultConfidence = 0.8f;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
     }
     private AutonomousTeamRobot bot;
 
     public int ringAmount(){
-        tfod.setZoom(5, 16.0/9.0);
+
         if (tfod != null) {
 
             List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
@@ -119,48 +119,37 @@ public class FinalAuto extends LinearOpMode {
         }
         return 0;
     }
-    private void TargetA() throws InterruptedException{
-        //lift arm whole time so the wobble doesn't drop
-        TimeUnit.MILLISECONDS.sleep(500);
-
-        //move the bot so it has space to turn
+    private void moveAroundRing() throws InterruptedException{
+        //move around rings
         bot.move(20,-0.5);
-        TimeUnit.MILLISECONDS.sleep(500);
-
-        //turn towards target zone
-        bot.turn(10, -1);
-
-        //move to target zone
-        TimeUnit.MILLISECONDS.sleep(500);
-        bot.move(110, -0.5);
-        TimeUnit.MILLISECONDS.sleep(1000);
-
+        TimeUnit.MILLISECONDS.sleep(700);
+        bot.turn(30, -1);
+        TimeUnit.MILLISECONDS.sleep(700);
+        bot.move(50,-0.5);
+        TimeUnit.MILLISECONDS.sleep(700);
+        bot.turn(30, 1);
+        TimeUnit.MILLISECONDS.sleep(700);
+        bot.move(35,-0.5);
+        TimeUnit.MILLISECONDS.sleep(700);
+        bot.turn(30, 1);
+        TimeUnit.MILLISECONDS.sleep(700);
+        bot.move(50,-0.5);
+        TimeUnit.MILLISECONDS.sleep(700);
+        bot.turn(27, -1);
+    }
+    private void wobbleDrop() throws InterruptedException{
         //drop off wobble
         bot.dropArm();
         TimeUnit.MILLISECONDS.sleep(500);
         bot.openGrabber();
         TimeUnit.MILLISECONDS.sleep(500);
         bot.liftArm();
-        TimeUnit.MILLISECONDS.sleep(1000);
+        TimeUnit.MILLISECONDS.sleep(500);
         bot.stopArm();
-        TimeUnit.MILLISECONDS.sleep(1000);
-
-
-
-        //move back from target zone
-        bot.move(40, 0.5);
-        TimeUnit.MILLISECONDS.sleep(1000);
-
-        //turn towards high shot
-        //usually scores the goal when the angle is around
-        bot.turn(87, -1);
-        TimeUnit.MILLISECONDS.sleep(1000);
-
-        //move to launching area
-        bot.move(40,0.5);
-        TimeUnit.MILLISECONDS.sleep(1000);
-
-        bot.shoot(1);
+        TimeUnit.MILLISECONDS.sleep(500);
+    }
+    private void fireRings(double distance) throws InterruptedException{
+        bot.shoot(distance);
         TimeUnit.MILLISECONDS.sleep(1500);
 
         //push ring to launcher
@@ -169,122 +158,102 @@ public class FinalAuto extends LinearOpMode {
         bot.pushRing();
         TimeUnit.MILLISECONDS.sleep(1000);
         bot.pushRing();
-        TimeUnit.MILLISECONDS.sleep(1500);
+        TimeUnit.MILLISECONDS.sleep(1000);
+    }
+    private void TargetA() throws InterruptedException{
 
+        //turn to target zone
+        TimeUnit.MILLISECONDS.sleep(500);
+        bot.turn(50, -1);
+        TimeUnit.MILLISECONDS.sleep(1000);
+
+        bot.move(25,-0.5);
+        TimeUnit.MILLISECONDS.sleep(500);
+
+
+        wobbleDrop();
+
+
+        bot.move(25,0.5);
+        TimeUnit.MILLISECONDS.sleep(500);
+
+        bot.turn(50, -1);
+        TimeUnit.MILLISECONDS.sleep(500);
+
+
+
+        //move back from target zone
+        bot.move(22, -0.5);
+        TimeUnit.MILLISECONDS.sleep(1000);
+
+        fireRings(1);
 
         bot.stopShoot();
         TimeUnit.MILLISECONDS.sleep(1000);
 
 
         //move onto launch line
-        bot.move(14,0.5);
+        bot.move(20,0.5);
         TimeUnit.MILLISECONDS.sleep(1000);
     }
     private void TargetB() throws InterruptedException{
-        TimeUnit.MILLISECONDS.sleep(500);
-
-        bot.turn(3, 1);
-
-        //move the bot to target zone
-        bot.move(190,-0.5);
+        TimeUnit.MILLISECONDS.sleep(1000);
+        bot.move(20,-0.5);
         TimeUnit.MILLISECONDS.sleep(1000);
 
-        //drop off wobble
-        bot.dropArm();
-        TimeUnit.MILLISECONDS.sleep(500);
-        bot.openGrabber();
-        TimeUnit.MILLISECONDS.sleep(500);
-        bot.liftArm();
-        TimeUnit.MILLISECONDS.sleep(1000);
-        bot.stopArm();
-        TimeUnit.MILLISECONDS.sleep(1000);
+        wobbleDrop();
 
         //move back from target zone and into launching area
         bot.move(36, 0.5);
         TimeUnit.MILLISECONDS.sleep(1000);
 
         //spin 180 degrees
-        bot.turn(114, 1);
+        bot.turn(95, -1);
         TimeUnit.MILLISECONDS.sleep(1000);
 
-        //turn on flywheel
-        bot.shoot(0.95);
-        TimeUnit.MILLISECONDS.sleep(2000);
-
-        //push ring to launcher
-        bot.pushRing();
-        TimeUnit.MILLISECONDS.sleep(1000);
-        bot.pushRing();
-        TimeUnit.MILLISECONDS.sleep(1000);
-        bot.pushRing();
-        TimeUnit.MILLISECONDS.sleep(1500);
+        fireRings(0.95);
 
         //turn off flywheel
         bot.stopShoot();
-        TimeUnit.MILLISECONDS.sleep(1000);
+        TimeUnit.MILLISECONDS.sleep(500);
 
 
         //move onto launch line
-        bot.move(14,0.5);
+        bot.move(30,0.5);
         TimeUnit.MILLISECONDS.sleep(1000);
+
     }
     private void TargetC() throws InterruptedException{
+        //turn to target zone
+        TimeUnit.MILLISECONDS.sleep(500);
+        bot.turn(14, -1);
         TimeUnit.MILLISECONDS.sleep(500);
 
-        //move the bot so it has space to turn
-        bot.move(20,-0.5);
+        bot.move(82,-0.5);
         TimeUnit.MILLISECONDS.sleep(500);
 
-        //turn towards target zone
-        bot.turn(5, -1);
+        wobbleDrop();
 
-        //move to target zone
+        bot.move(82,0.5);
         TimeUnit.MILLISECONDS.sleep(500);
-        bot.move(235, -0.5);
-        TimeUnit.MILLISECONDS.sleep(1000);
 
-        //drop off wobble
-        bot.dropArm();
+        bot.turn(77, -1);
         TimeUnit.MILLISECONDS.sleep(500);
-        bot.openGrabber();
-        TimeUnit.MILLISECONDS.sleep(500);
-        bot.liftArm();
-        TimeUnit.MILLISECONDS.sleep(1000);
-        bot.stopArm();
-        TimeUnit.MILLISECONDS.sleep(1000);
 
 
 
         //move back from target zone
-        bot.move(90, 0.5);
+        bot.move(20, -0.5);
         TimeUnit.MILLISECONDS.sleep(1000);
 
-        //turn towards high shot
-        bot.turn(128, 1);
-        TimeUnit.MILLISECONDS.sleep(1000);
-
-        //move towards launch zone
-        bot.move(14,0.5);
-        TimeUnit.MILLISECONDS.sleep(1000);
-
-        bot.shoot(1);
-        TimeUnit.MILLISECONDS.sleep(1500);
-
-        //push ring to launcher
-        bot.pushRing();
-        TimeUnit.MILLISECONDS.sleep(1000);
-        bot.pushRing();
-        TimeUnit.MILLISECONDS.sleep(1000);
-        bot.pushRing();
-        TimeUnit.MILLISECONDS.sleep(1500);
-
+        fireRings(1);
 
         bot.stopShoot();
         TimeUnit.MILLISECONDS.sleep(1000);
 
 
         //move onto launch line
-        bot.move(10,0.5);
+        bot.move(20,0.5);
         TimeUnit.MILLISECONDS.sleep(1000);
     }
 
@@ -296,23 +265,18 @@ public class FinalAuto extends LinearOpMode {
 
         initVuforia();
         initTfod();
-
+        tfod.setZoom(1.5, 16.0/9.0);
 
         if (tfod != null) {
             tfod.activate();
         }
-
-        telemetry.addData(">", "Press Play to start op mode");
-        telemetry.update();
-        waitForStart();
-
         sleep (1000);
         double sum = 0;
         for (int i = 0; i < 10; i++){
             sum += ringAmount();
             sleep (100);
         }
-        double x = Math.round(sum / 10.0);
+        double rings = Math.round(sum / 10.0);
         telemetry.addData("rings", ringAmount());
         telemetry.update();
         sleep (100);
@@ -321,17 +285,30 @@ public class FinalAuto extends LinearOpMode {
             tfod.shutdown();
         }
 
+        telemetry.addData(">", "Press Play to start op mode");
+        telemetry.update();
+        waitForStart();
+
+
+
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
+
+        //lift arm whole time so the wobble doesn't drop
+        TimeUnit.MILLISECONDS.sleep(500);
 
         bot.closeGrabber();
         TimeUnit.MILLISECONDS.sleep(800);
         bot.liftArm();
-        TimeUnit.MILLISECONDS.sleep(1000);
+        TimeUnit.MILLISECONDS.sleep(800);
 
-        if (x == 0){
+        bot.turn(3, 1);
+
+        moveAroundRing();
+
+        if (rings == 0){
             TargetA();
-        }else if (x == 1){
+        }else if (rings == 1){
             TargetB();
         }else{
             TargetC();

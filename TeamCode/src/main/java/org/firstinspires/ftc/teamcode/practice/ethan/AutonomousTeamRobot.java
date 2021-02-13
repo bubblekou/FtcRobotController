@@ -185,8 +185,4 @@ public class AutonomousTeamRobot {
 
     public void shoot(double distance) { flywheel.setPower(distance); }
     public void stopShoot() { flywheel.setPower(0); }
-
-    public void targetA() throws InterruptedException{
-
-    }
 }
