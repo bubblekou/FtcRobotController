@@ -50,6 +50,8 @@ public class AutoTeleop extends LinearOpMode {
         double sum = 0;
         for (int i = 0; i < 10; i++){
             sum += bot.getRingAmount();
+            telemetry.addData("rings: ", bot.getRingAmount());
+            telemetry.update();
             sleep (100);
         }
         long rings = Math.round(sum/10.0);
