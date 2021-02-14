@@ -53,14 +53,14 @@ public class AutoTeleop extends LinearOpMode {
             sleep (100);
         }
         long rings = Math.round(sum/10.0);
-        telemetry.addData("rings", bot.getRingAmount());
-        telemetry.update();
         bot.shutdownTfod();
 
         telemetry.addData(">", "Press Play to start op mode");
+        // Wait for the game to start (driver presses PLAY)
+
+        telemetry.addData("rings: ", rings);
         telemetry.update();
 
-        // Wait for the game to start (driver presses PLAY)
         waitForStart();
         if (rings == 0){
             gotoTargetA();
