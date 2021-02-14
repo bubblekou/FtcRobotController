@@ -76,7 +76,6 @@ public class AutoTeleop extends LinearOpMode {
 
         //avoid the ring in the path
         bot.gyroDrive(0.3, -54, 0);
-        bot.gyroDrive( 0.30, -42, 0);
 
         bot.gyroTurn(0.2, 90);
         bot.gyroHold(0.2, 90, 0.2);
