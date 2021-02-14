@@ -299,7 +299,7 @@ public class GyroDriveRobot extends TeamRobot {
         }
     }
 
-    public int getRingAmount(){
+    public double getRingAmount(){
         if (tfod != null) {
 
             List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();

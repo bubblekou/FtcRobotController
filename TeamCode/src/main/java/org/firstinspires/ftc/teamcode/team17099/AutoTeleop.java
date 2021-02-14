@@ -131,7 +131,7 @@ public class AutoTeleop extends LinearOpMode {
             telemetry.update();
 
             bot.pushRing();
-            sleep(1000);
+            sleep(1000);//750 maybe
         }
         bot.stopFlywheel();
         bot.gyroTurn(0.30, 90);
