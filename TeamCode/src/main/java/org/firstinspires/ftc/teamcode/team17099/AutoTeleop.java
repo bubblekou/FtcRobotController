@@ -165,15 +165,16 @@ public class AutoTeleop extends LinearOpMode {
 
         int count = 0;
         bot.startHighFlywheel();
-        sleep(1000);
+        //sleep(1000);
 
-        while (opModeIsActive() && count < 4) {
+        while (opModeIsActive() && count < 3) {
             count++;
+            sleep(1000);
+
             telemetry.addData(">", "Ring " + count);
             telemetry.update();
 
             bot.pushRing();
-            sleep(1000);
         }
         bot.stopFlywheel();
         bot.gyroTurn(0.30, 90);
@@ -181,7 +182,7 @@ public class AutoTeleop extends LinearOpMode {
 
         bot.gyroTurn(0.30, 0);
         bot.gyroHold(0.30,0, 0.2);
-        bot.gyroDrive(0.3, -40, 0);
+        bot.gyroDrive(0.3, -46, 0);
 
         bot.gyroTurn(0.30, -90);
         bot.gyroHold(0.30,-90, 0.2);
@@ -200,6 +201,6 @@ public class AutoTeleop extends LinearOpMode {
         bot.gyroTurn(0.30, 0);
         bot.gyroHold(0.30,0, 0.2);
 
-        bot.gyroDrive(0.5, 16, 0);
+        bot.gyroDrive(0.5, 10, 0);
     }
 }
