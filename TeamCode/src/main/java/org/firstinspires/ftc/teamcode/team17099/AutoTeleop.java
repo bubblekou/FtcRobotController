@@ -97,12 +97,13 @@ public class AutoTeleop extends LinearOpMode {
         }
         bot.stopFlywheel();
         bot.gyroTurn(0.30, -90);
-        bot.gyroDrive(0.3, -20, 0);
+        bot.gyroDrive(0.3, -28, 0);
         bot.dropArm();
         sleep(200);
         bot.flipGrabber();
         sleep(200);
         bot.liftArm();
+        bot.gyroDrive(0.3, 4, 0);
     }
 
     private void gotoTargetB() throws InterruptedException{
