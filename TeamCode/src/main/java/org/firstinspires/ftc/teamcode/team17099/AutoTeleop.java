@@ -75,7 +75,7 @@ public class AutoTeleop extends LinearOpMode {
         bot.liftArm();
 
         //avoid the ring in the path
-        bot.gyroDrive(0.3, -54, 0);
+        bot.gyroDrive(0.5, -54, 0);
 
         bot.gyroTurn(0.2, 90);
         bot.gyroHold(0.2, 90, 0.2);
@@ -97,7 +97,7 @@ public class AutoTeleop extends LinearOpMode {
         }
         bot.stopFlywheel();
         bot.gyroTurn(0.30, -90);
-        bot.gyroDrive(0.3, -28, 0);
+        bot.gyroDrive(0.5, -28, 0);
         bot.dropArm();
         sleep(200);
         bot.flipGrabber();
@@ -110,9 +110,9 @@ public class AutoTeleop extends LinearOpMode {
         bot.liftArm();
 
         //avoid the ring in the path
-        bot.gyroDrive(0.3, -12, 0);
+        bot.gyroDrive(0.4, -12, 0);
         bot.gyroStrafeSideway(0.3, 12, 0);
-        bot.gyroDrive( 0.30, -42, 0);
+        bot.gyroDrive( 0.5, -42, 0);
         bot.gyroStrafeSideway(0.3, -12, 0);
 
         bot.gyroTurn(0.2, 90);
@@ -139,7 +139,7 @@ public class AutoTeleop extends LinearOpMode {
 
         bot.gyroTurn(0.30, 0);
         bot.gyroHold(0.30,0, 0.2);
-        bot.gyroDrive(0.3, -24, 0);
+        bot.gyroDrive(0.5, -24, 0);
         bot.dropArm();
         sleep(200);
         bot.flipGrabber();
@@ -152,9 +152,9 @@ public class AutoTeleop extends LinearOpMode {
         bot.liftArm();
 
         //avoid the ring in the path
-        bot.gyroDrive(0.3, -12, 0);
+        bot.gyroDrive(0.5, -12, 0);
         bot.gyroStrafeSideway(0.3, 12, 0);
-        bot.gyroDrive( 0.30, -42, 0);
+        bot.gyroDrive( 0.50, -42, 0);
         bot.gyroStrafeSideway(0.3, -12, 0);
 
         bot.gyroTurn(0.2, 90);
@@ -181,18 +181,18 @@ public class AutoTeleop extends LinearOpMode {
 
         bot.gyroTurn(0.30, 0);
         bot.gyroHold(0.30,0, 0.2);
-        bot.gyroDrive(0.3, -40, 0);
+        bot.gyroDrive(0.5, -40, 0);
 
         bot.gyroTurn(0.30, -90);
         bot.gyroHold(0.30,-90, 0.2);
 
-        bot.gyroDrive(0.30, -24, 0);
+        bot.gyroDrive(0.50, -24, 0);
         bot.dropArm();
         sleep(200);
         bot.flipGrabber();
         sleep(200);
         bot.liftArm();
-        bot.gyroDrive(0.3, 24, 0);
+        bot.gyroDrive(0.5, 24, 0);
 
         bot.gyroTurn(0.30, 0);
         bot.gyroHold(0.30,0, 0.2);
@@ -200,6 +200,6 @@ public class AutoTeleop extends LinearOpMode {
         bot.gyroTurn(0.30, 0);
         bot.gyroHold(0.30,0, 0.2);
 
-        bot.gyroDrive(0.3, 16, 0);
+        bot.gyroDrive(0.5, 16, 0);
     }
 }
