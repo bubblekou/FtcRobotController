@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode.practice.daniel;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -48,7 +49,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  */
 
 @TeleOp(name="Daniel: RingMotion", group="Daniel's Teleops")
-//@Disabled
+@Disabled
 public class RingMotion extends LinearOpMode {
 
     private DcMotor conveyor = null;

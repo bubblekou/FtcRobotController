@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode.practice.ethan;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -43,6 +44,7 @@ import java.util.concurrent.TimeUnit;
  */
 
 @Autonomous(name="EthanBasicAuto", group="Ethan's Autonomous")
+@Disabled
 public class EthanBasicAuto extends LinearOpMode {
     private AutonomousTeamRobot bot;
 

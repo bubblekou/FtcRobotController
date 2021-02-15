@@ -1,12 +1,13 @@
 package org.firstinspires.ftc.teamcode.practice.daniel;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.team17099.GyroDriveRobot;
 
 @Autonomous(name="Daniel: Gyro Turn", group="Daniel's Teleops")
-//@Disabled
+@Disabled
 public class DanielGyroTurn extends LinearOpMode {
     private GyroDriveRobot bot;
     @Override

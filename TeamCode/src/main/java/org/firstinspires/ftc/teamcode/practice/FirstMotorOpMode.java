@@ -51,7 +51,7 @@ import com.qualcomm.robotcore.util.Range;
  */
 
 @TeleOp(name="Example: Motor OpMode", group="Example Teleops")
-//@Disabled
+@Disabled
 public class FirstMotorOpMode extends LinearOpMode {
 
     // Declare OpMode members.

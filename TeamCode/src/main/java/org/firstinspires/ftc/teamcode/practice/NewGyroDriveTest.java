@@ -1,13 +1,14 @@
 package org.firstinspires.ftc.teamcode.practice;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.team17099.GyroDriveRobot;
 import org.firstinspires.ftc.teamcode.team17099.GyroDriveRobotV2;
 
 @Autonomous(name="Drive Avoid Imu", group="Exercises")
-//@Disabled
+@Disabled
 public class NewGyroDriveTest extends LinearOpMode
 {
     private GyroDriveRobotV2 bot;

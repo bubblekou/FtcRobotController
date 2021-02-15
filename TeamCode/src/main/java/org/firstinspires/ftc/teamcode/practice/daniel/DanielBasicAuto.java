@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode.practice.daniel;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -43,6 +44,7 @@ import java.util.concurrent.TimeUnit;
  */
 
 @Autonomous(name="DanielBasicAuto", group="Daniel's Autonomous")
+@Disabled
 public class DanielBasicAuto extends LinearOpMode {
     private AutoTeamBot bot;
 
