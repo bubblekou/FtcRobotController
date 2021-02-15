@@ -47,35 +47,29 @@ public class AutoTeleop extends LinearOpMode {
             idle();
         }
 
-        double sum = 0;
+        double maxRings = 0;
         double ringAmt;
-        double[] ringArr = new double[10];
         for (int i = 0; i < 10; i++){
             ringAmt = bot.getRingAmount();
-            sum += ringAmt;
-            ringArr[i] = ringAmt;
+            if (ringAmt > maxRings){
+                maxRings = ringAmt;
+            }
             sleep (100);
         }
-        long rings = Math.round(sum/10.0);
         bot.shutdownTfod();
 
         telemetry.addData(">", "Press Play to start op mode");
         // Wait for the game to start (driver presses PLAY)
-
-        telemetry.addData(",", ringArr);
         telemetry.update();
 
         waitForStart();
-        if (rings == 0){
+        if (maxRings == 0){
             gotoTargetA();
-        }else if (rings == 1){
+        }else if (maxRings == 1){
             gotoTargetB();
         }else{
             gotoTargetC();
         }
-
-        telemetry.addData(",", ringArr);
-        telemetry.update();
     }
 
     private void gotoTargetA() throws InterruptedException{
