@@ -322,11 +322,14 @@ public class TeamRobot {
      * flywheel for launcher
      */
     public void startLowFlywheel() {
-        flywheel.setPower(0.8);
+        flywheel.setPower(0.75);
     }
 
     public void startHighFlywheel() {
         flywheel.setPower(1);
+    }
+    public void shootRing(double power){
+        flywheel.setPower(power);
     }
 
     public void stopFlywheel() {

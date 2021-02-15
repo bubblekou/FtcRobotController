@@ -48,10 +48,12 @@ public class AutoTeleop extends LinearOpMode {
         }
 
         double sum = 0;
+        double ringAmt;
+        double[] ringArr = new double[10];
         for (int i = 0; i < 10; i++){
-            sum += bot.getRingAmount();
-            telemetry.addData("rings: ", bot.getRingAmount());
-            telemetry.update();
+            ringAmt = bot.getRingAmount();
+            sum += ringAmt;
+            ringArr[i] = ringAmt;
             sleep (100);
         }
         long rings = Math.round(sum/10.0);
@@ -60,7 +62,7 @@ public class AutoTeleop extends LinearOpMode {
         telemetry.addData(">", "Press Play to start op mode");
         // Wait for the game to start (driver presses PLAY)
 
-        telemetry.addData("rings: ", rings);
+        telemetry.addData(",", ringArr);
         telemetry.update();
 
         waitForStart();
@@ -71,6 +73,9 @@ public class AutoTeleop extends LinearOpMode {
         }else{
             gotoTargetC();
         }
+
+        telemetry.addData(",", ringArr);
+        telemetry.update();
     }
 
     private void gotoTargetA() throws InterruptedException{
@@ -86,25 +91,25 @@ public class AutoTeleop extends LinearOpMode {
         bot.gyroHold(0.2, 180, 0.2);
 
         int count = 0;
-        bot.startHighFlywheel();
-        sleep(1000);
+        bot.shootRing(0.9);
+        //sleep(1000);
 
-        while (opModeIsActive() && count < 4) {
+        while (opModeIsActive() && count < 3) {
             count++;
+            sleep(1000);
             telemetry.addData(">", "Ring " + count);
             telemetry.update();
-
             bot.pushRing();
-            sleep(1000);
         }
         bot.stopFlywheel();
-        bot.gyroTurn(0.30, -90);
-        bot.gyroDrive(0.5, -28, 0);
+        bot.gyroTurn(0.3, -90);
+        bot.gyroDrive(0.5, -10, 0);
         bot.dropArm();
         sleep(200);
         bot.flipGrabber();
         sleep(200);
         bot.liftArm();
+        bot.gyroTurn(0.3, 90);
         bot.gyroDrive(0.3, 4, 0);
     }
 
