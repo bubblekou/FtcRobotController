@@ -83,17 +83,13 @@ public class AutoTeleop extends LinearOpMode {
 
         //avoid the ring in the path
         bot.gyroDrive(0.5, -54, 0);
-
         bot.gyroTurn(0.2, 90);
         bot.gyroHold(0.2, 90, 0.2);
-
         bot.gyroTurn(0.2, 180);
         bot.gyroHold(0.2, 180, 0.2);
 
         int count = 0;
         bot.shootRing(0.9);
-        //sleep(1000);
-
         while (opModeIsActive() && count < 3) {
             count++;
             sleep(1000);
@@ -102,6 +98,7 @@ public class AutoTeleop extends LinearOpMode {
             bot.pushRing();
         }
         bot.stopFlywheel();
+
         bot.gyroTurn(0.3, -90);
         bot.gyroDrive(0.5, -10, 0);
         bot.dropArm();
@@ -109,8 +106,10 @@ public class AutoTeleop extends LinearOpMode {
         bot.flipGrabber();
         sleep(200);
         bot.liftArm();
-        bot.gyroTurn(0.3, 90);
-        bot.gyroDrive(0.3, 4, 0);
+
+        bot.gyroDrive(0.5, 10, 0);
+        bot.gyroTurn(0.3, 0);
+        bot.gyroDrive(0.3, -12, 0);
     }
 
     private void gotoTargetB() throws InterruptedException{
@@ -121,29 +120,24 @@ public class AutoTeleop extends LinearOpMode {
         bot.gyroStrafeSideway(0.3, 12, 0);
         bot.gyroDrive( 0.3, -38, 0);
         bot.gyroStrafeSideway(0.3, -12, 0);
-
         bot.gyroTurn(0.2, 90);
         bot.gyroHold(0.2, 90, 0.2);
-
         bot.gyroTurn(0.2, 180);
         bot.gyroHold(0.2, 180, 0.2);
 
         int count = 0;
         bot.startHighFlywheel();
-        sleep(1000);
-
-        while (opModeIsActive() && count < 4) {
+        while (opModeIsActive() && count < 3) {
             count++;
+            sleep(1000);
             telemetry.addData(">", "Ring " + count);
             telemetry.update();
-
             bot.pushRing();
-            sleep(1000);//750 maybe
         }
         bot.stopFlywheel();
+
         bot.gyroTurn(0.30, 90);
         bot.gyroHold(0.30,90, 0.2);
-
         bot.gyroTurn(0.30, 0);
         bot.gyroHold(0.30,0, 0.2);
         bot.gyroDrive(0.3, -24, 0);
@@ -152,6 +146,7 @@ public class AutoTeleop extends LinearOpMode {
         bot.flipGrabber();
         sleep(200);
         bot.liftArm();
+
         bot.gyroDrive(0.3, 6, 0);
     }
 
@@ -163,51 +158,41 @@ public class AutoTeleop extends LinearOpMode {
         bot.gyroStrafeSideway(0.3, 12, 0);
         bot.gyroDrive( 0.30, -38, 0);
         bot.gyroStrafeSideway(0.3, -12, 0);
-
         bot.gyroTurn(0.2, 90);
         bot.gyroHold(0.2, 90, 0.2);
-
         bot.gyroTurn(0.2, 180);
         bot.gyroHold(0.2, 180, 0.2);
 
         int count = 0;
         bot.startHighFlywheel();
-        //sleep(1000);
-
         while (opModeIsActive() && count < 3) {
             count++;
             sleep(1000);
-
             telemetry.addData(">", "Ring " + count);
             telemetry.update();
-
             bot.pushRing();
         }
         bot.stopFlywheel();
+
         bot.gyroTurn(0.30, 90);
         bot.gyroHold(0.30,90, 0.2);
-
         bot.gyroTurn(0.30, 0);
         bot.gyroHold(0.30,0, 0.2);
         bot.gyroDrive(0.3, -46, 0);
-
         bot.gyroTurn(0.30, -90);
         bot.gyroHold(0.30,-90, 0.2);
-
         bot.gyroDrive(0.30, -24, 0);
         bot.dropArm();
         sleep(200);
         bot.flipGrabber();
         sleep(200);
         bot.liftArm();
+
         bot.gyroDrive(0.3, 24, 0);
-
         bot.gyroTurn(0.30, 0);
         bot.gyroHold(0.30,0, 0.2);
-
         bot.gyroTurn(0.30, 0);
         bot.gyroHold(0.30,0, 0.2);
-
         bot.gyroDrive(0.5, 10, 0);
     }
 }
