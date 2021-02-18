@@ -42,15 +42,15 @@ public class AutoTeleop extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         //import the team bot so we have access to all the stuff in it.
         this.bot = new GyroDriveRobot(hardwareMap, this);
+        while (!isStarted()) {
+            sleep(100);
+            idle();
+        }
 
-        telemetry.addData(">", "Press Play to start op mode");
-        // Wait for the game to start (driver presses PLAY)
-        telemetry.update();
-        waitForStart();
-
-        int maxRings = 0;
+        double maxRings = 0;
+        double ringAmt;
         for (int i = 0; i < 10; i++){
-            int ringAmt = bot.getRingAmount();
+            ringAmt = bot.getRingAmount();
             if (ringAmt > maxRings){
                 maxRings = ringAmt;
             }
@@ -58,9 +58,14 @@ public class AutoTeleop extends LinearOpMode {
         }
         bot.shutdownTfod();
 
+        telemetry.addData(">", "Press Play to start op mode");
+        // Wait for the game to start (driver presses PLAY)
+        telemetry.update();
+
+        waitForStart();
         if (maxRings == 0){
             gotoTargetA();
-        } else if (maxRings == 1){
+        }else if (maxRings == 1){
             gotoTargetB();
         }else{
             gotoTargetC();
