@@ -51,6 +51,7 @@ import org.firstinspires.ftc.teamcode.team17099.TeamRobot;
  * is explained below.
  */
 @TeleOp(name = "Concept: TensorFlow Object Detection Webcam", group = "Concept")
+//@Disabled
 @Disabled
 public class DanielTensorflow extends LinearOpMode {
 
