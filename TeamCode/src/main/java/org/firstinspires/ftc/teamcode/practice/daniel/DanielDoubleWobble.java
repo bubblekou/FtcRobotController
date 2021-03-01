@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode.practice.daniel;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.teamcode.team17099.GyroDriveRobot;
 
 /**
@@ -86,6 +87,19 @@ public class DanielDoubleWobble extends LinearOpMode {
             idle();
         }
 
+        while (!isStopRequested()) {
+            VectorF lastLocation = bot.getLocation();
+            if (lastLocation != null) {
+                telemetry.addData("Pos (in)", "{X, Y, Z} = %.1f, %.1f, %.1f",
+                        lastLocation.get(0) / bot.mmPerInch, lastLocation.get(1) / bot.mmPerInch, lastLocation.get(2) / bot.mmPerInch);
+            } else {
+                telemetry.addData("Pos (in)", "unknown");
+            }
+
+
+            telemetry.update();
+        }
+
         bot.liftArm();
 
         bot.gyroDrive(0.5, -60, 0);
@@ -128,5 +142,7 @@ public class DanielDoubleWobble extends LinearOpMode {
         bot.flipGrabber();
         sleep(200);
         bot.liftArm();
+
+        bot.stopCamera();
     }
 }
