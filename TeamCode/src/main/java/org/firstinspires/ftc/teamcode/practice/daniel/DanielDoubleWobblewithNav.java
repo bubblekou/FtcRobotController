@@ -35,6 +35,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.teamcode.team17099.GyroDriveRobot;
 
+import static java.lang.Math.atan;
 import static java.lang.Math.sqrt;
 import static java.lang.Math.tan;
 
@@ -122,7 +123,7 @@ public class DanielDoubleWobblewithNav extends LinearOpMode {
 
         long wobblegoalleftposX = -48;
         long wobblegoalleftposY = -24;
-        long angle = (long) ((long) 90 - tan(-1*(wobblegoalleftposY - Yrobotcord)/(wobblegoalleftposX - Xrobotord)));
+        long angle = (long) ((long) 90 - atan(-1*(wobblegoalleftposY - Yrobotcord)/(wobblegoalleftposX - Xrobotord)));
         long distance = (long) sqrt((wobblegoalleftposX - Xrobotord)*(wobblegoalleftposX - Xrobotord) + (wobblegoalleftposY - Yrobotcord) * (wobblegoalleftposY - Yrobotcord));
         int drivedistance = (int) distance;
 
