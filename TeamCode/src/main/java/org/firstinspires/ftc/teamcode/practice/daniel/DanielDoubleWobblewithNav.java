@@ -36,6 +36,7 @@ import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.teamcode.team17099.GyroDriveRobot;
 
 import static java.lang.Math.sqrt;
+import static java.lang.Math.tan;
 
 /**
  * This file illustrates the concept of driving a path based on Gyro heading and encoder counts.
@@ -121,13 +122,13 @@ public class DanielDoubleWobblewithNav extends LinearOpMode {
 
         long wobblegoalleftposX = -48;
         long wobblegoalleftposY = -24;
-        long angle = (long) ((wobblegoalleftposX - Xrobotord)/(wobblegoalleftposY - Yrobotcord))*360;
+        long angle = (long) ((long) 90 - tan((wobblegoalleftposY - Yrobotcord)/(wobblegoalleftposX - Xrobotord)));
         long distance = (long) sqrt((wobblegoalleftposX - Xrobotord)*(wobblegoalleftposX - Xrobotord) + (wobblegoalleftposY - Yrobotcord) * (wobblegoalleftposY - Yrobotcord));
         int drivedistance = (int) distance;
 
         bot.stopCamera();
 
-        bot.gyroTurn(0.3, angle);
+        bot.gyroTurn(0.3, -angle);
         bot.gyroDrive(0.3, drivedistance - 6, 0);
         bot.flipGrabber();
         bot.liftArm();
