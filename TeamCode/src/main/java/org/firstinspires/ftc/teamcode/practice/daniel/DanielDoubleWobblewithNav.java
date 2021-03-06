@@ -124,6 +124,12 @@ public class DanielDoubleWobblewithNav extends LinearOpMode {
         long wobblegoalleftposX = -48;
         long wobblegoalleftposY = -24;
         long angle = (long) atan(-1*(wobblegoalleftposX - Xrobotord)/(wobblegoalleftposY - Yrobotcord));
+        if (angle > 180) {
+            angle = angle - 180;
+        }
+        else if (0 > angle) {
+            angle = angle + 180;
+        }
         long distance = (long) sqrt((wobblegoalleftposX - Xrobotord)*(wobblegoalleftposX - Xrobotord) + (wobblegoalleftposY - Yrobotcord) * (wobblegoalleftposY - Yrobotcord));
         int drivedistance = (int) distance;
 
