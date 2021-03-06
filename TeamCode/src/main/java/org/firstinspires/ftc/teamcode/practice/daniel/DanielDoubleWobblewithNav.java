@@ -105,7 +105,7 @@ public class DanielDoubleWobblewithNav extends LinearOpMode {
 
         bot.liftArm();
 
-        bot.gyroDrive(0.5, -60, 0);
+        bot.gyroDrive(0.5, -72, 0);
         bot.gyroTurn(0.3, -90);
         bot.gyroHold(0.3, -90, 0.2);
         bot.dropArm();
@@ -118,33 +118,46 @@ public class DanielDoubleWobblewithNav extends LinearOpMode {
         bot.dropArm();
 
         VectorF lastLocation = bot.getLocation();
-        long Xrobotord = (long) (lastLocation.get(0) / bot.mmPerInch);
-        long Yrobotcord = (long) (lastLocation.get(1) / bot.mmPerInch);
+        double Xrobotord = lastLocation.get(0) / bot.mmPerInch;
+        double Yrobotcord = lastLocation.get(1) / bot.mmPerInch;
 
-        long wobblegoalleftposX = -48;
-        long wobblegoalleftposY = -24;
-        long angle = (long) atan(-1*(wobblegoalleftposX - Xrobotord)/(wobblegoalleftposY - Yrobotcord));
+        double wobblegoalleftposX = -48;
+        double wobblegoalleftposY = -24;
+        double ratio = 1.0 * (-24 + 48)/(-48 - 12);
+        double angle = (atan(-ratio) * 180 / Math.PI);
         if (angle > 180) {
             angle = angle - 180;
         }
         else if (0 > angle) {
             angle = angle + 180;
         }
-        long distance = (long) sqrt((wobblegoalleftposX - Xrobotord)*(wobblegoalleftposX - Xrobotord) + (wobblegoalleftposY - Yrobotcord) * (wobblegoalleftposY - Yrobotcord));
-        int drivedistance = (int) distance;
+        int distance = (int) sqrt(Math.pow(wobblegoalleftposX - Xrobotord, 2) + Math.pow(wobblegoalleftposY - Yrobotcord, 2));
 
         bot.stopCamera();
 
         bot.gyroTurn(0.3, -angle);
-        bot.gyroDrive(0.3, drivedistance - 6, 0);
+        bot.gyroDrive(0.3, distance - 5, 0);
         bot.flipGrabber();
         bot.liftArm();
-        bot.gyroDrive(0.3, -(drivedistance + 6), 0);
+        bot.gyroDrive(0.3, -(distance - 5), 0);
         bot.gyroTurn(0.3, -90);
         bot.dropArm();
         bot.flipGrabber();
         bot.gyroDrive(0.3, 24, 0);
         bot.gyroTurn(0.3, 180);
-        bot.gyroDrive(0.3, 12, 0);
+        bot.gyroDrive(0.3, -6, 0);
+        int count = 0;
+        bot.startHighFlywheel();
+        sleep(1000);
+
+        while (opModeIsActive() && count < 4) {
+            count++;
+            telemetry.addData(">", "Ring " + count);
+            telemetry.update();
+
+            bot.pushRing();
+            sleep(1000);
+        }
+        bot.stopFlywheel();
     }
 }
