@@ -13,7 +13,6 @@ import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
-import org.openftc.easyopencv.OpenCvInternalCamera;
 import org.openftc.easyopencv.OpenCvPipeline;
 
 import static java.lang.Math.abs;
@@ -112,6 +111,7 @@ public class RingPresenceDetection extends LinearOpMode {
         public Mat processFrame(Mat input) {
             //this is how sensitive the detection will be - higher means less sensitive, lower means more sensitive
             final int sensitivity = 40;
+            double differenceAmt;
             inputToCb(input);
             avg1 = (int) Core.mean(region1_Cr).val[0];
             avg2 = (int) Core.mean(region2_Cr).val[0];
@@ -123,6 +123,7 @@ public class RingPresenceDetection extends LinearOpMode {
             for (double i : diffList) {
                 if (i > sensitivity) {
                     state = RingState.PRESENT;
+                    differenceAmt = i;
                 }
             }
 
