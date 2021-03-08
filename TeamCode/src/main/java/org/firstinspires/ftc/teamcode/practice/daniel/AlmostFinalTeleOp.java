@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode.practice.daniel;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -54,6 +55,7 @@ import java.util.concurrent.TimeUnit;
  */
 
 @TeleOp(name="Daniel: AlmostFinalTeleOp", group="Daniel's Teleops")
+@Disabled
 public class AlmostFinalTeleOp extends LinearOpMode {
 
     private TeamRobot bot;
@@ -76,8 +78,6 @@ public class AlmostFinalTeleOp extends LinearOpMode {
         telemetry.update();
 
         this.bot = new TeamRobot(hardwareMap);
-
-        bot.init();
 
         grabber = hardwareMap.get(DcMotor.class, "grabber");
         flywheel = hardwareMap.get(DcMotor.class, "flywheel");

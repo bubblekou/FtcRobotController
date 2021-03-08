@@ -27,28 +27,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.practice.daniel;
+package org.firstinspires.ftc.teamcode.practice.ethan;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.teamcode.practice.ethan.AutonomousTeamRobot;
 import org.firstinspires.ftc.teamcode.team17099.GyroDriveRobot;
-import org.firstinspires.ftc.teamcode.team17099.TeamRobot;
-
-import java.util.concurrent.TimeUnit;
-
-import static java.lang.Thread.sleep;
-import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.BACK;
 
 /**
  * This file illustrates the concept of driving a path based on Gyro heading and encoder counts.
@@ -83,9 +67,9 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="DanielAuto", group="Daniel's Teleops")
+@Autonomous(name="EthanDoubleWobble", group="Ethan's Autonomous")
 //@Disabled
-public class DanielAuto extends LinearOpMode {
+public class EthanDoubleWobble extends LinearOpMode {
     private GyroDriveRobot bot;
 
     @Override
@@ -104,45 +88,33 @@ public class DanielAuto extends LinearOpMode {
 
         bot.liftArm();
 
-        //avoid the ring in the path
-        bot.gyroDrive(0.3, -12, 0);
-        bot.gyroStrafeSideway(0.3, 12, 0);
-        bot.gyroDrive( 0.30, -42, 0);
-        bot.gyroStrafeSideway(0.3, -12, 0);
-
+        bot.gyroDrive(0.5, -54, 0);
         bot.gyroTurn(0.2, 90);
         bot.gyroHold(0.2, 90, 0.2);
-
         bot.gyroTurn(0.2, 180);
         bot.gyroHold(0.2, 180, 0.2);
 
         int count = 0;
-        bot.startHighFlywheel();
-        sleep(1000);
-
-        while (opModeIsActive() && count < 4) {
+        bot.shootRing(0.9);
+        while (opModeIsActive() && count < 3) {
             count++;
+            sleep(1000);
             telemetry.addData(">", "Ring " + count);
             telemetry.update();
-
             bot.pushRing();
-            sleep(1000);
         }
         bot.stopFlywheel();
 
-        bot.gyroTurn(0.30, -90);
-        bot.gyroDrive(0.3, -20, 0);
+        bot.gyroTurn(0.3, -90);
+        bot.gyroDrive(0.5, -16, 0);
         bot.dropArm();
         sleep(200);
         bot.flipGrabber();
         sleep(200);
         bot.liftArm();
-//        bot.gyroTurn(0.30, 90);
-//        bot.gyroDrive(0.30, -36, 0);
-//        bot.flipGrabber();
-//        bot.gyroDrive(0.3, 36, 0);
-//        bot.gyroTurn(0.3, -90);
-//        bot.dropArm();
-//        bot.flipGrabber();
+
+        bot.gyroDrive(0.5, 10, 0);
+        bot.gyroTurn(0.3, 180);
+        bot.gyroDrive(0.3, -12, 0);
     }
 }

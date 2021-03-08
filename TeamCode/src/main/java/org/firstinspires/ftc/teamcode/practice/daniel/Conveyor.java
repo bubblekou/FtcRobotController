@@ -51,7 +51,7 @@ import com.qualcomm.robotcore.util.Range;
  */
 
 @TeleOp(name="Daniel: Conveyor", group="Daniel's Teleops")
-//@Disabled
+@Disabled
 public class Conveyor extends LinearOpMode {
 
     private DcMotor conveyor = null;

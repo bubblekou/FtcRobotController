@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode.practice.daniel;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -36,6 +37,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name="Daniel: MecanumDrivetrain", group = "Daniel's Teleops")
+@Disabled
 public class MecanumDrivetrain extends LinearOpMode {
     public DcMotor wheelFrontLeft = null;
     public DcMotor wheelFrontRight = null;

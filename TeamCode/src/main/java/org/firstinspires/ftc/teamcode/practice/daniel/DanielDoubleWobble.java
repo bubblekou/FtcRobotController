@@ -31,24 +31,9 @@ package org.firstinspires.ftc.teamcode.practice.daniel;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.teamcode.practice.ethan.AutonomousTeamRobot;
+import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.teamcode.team17099.GyroDriveRobot;
-import org.firstinspires.ftc.teamcode.team17099.TeamRobot;
-
-import java.util.concurrent.TimeUnit;
-
-import static java.lang.Thread.sleep;
-import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.BACK;
 
 /**
  * This file illustrates the concept of driving a path based on Gyro heading and encoder counts.
@@ -83,9 +68,9 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="DanielAuto", group="Daniel's Teleops")
+@Autonomous(name="DanielDoubleWobble", group="Daniel's Autonomous")
 //@Disabled
-public class DanielAuto extends LinearOpMode {
+public class DanielDoubleWobble extends LinearOpMode {
     private GyroDriveRobot bot;
 
     @Override
@@ -102,24 +87,44 @@ public class DanielAuto extends LinearOpMode {
             idle();
         }
 
+        while (!isStopRequested()) {
+            VectorF lastLocation = bot.getLocation();
+            if (lastLocation != null) {
+                telemetry.addData("Pos (in)", "{X, Y, Z} = %.1f, %.1f, %.1f",
+                        lastLocation.get(0) / bot.mmPerInch, lastLocation.get(1) / bot.mmPerInch, lastLocation.get(2) / bot.mmPerInch);
+            } else {
+                telemetry.addData("Pos (in)", "unknown");
+            }
+
+
+            telemetry.update();
+        }
+
         bot.liftArm();
 
-        //avoid the ring in the path
-        bot.gyroDrive(0.3, -12, 0);
-        bot.gyroStrafeSideway(0.3, 12, 0);
-        bot.gyroDrive( 0.30, -42, 0);
-        bot.gyroStrafeSideway(0.3, -12, 0);
-
-        bot.gyroTurn(0.2, 90);
-        bot.gyroHold(0.2, 90, 0.2);
-
-        bot.gyroTurn(0.2, 180);
-        bot.gyroHold(0.2, 180, 0.2);
+        bot.gyroDrive(0.5, -60, 0);
+        bot.gyroTurn(0.3, -90);
+        bot.gyroHold(0.2, -90, 0.2);
+        bot.dropArm();
+        sleep(200);
+        bot.flipGrabber();
+        sleep(200);
+        bot.liftArm();
+        bot.gyroTurn(0.2, 0);
+        bot.gyroHold(0.2, 0, 0.2);
+        bot.dropArm();
+        bot.gyroDrive(0.5, -36, 0);
+        bot.gyroTurn(0.3, -90);
+        bot.gyroHold(0.2, -90, 0.2);
+        bot.gyroDrive(0.3, 24, 0);
+        bot.flipGrabber();
+        bot.liftArm();
+        bot.gyroDrive(1.0, 8, 0);
+        bot.gyroTurn(0.3, -180);
+        bot.gyroHold(0.2, -180, 0.2);
+        bot.gyroDrive(0.5, 36, 0);
 
         int count = 0;
-        bot.startHighFlywheel();
-        sleep(1000);
-
         while (opModeIsActive() && count < 4) {
             count++;
             telemetry.addData(">", "Ring " + count);
@@ -137,12 +142,7 @@ public class DanielAuto extends LinearOpMode {
         bot.flipGrabber();
         sleep(200);
         bot.liftArm();
-//        bot.gyroTurn(0.30, 90);
-//        bot.gyroDrive(0.30, -36, 0);
-//        bot.flipGrabber();
-//        bot.gyroDrive(0.3, 36, 0);
-//        bot.gyroTurn(0.3, -90);
-//        bot.dropArm();
-//        bot.flipGrabber();
+
+        bot.stopCamera();
     }
 }

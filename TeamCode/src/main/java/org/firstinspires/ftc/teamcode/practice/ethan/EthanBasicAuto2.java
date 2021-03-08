@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode.practice.ethan;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import java.util.concurrent.TimeUnit;
@@ -40,6 +41,7 @@ import java.util.concurrent.TimeUnit;
  */
 
 @Autonomous(name="EthanBasicAuto2", group="Ethan's Autonomous")
+@Disabled
 public class EthanBasicAuto2 extends LinearOpMode {
     private AutonomousTeamRobot bot;
 
@@ -64,9 +66,28 @@ public class EthanBasicAuto2 extends LinearOpMode {
 
         bot.turn(3, 1);
 
-        //move the bot to target zone
-        bot.move(190,-0.5);
+        //move around rings
+        bot.move(20,-0.5);
         TimeUnit.MILLISECONDS.sleep(1000);
+        bot.turn(30, -1);
+        TimeUnit.MILLISECONDS.sleep(1000);
+        bot.move(50,-0.5);
+        TimeUnit.MILLISECONDS.sleep(1000);
+        bot.turn(30, 1);
+        TimeUnit.MILLISECONDS.sleep(1000);
+        bot.move(35,-0.5);
+        TimeUnit.MILLISECONDS.sleep(1000);
+        bot.turn(30, 1);
+        TimeUnit.MILLISECONDS.sleep(1000);
+        bot.move(50,-0.5);
+        TimeUnit.MILLISECONDS.sleep(1000);
+        bot.turn(27, -1);
+
+        TimeUnit.MILLISECONDS.sleep(1000);
+        bot.move(20,-0.5);
+        TimeUnit.MILLISECONDS.sleep(1000);
+
+
 
         //drop off wobble
         bot.dropArm();
@@ -83,7 +104,7 @@ public class EthanBasicAuto2 extends LinearOpMode {
         TimeUnit.MILLISECONDS.sleep(1000);
 
         //spin 180 degrees
-        bot.turn(114, 1);
+        bot.turn(100, -1);
         TimeUnit.MILLISECONDS.sleep(1000);
 
         //turn on flywheel
@@ -104,7 +125,7 @@ public class EthanBasicAuto2 extends LinearOpMode {
 
 
         //move onto launch line
-        bot.move(14,0.5);
+        bot.move(30,0.5);
         TimeUnit.MILLISECONDS.sleep(1000);
 
 

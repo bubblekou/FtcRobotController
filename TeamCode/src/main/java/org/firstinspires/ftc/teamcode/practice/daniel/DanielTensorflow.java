@@ -51,6 +51,7 @@ import org.firstinspires.ftc.teamcode.team17099.TeamRobot;
  * is explained below.
  */
 @TeleOp(name = "Concept: TensorFlow Object Detection Webcam", group = "Concept")
+//@Disabled
 @Disabled
 public class DanielTensorflow extends LinearOpMode {
 
@@ -94,7 +95,6 @@ public class DanielTensorflow extends LinearOpMode {
     public void runOpMode() {
 
         TeamRobot bot = new TeamRobot(hardwareMap);
-        bot.init();
         // The TFObjectDetector uses the camera frames from the VuforiaLocalizer, so we create that
         // first.
         initVuforia();
