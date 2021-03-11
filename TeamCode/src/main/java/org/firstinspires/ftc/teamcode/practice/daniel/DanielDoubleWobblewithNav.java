@@ -123,7 +123,7 @@ public class DanielDoubleWobblewithNav extends LinearOpMode {
 
         double wobblegoalleftposX = -48;
         double wobblegoalleftposY = -24;
-        double ratio = 1.0 * (-24 + 48)/(-48 - 12);
+        double ratio = 1.0 * (-24 + Yrobotcord)/(-48 - Xrobotord);
         double angle = (atan(-ratio) * 180 / Math.PI);
         if (angle > 180) {
             angle = angle - 180;
