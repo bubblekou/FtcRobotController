@@ -74,7 +74,7 @@ import static java.lang.Math.tan;
 
 @Autonomous(name="DanielDoubleWobblewithNav", group="Daniel's Autonomous")
 //@Disabled
-public class DanielDoubleWobblewithNav extends LinearOpMode {
+public class  DanielDoubleWobblewithNav extends LinearOpMode {
     private GyroDriveRobot bot;
 
     @Override
