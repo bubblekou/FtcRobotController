@@ -1,0 +1,12 @@
+runtime: python38
+env_variables:
+  API_KEY: pk_76204f4087c34d1392b91ff2098b08e9
+  FLASK_APP: application.py
+
+handlers:
+- url: /static
+  static_dir: static
+
+- url: /.*
+  redirect_http_response_code: 301
+  script: auto
