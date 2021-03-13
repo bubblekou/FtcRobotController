@@ -43,7 +43,7 @@ public class TeamRobot {
 
     // Macanum drive speed control with turbo between 0.1 and 1.0, there are face and slow paces
     // for turbo adjustment
-    private double turbo = 0.5;
+    private double turbo = 0.75;
     private double pace = 0.2;
 
     // Intake system
@@ -165,9 +165,9 @@ public class TeamRobot {
      */
     public void updateTurbo(boolean increasing) {
         if (increasing) {
-            turbo = Math.min(0.75, turbo + pace);
+            turbo = Math.min(1.0, turbo + pace);
         } else {
-            turbo = Math.max(0.1, turbo - pace);
+            turbo = Math.max(0.25, turbo - pace);
         }
     }
 
